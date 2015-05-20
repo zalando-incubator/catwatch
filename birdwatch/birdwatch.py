@@ -36,7 +36,7 @@ def setup_scheduler():
 
 def setup_webapp(config):
     app = connexion.App(__name__, config.port, specification_dir='swagger/')
-    #app.add_api('YAML_FILE')
+    app.add_api('birdwatch-api.yaml')
     return app
 
 
