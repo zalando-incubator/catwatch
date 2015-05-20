@@ -24,4 +24,25 @@ def list_contributors():
     github = GitHub(token=configuration.github_token)
     user = github.user('mrandi')
 
-    return user.to_json()
+    return {
+            'name': user.name, 
+            'avatar_url': user.avatar_url,
+            'username': user.login,
+            'stats': {
+                'forks': 'TODO',
+                'stars': 'TODO',
+                'contributions': 'TODO',
+                'overall': {
+                    'commits': 'TODO',
+                    'pull_requests': 'TODO',
+                    'comments': 'TODO',
+                    'approvals': 'TODO'
+                },
+                'last_month': {
+                    'commits': 'TODO',
+                    'pull_requests': 'TODO',
+                    'comments': 'TODO',
+                    'approvals': 'TODO'
+                }
+            }
+        }

@@ -26,7 +26,7 @@ definitions:
       stars:
         type: string
         example: "34"
-      contributors:
+      contributions:
         type: string
         example: "34"
       overall:
@@ -40,7 +40,7 @@ definitions:
       commits:
         type: string
         example: "23"
-      pull_request:
+      pull_requests:
         type: string
         example: "77"
       comments:
