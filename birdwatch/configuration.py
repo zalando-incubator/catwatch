@@ -16,5 +16,7 @@ import environmental
 
 class Configuration:
     port = environmental.Int('PORT', 8080)
-    job_interval = environmental.Int('JOB_INTERVAL', 15)  # how many seconds to wait between job runs
+    job_interval = environmental.Int('JOB_INTERVAL', 5)  # how many seconds to wait between job runs
     github_token = environmental.Str('GITHUB_TOKEN', '')
+
+configuration = Configuration()

@@ -19,36 +19,36 @@ import apscheduler.schedulers.background as scheduler_background
 import apscheduler.triggers.interval as scheduler_interval
 import connexion
 
-import birdwatch.configuration as configuration
+from birdwatch.configuration import configuration
+import birdwatch.collector as collector
 
 logger = logging.getLogger('birdwatch')
 logging.basicConfig(level=logging.DEBUG, style='{', format="{asctime} | {levelname: <7} | {name: <20.20} | {message}")
 
 
-def setup_scheduler(config):
+def setup_scheduler():
     # configure scheduler
     scheduler = scheduler_background.BackgroundScheduler()
-    interval = scheduler_interval.IntervalTrigger(seconds=config.job_interval)
-    scheduler.add_job(JOB_FUNCTION_PLEASE_REPLACE, interval, max_instances=10)
+    interval = scheduler_interval.IntervalTrigger(seconds=configuration.job_interval)
+    scheduler.add_job(collector.job, interval, max_instances=10)
     return scheduler
 
 
 def setup_webapp(config):
     app = connexion.App(__name__, config.port, specification_dir='swagger/')
-    app.add_api('YAML_FILE')
+    #app.add_api('YAML_FILE')
     return app
 
 
 def main():
-    config = configuration.Configuration()
 
     logger.info('Starting Scheduler')
-    scheduler = setup_scheduler(config)
+    scheduler = setup_scheduler()
     scheduler.start()
     logger.info('Scheduler running')
 
     logger.info('Starting web app')
-    app = setup_webapp(config)
+    app = setup_webapp(configuration)
     app.run()
 
 
