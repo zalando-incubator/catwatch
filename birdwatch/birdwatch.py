@@ -30,6 +30,8 @@ def setup_scheduler():
     # configure scheduler
     scheduler = scheduler_background.BackgroundScheduler()
     interval = scheduler_interval.IntervalTrigger(seconds=configuration.job_interval)
+    # NEEDS to be removed: intended behavior: start job after bootup and rerun it after an hour
+    collector.job()
     scheduler.add_job(collector.job, interval, max_instances=10)
     return scheduler
 

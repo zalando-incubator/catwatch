@@ -16,8 +16,9 @@ import environmental
 
 class Configuration:
     port = environmental.Int('PORT', 8080)
-    job_interval = environmental.Int('JOB_INTERVAL', 5)  # how many seconds to wait between job runs
+    job_interval = environmental.Int('JOB_INTERVAL', 60 * 60)  # how many seconds to wait between job runs
     github_token = environmental.Str('GITHUB_TOKEN', '')
-    organizations = environmental.List('ORGANIZATIONS', ['zalando'])
+    organizations = environmental.List('ORGANIZATIONS', ['zalando', 'zalando-stups'])
+    item_limit = environmental.Int('ITEM_LIMIT', 10)
 
 configuration = Configuration()
