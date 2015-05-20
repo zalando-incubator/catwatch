@@ -20,4 +20,8 @@ def list_projects():
 
 def list_contributors():
 
-    return {}
+    # just for testing
+    github = GitHub(token=configuration.github_token)
+    user = github.user('mrandi')
+
+    return user.to_json()
