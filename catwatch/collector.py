@@ -35,6 +35,9 @@ class Contributor:
         self.actions = 0
         self.projects = 0
 
+    def __str__(self):
+        return pprint.pformat(vars(self))
+
     @property
     def score(self) -> int:
         return self.actions + self.projects
@@ -55,6 +58,9 @@ class Project:
         except GitHubError:
             self.contributor_list = []
          # TODO Actions
+
+    def __str__(self):
+        return pprint.pformat(vars(self))
 
     @property
     def contributors(self):
