@@ -1,0 +1,1 @@
+from .catwatch import main
