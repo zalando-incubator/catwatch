@@ -124,7 +124,8 @@ paths:
       description: Get all projects
       tags:
         - Birdwatch API
-      operationId: blub
+      operationId: birdwatch.api.list_projects
+
       parameters:
         - name: order_by
           in: query
@@ -132,6 +133,7 @@ paths:
           enum:
             - POPULAR
             - ACTIVE
+
       responses:
         "200":
           description: List of all projects
@@ -146,7 +148,8 @@ paths:
       description: Get all contributors
       tags:
         - Birdwatch API
-      operationId: blub
+      operationId: birdwatch.api.list_contributors
+
       parameters:
         - name: order_by
           in: query
