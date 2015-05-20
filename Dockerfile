@@ -8,7 +8,7 @@ RUN apt-get install python3 python3-pip
 ENV ORGANIZATIONS ['zalando', 'zalando-stups']
 ENV GITHUB_TOKEN 'Please do never put your github token into repository'
 
-ADD birdwatch /birdwatch
+ADD catwatch /catwatch
 ADD run_server.py /
 ADD requirements.txt /
 

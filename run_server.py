@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
 
-import birdwatch
+import catwatch
 
-birdwatch.main()
+catwatch.main()
