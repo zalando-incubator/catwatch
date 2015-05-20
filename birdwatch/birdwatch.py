@@ -19,9 +19,9 @@ import apscheduler.schedulers.background as scheduler_background
 import apscheduler.triggers.interval as scheduler_interval
 import connexion
 
-import birdwatch.configuration
+import birdwatch.configuration as configuration
 
-logger = logging.getLogger('lizzy')
+logger = logging.getLogger('birdwatch')
 logging.basicConfig(level=logging.DEBUG, style='{', format="{asctime} | {levelname: <7} | {name: <20.20} | {message}")
 
 
