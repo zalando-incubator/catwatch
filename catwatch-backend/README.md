@@ -3,19 +3,19 @@ Build and run the backend either by Gradle or Maven.
 
 Gradle:
 
-	// build
+	# build
 	./gradlew build
 	
-	// run
+	# run
 	java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar
 
 
 Maven:
 
-	// build
+	# build
 	mvn install
 	
-	// run
+	# run
 	mvn spring-boot:run
 
 

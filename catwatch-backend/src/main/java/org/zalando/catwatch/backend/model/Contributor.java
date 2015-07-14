@@ -1,29 +1,30 @@
 package org.zalando.catwatch.backend.model;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
-@ApiModel(description = "")
+@ApiModel(description = "A contributor is a (GitHub) user that may have contributed to projects. "
+		+ "Equals to a GitHub acocunt. See https://developer.github.com/v3/users/#get-a-single-user")
 public class Contributor {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
 	private String name = null;
 	private String url = null;
-	private BigDecimal organizationalCommitsCount = null;
-	private BigDecimal personalCommitsCount = null;
-	private BigDecimal personalProjectsCount = null;
-	private BigDecimal organizationalProjectsCount = null;
+	private Integer organizationalCommitsCount = null;
+	private Integer personalCommitsCount = null;
+	private Integer personalProjectsCount = null;
+	private Integer organizationalProjectsCount = null;
 
 	public Contributor() {
 		super();
@@ -32,6 +33,10 @@ public class Contributor {
 	public Contributor(String name) {
 		super();
 		this.name = name;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	/**
@@ -65,11 +70,11 @@ public class Contributor {
 	 **/
 	@ApiModelProperty(value = "Count of organizational commits.")
 	@JsonProperty("organizationalCommitsCount")
-	public BigDecimal getOrganizationalCommitsCount() {
+	public Integer getOrganizationalCommitsCount() {
 		return organizationalCommitsCount;
 	}
 
-	public void setOrganizationalCommitsCount(BigDecimal organizationalCommitsCount) {
+	public void setOrganizationalCommitsCount(Integer organizationalCommitsCount) {
 		this.organizationalCommitsCount = organizationalCommitsCount;
 	}
 
@@ -78,11 +83,11 @@ public class Contributor {
 	 **/
 	@ApiModelProperty(value = "Count of personal commits.")
 	@JsonProperty("personalCommitsCount")
-	public BigDecimal getPersonalCommitsCount() {
+	public Integer getPersonalCommitsCount() {
 		return personalCommitsCount;
 	}
 
-	public void setPersonalCommitsCount(BigDecimal personalCommitsCount) {
+	public void setPersonalCommitsCount(Integer personalCommitsCount) {
 		this.personalCommitsCount = personalCommitsCount;
 	}
 
@@ -91,11 +96,11 @@ public class Contributor {
 	 **/
 	@ApiModelProperty(value = "Count of personal projects of contributor.")
 	@JsonProperty("personalProjectsCount")
-	public BigDecimal getPersonalProjectsCount() {
+	public Integer getPersonalProjectsCount() {
 		return personalProjectsCount;
 	}
 
-	public void setPersonalProjectsCount(BigDecimal personalProjectsCount) {
+	public void setPersonalProjectsCount(Integer personalProjectsCount) {
 		this.personalProjectsCount = personalProjectsCount;
 	}
 
@@ -104,11 +109,11 @@ public class Contributor {
 	 **/
 	@ApiModelProperty(value = "Count of organization projects of contributor.")
 	@JsonProperty("organizationalProjectsCount")
-	public BigDecimal getOrganizationalProjectsCount() {
+	public Integer getOrganizationalProjectsCount() {
 		return organizationalProjectsCount;
 	}
 
-	public void setOrganizationalProjectsCount(BigDecimal organizationalProjectsCount) {
+	public void setOrganizationalProjectsCount(Integer organizationalProjectsCount) {
 		this.organizationalProjectsCount = organizationalProjectsCount;
 	}
 
@@ -117,6 +122,7 @@ public class Contributor {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class Contributor {\n");
 
+		sb.append("  id: ").append(id).append("\n");
 		sb.append("  name: ").append(name).append("\n");
 		sb.append("  url: ").append(url).append("\n");
 		sb.append("  organizationalCommitsCount: ").append(organizationalCommitsCount).append("\n");
