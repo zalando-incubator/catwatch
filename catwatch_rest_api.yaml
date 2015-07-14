@@ -246,15 +246,21 @@ definitions:
       tags_count:
         type: number
         description: Count of tags.
+      organization_name:
+        type: string
+        description: Organization of the Project.
       snapshot_date:
         type: string
-	format: date-time
+        format: date-time
         description: Statistics snapshot date.
   Contributor:
     properties:
       name:
         type: string
         description: Name of contributor
+      gitHubUserName:
+        type: string
+        description: Unique github name of contributor
       url:
         type: string
         description: URL of contributor
@@ -270,6 +276,13 @@ definitions:
       organizational_projects_count:
         type: number
         description: Count of organization projects of contributor.
+      organization_name:
+        type: string
+        description: Organization of the Project.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Statistics snapshot date.
   Project:
     properties:
       name:
@@ -310,6 +323,10 @@ definitions:
       organization_name:
         type: string
         description: Organization of the Project.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Statistics snapshot date.
   Language:
     properties:
       name:
