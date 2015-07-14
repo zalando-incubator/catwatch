@@ -9,6 +9,7 @@ if [ "$BUILD_TOOL" = "maven" ]; then
 else
 
     cd catwatch-backend
+    chmod +x gradlew
 	./gradlew clean build
 	cd .. 
 
