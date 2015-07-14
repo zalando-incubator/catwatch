@@ -1,6 +1,0 @@
-flask
-tornado
-APScheduler
-connexion
-environmental
-github3.py
