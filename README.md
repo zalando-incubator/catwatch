@@ -3,5 +3,5 @@ CatWatch presents statistics about your most popular projects on github.com and 
 
 Documentation for the sub modules:
 
-* [catwatch-backend](tree/master/catwatch-backend)
-* [catwatch-ui-responsive](tree/master/catwatch-ui-responsive)
+* [catwatch-backend](catwatch-backend/README.md)
+* [catwatch-ui-responsive](catwatch-ui-responsive/README.md)
