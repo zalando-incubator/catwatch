@@ -1,0 +1,14 @@
+
+# IDE project files
+.project
+.settings
+.classpath
+.idea
+*.iml
+
+catwatch-backend/.gitignore
+
+/target/
+*/build/
+.gradle
+

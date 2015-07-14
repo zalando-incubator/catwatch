@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+jar {
+    baseName = 'catwatch-backend'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // web
+	compile("org.springframework.boot:spring-boot-starter-web")
+    compile("io.swagger:swagger-annotations:1.5.0")
+	compile("com.fasterxml.jackson.core:jackson-annotations")
+    // persistence
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.h2database:h2")
+    // monitoring
+	compile("org.springframework.boot:spring-boot-starter-actuator")
+	// test
+	testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("junit:junit")
+	testCompile("org.mockito:mockito-core")
+	testCompile("org.hamcrest:hamcrest-core")
+	testCompile("org.hamcrest:hamcrest-library")
+	testCompile("org.springframework:spring-test")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}

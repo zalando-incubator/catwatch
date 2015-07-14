@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.zalando</groupId>
+    <artifactId>catwatch</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+    
+    <modules>
+    	<module>catwatch-backend</module>
+    </modules>
+
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>
+        Root project for all CatWatch related projects.
+
+        CatWatch presents statistics about your most popular projects on github.com and your most active contributors.
+        The results are accessible via REST API and statistics website.
+
+        More details are on the project page.
+    </description>
+
+    <url>https://github.com/zalando/catwatch</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/zalando/catwatch.git</connection>
+        <developerConnection>scm:git:git@github.com:zalando/catwatch.git</developerConnection>
+        <url>https://github.com/zalando/catwatch/</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <inceptionYear>2015</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>rwitzel</id>
+            <name>Rodrigo Witzel</name>
+            <email>rodrigo.witzel@zalando,de</email>
+        </developer>
+        <!-- add more later -->
+    </developers>
+
+</project>   
