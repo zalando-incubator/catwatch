@@ -7,5 +7,5 @@ env:
   - BUILD_TOOL=gradle
 
 script:
-  - build.sh
+  - ./build.sh
 
