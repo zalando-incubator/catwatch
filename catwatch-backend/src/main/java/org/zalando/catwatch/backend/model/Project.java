@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@ApiModel(description = "")
+@ApiModel(description = "Represents a GitHub repository. See https://developer.github.com/v3/repos/")
 public class Project {
 
 	@Id

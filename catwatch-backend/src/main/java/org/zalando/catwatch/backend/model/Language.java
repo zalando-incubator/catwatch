@@ -6,7 +6,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 
-@ApiModel(description = "")
+@ApiModel(description = "A programming language as it is used in source code of GitHub repositories. "
+		+ "Compare with https://developer.github.com/v3/repos/#list-languages")
 public class Language  {
   
   private String name = null;

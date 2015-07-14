@@ -11,12 +11,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@ApiModel(description = "")
+@ApiModel(description = "A contributor is a (GitHub) user that may have contributed to projects. "
+		+ "Equals to a GitHub acocunt. See https://developer.github.com/v3/users/#get-a-single-user")
 public class Contributor {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
 	private String name = null;
 	private String url = null;
@@ -33,7 +34,7 @@ public class Contributor {
 		super();
 		this.name = name;
 	}
-	
+
 	public long getId() {
 		return id;
 	}
