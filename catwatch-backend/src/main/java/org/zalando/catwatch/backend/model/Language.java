@@ -1,17 +1,17 @@
 package org.zalando.catwatch.backend.model;
 
-import java.math.BigDecimal;
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
 public class Language  {
   
   private String name = null;
-  private BigDecimal projectsCount = null;
-  private BigDecimal percentage = null;
+  private Integer projectsCount = null;
+  private Integer percentage = null;
 
   
   /**
@@ -32,10 +32,10 @@ public class Language  {
    **/
   @ApiModelProperty(value = "Count of projects using it.")
   @JsonProperty("projectsCount")
-  public BigDecimal getProjectsCount() {
+  public Integer getProjectsCount() {
     return projectsCount;
   }
-  public void setProjectsCount(BigDecimal projectsCount) {
+  public void setProjectsCount(Integer projectsCount) {
     this.projectsCount = projectsCount;
   }
 
@@ -45,10 +45,10 @@ public class Language  {
    **/
   @ApiModelProperty(value = "Usage percentage of programming language.")
   @JsonProperty("percentage")
-  public BigDecimal getPercentage() {
+  public Integer getPercentage() {
     return percentage;
   }
-  public void setPercentage(BigDecimal percentage) {
+  public void setPercentage(Integer percentage) {
     this.percentage = percentage;
   }
 
