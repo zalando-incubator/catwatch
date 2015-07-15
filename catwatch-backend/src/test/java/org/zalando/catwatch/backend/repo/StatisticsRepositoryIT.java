@@ -9,34 +9,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
-import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.model.Statistics;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-public class ContributorRepositoryIT {
+public class StatisticsRepositoryIT {
 	
     @Autowired
-    ContributorRepository repository;
+    StatisticsRepository repository;
     
 	@Test
 	public void learningtestSaveAndLoad() throws Exception {
 		
         // given
-        repository.save(new Contributor("Jack"));
-        repository.save(new Contributor("Chloe"));
-        Contributor kim = new Contributor("Kim");
-		repository.save(kim);
-
-        // when
-        Contributor loadedContributor = repository.findOne(kim.getId());
-
-        // then
-        assertThat(loadedContributor.getName(), equalTo("Kim"));
-
-        // when
-        loadedContributor = repository.findByName("Kim").get(0);
+		Statistics statistics = new Statistics();
+		statistics.setMembersCount(1234);
+        repository.save(statistics);
         
+        // when
+        Statistics loadedStatistics = repository.findOne(statistics.getId());
+
         // then
-        assertThat(loadedContributor.getName(), equalTo("Kim"));    }
+        assertThat(loadedStatistics.getMembersCount(), equalTo(1234));    }
 
 }

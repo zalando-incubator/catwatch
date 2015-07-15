@@ -1,0 +1,350 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Catwatch API
+  description: Get your github statitics with the Catwatch API
+  version: "1.0.0"
+# the domain of the service
+host: api.catwatch.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /statistics:
+    get:
+      summary: General Statistics of list of Github.com Organizations
+      description: |
+        The Statistics endpoint returns snapshot of statistics over a given period of time of the organization 
+        Github account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations.
+        
+      parameters:
+        - name: organizations
+          in: query
+          description:  List of github.com organizations to scan(comma seperated)
+          required: true
+          type: string
+        - name: start_date
+          in: query
+          description: Date from which to start fetching statistics records from database(default = current date)  
+          required: false
+          type: string
+          format: date-time
+        - name: end_date
+          in: query
+          description: Date till which statistics records will be fetched from database(default = current date) 
+          required: false
+          type: string
+          format: date-time
+      tags:
+        - Statistics
+      responses:
+        200:
+          description: An array of Statistics over selected period of time.
+          schema:
+           type: array
+           items:
+            $ref: '#/definitions/Statistics'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /contributors:
+    get:
+      summary: Contributor
+      description: |
+        The Contributors endpoint returns all information like name, url, commits count, 
+        projects count of all the Contributors for the selected filter. 
+      parameters:
+        - name: organizations
+          in: query
+          description:  List of github.com organizations to scan(comma seperated)
+          required: true
+          type: string
+        - name: limit
+          in: query
+          description: Number of items to retrieve. Default is 5.
+          required: false
+          type: integer
+          format: int32
+        - name: offset
+          in: query
+          description: Offset the list of returned results by this amount. Default is zero.
+          required: false
+          type: integer
+          format: int32
+        - name: start_date
+          in: query
+          description: Date from which to start fetching records from database(default = current_date) 
+          required: false
+          type: string
+          format: date-time
+        - name: end_date
+          in: query
+          description: Date till which records will be fetched from database(default = current_date) 
+          required: false
+          type: string
+          format: date-time
+        - name: sort_by
+          in: query
+          description: parameter by which result should be sorted. '-' means descending order (default is count of commit)
+          required: false
+          type: string
+        - name: q
+          in: query
+          description: query paramater for search query (this will be contributor names prefix)
+          required: false
+          type: string
+      tags:
+        - Contributor
+      responses:
+        200:
+          description: An array of Contributors of selected Github organization
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contributor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /projects:
+    get:
+      summary: Project
+      description: The Projects endpoint returns all information like name,description, url, stars count, commits count, forks count, contributors count, score, languages used, last pushed of all the projects for the selected filter.
+      parameters:
+        - name: organizations
+          in: query
+          description:  List of github.com organizations to scan(comma seperated)
+          required: true
+          type: string
+        - name: limit
+          in: query
+          description: Number of items to retrieve. Default is 5.
+          required: false
+          type: integer
+          format: int32
+        - name: offset
+          in: query
+          description: Offset the list of returned results by this amount. Default is zero.
+          required: false
+          type: integer
+          format: int32
+        - name: start_date
+          in: query
+          description: Date from which to start fetching records from database(default = current_date) 
+          required: false
+          type: string
+          format: date-time
+        - name: end_date
+          in: query
+          description: Date till which records will be fetched from database(default = current_date) 
+          required: false
+          type: string
+          format: date-time
+        - name: sort_by
+          in: query
+          description: parameter by which result should be sorted. '-' means descending order (count of star,count of commit, count of forks, count of contributors, score). Default is descending order of score.
+          required: false
+          type: string
+        - name: q
+          in: query
+          description: query paramater for search query (this will be project names prefix)
+          required: false
+          type: string 
+      tags:
+        - Project
+      responses:
+        200:
+          description: An array of Projects of selected Github organization
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Project'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /languages:
+    get:
+      summary: Project programming language
+      description: The languages endpoint returns information about the languages used for projects by selected Github Organizations order by the number of projects using the programming language.
+      parameters:
+        - name: organizations
+          in: query
+          description:  List of github.com organizations to scan(comma seperated)
+          required: true
+          type: string
+        - name: limit
+          in: query
+          description: Number of items to retrieve. Default is 5.
+          required: false
+          type: integer
+          format: int32
+        - name: offset
+          in: query
+          description: Offset the list of returned results by this amount. Default is zero.
+          required: false
+          type: integer
+          format: int32
+        - name: q
+          in: query
+          description: query paramater for search query (this can be language name prefix)
+          required: false
+          type: string 
+      tags:
+        - Project
+      responses:
+        200:
+          description: An array of programming language used and count of projects using it.
+          schema:
+           type: array
+           items:
+             $ref: '#/definitions/Language'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+
+ 
+   
+definitions:
+  Statistics:
+    properties:
+      private_project_count:
+        type: number
+        description: Count of private projects.
+      public_project_count:
+        type: number
+        description: Count of public projects.
+      members_count:
+        type: number
+        description: Count of memebers.
+      teams_count:
+        type: number
+        description: Count of teams.
+      all_contributors_count:
+        type: number
+        description: Count of contributors.
+      all_stars_count:
+        type: number
+        description: Count of stars.
+      all_forks_count:
+        type: number
+        description: Count of forks.
+      all_size_count:
+        type: number
+        description: Count of projects.
+      program_languages_count:
+        type: number
+        description: Count of programming languages used.
+      tags_count:
+        type: number
+        description: Count of tags.
+      organization_name:
+        type: string
+        description: Organization name.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Statistics snapshot date.
+  Contributor:
+    properties:
+      name:
+        type: string
+        description: Name of contributor
+      gitHubUserName:
+        type: string
+        description: Unique github name of contributor
+      url:
+        type: string
+        description: URL of contributor
+      organizational_commits_count:
+        type: number
+        description: Count of organizational commits.
+      personal_commits_count:
+        type: number
+        description: Count of personal commits.
+      personal_projects_count:
+        type: number
+        description: Count of personal projects of contributor.
+      organizational_projects_count:
+        type: number
+        description: Count of organization projects of contributor.
+      organization_name:
+        type: string
+        description: Organization of the Contributor.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Contributor snapshot date.
+  Project:
+    properties:
+      name:
+        type: string
+        description: Name of project
+      url:
+        type: string
+        description: URL of project
+      description:
+        type: string
+        description: Description of project
+      stars_count:
+        type: number
+        description: Count of stars for the project.
+      commits_count:
+        type: number
+        description: Count of commits for the project.
+      forks_count:
+        type: number
+        description: Count of forks of project.
+      contributors_count:
+        type: number
+        description: Count of contributors of project.
+      score:
+        type: string
+        description: Score of project.
+      last_pushed:
+        type: string
+        description: Last pushed data of project.
+      primary_language:
+        type: string
+        description: Primary programming language of project
+      language_list:
+        type: array
+        description: List of programming languages of project
+        items:
+          type: string
+      organization_name:
+        type: string
+        description: Organization of the Project.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Project snapshot date.
+  Language:
+    properties:
+      name:
+        type: string
+        description: Name of the programming language used.
+      projects_count:
+        type: number
+        description: Count of projects using it.
+      percentage:
+        type: number
+        description: Usage percentage of programming language.
+
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
