@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CollectionTable;
