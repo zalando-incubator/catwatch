@@ -35,7 +35,8 @@ public class Project {
 	private String score = null;
 	private String lastPushed = null;
 	private String primaryLanguage = null;
-
+	private Date snapshotDate = null;
+	  
 	@ElementCollection
 	@CollectionTable(name = "LANG_LIST", joinColumns = @JoinColumn(name = "PROJECT_ID") )
 	@Column(name = "LANGUAGE")
@@ -203,6 +204,19 @@ public class Project {
 		this.organizationName = organizationName;
 	}
 
+	/**
+	 * Project snapshot date.
+	 **/
+	@ApiModelProperty(value = "Project snapshot date.")
+	@JsonProperty("snapshotDate")
+	public Date getSnapshotDate() {
+		return snapshotDate;
+	}
+
+	public void setSnapshotDate(Date snapshotDate) {
+		this.snapshotDate = snapshotDate;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -221,6 +235,7 @@ public class Project {
 		sb.append("  primaryLanguage: ").append(primaryLanguage).append("\n");
 		sb.append("  languageList: ").append(languageList).append("\n");
 		sb.append("  organizationName: ").append(organizationName).append("\n");
+		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
 		sb.append("}\n");
 		return sb.toString();
 	}

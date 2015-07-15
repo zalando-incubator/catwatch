@@ -1,5 +1,7 @@
 package org.zalando.catwatch.backend.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +30,8 @@ public class Statistics {
 	private Integer allSizeCount = null;
 	private Integer programLanguagesCount = null;
 	private Integer tagsCount = null;
-	private String snapshotDate = null;
+	private String organizationName = null;
+	private Date snapshotDate = null;
 
 	public long getId() {
 		return id;
@@ -164,16 +167,29 @@ public class Statistics {
 		this.tagsCount = tagsCount;
 	}
 
+	
+	/**
+	 * Organization name.
+	 **/
+	@ApiModelProperty(value = "Organization name.")
+	@JsonProperty("organizationName")
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
 	/**
 	 * Statistics snapshot date.
 	 **/
 	@ApiModelProperty(value = "Statistics snapshot date.")
 	@JsonProperty("snapshotDate")
-	public String getSnapshotDate() {
+	public Date getSnapshotDate() {
 		return snapshotDate;
 	}
 
-	public void setSnapshotDate(String snapshotDate) {
+	public void setSnapshotDate(Date snapshotDate) {
 		this.snapshotDate = snapshotDate;
 	}
 
@@ -193,6 +209,7 @@ public class Statistics {
 		sb.append("  allSizeCount: ").append(allSizeCount).append("\n");
 		sb.append("  programLanguagesCount: ").append(programLanguagesCount).append("\n");
 		sb.append("  tagsCount: ").append(tagsCount).append("\n");
+		sb.append("  organizationName: ").append(organizationName).append("\n");
 		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
 		sb.append("}\n");
 		return sb.toString();

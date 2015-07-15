@@ -25,7 +25,10 @@ public class Contributor {
 	private Integer personalCommitsCount = null;
 	private Integer personalProjectsCount = null;
 	private Integer organizationalProjectsCount = null;
+	private String organizationName = null;
+    private Date snapshotDate = null;
 
+	
 	public Contributor() {
 		super();
 	}
@@ -116,6 +119,32 @@ public class Contributor {
 	public void setOrganizationalProjectsCount(Integer organizationalProjectsCount) {
 		this.organizationalProjectsCount = organizationalProjectsCount;
 	}
+	
+	/**
+	 * Organization of the Contributor.
+	 **/
+	@ApiModelProperty(value = "Organization of the Contributor.")
+	@JsonProperty("organizationName")
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
+
+	/**
+	 * Contributor snapshot date.
+	 **/
+	@ApiModelProperty(value = "Contributor snapshot date.")
+	@JsonProperty("snapshotDate")
+	public Date getSnapshotDate() {
+		return snapshotDate;
+	}
+
+	public void setSnapshotDate(Date snapshotDate) {
+		this.snapshotDate = snapshotDate;
+	}
 
 	@Override
 	public String toString() {
@@ -129,6 +158,8 @@ public class Contributor {
 		sb.append("  personalCommitsCount: ").append(personalCommitsCount).append("\n");
 		sb.append("  personalProjectsCount: ").append(personalProjectsCount).append("\n");
 		sb.append("  organizationalProjectsCount: ").append(organizationalProjectsCount).append("\n");
+		sb.append("  organizationName: ").append(organizationName).append("\n");
+		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
 		sb.append("}\n");
 		return sb.toString();
 	}
