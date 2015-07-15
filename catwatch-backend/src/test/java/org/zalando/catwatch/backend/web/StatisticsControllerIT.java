@@ -1,7 +1,6 @@
 package org.zalando.catwatch.backend.web;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
