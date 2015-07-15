@@ -27,7 +27,7 @@ SenzaComponents:
         application_version: "{{Arguments.ImageVersion}}"
         runtime: Docker
         source: "pierone.stups.zalan.do/mentoring/catwatch:{{Arguments.ImageVersion}}"
-        health_check_path: /healtchcheck
+        health_check_path: /healthcheck/ 
         ports:
           8080: 8080
         scalyr_account_key: 00__Qhet83Yi/5ZOuLUvMtPaaU_UjJO49vN52/xwGTas- 
@@ -37,6 +37,6 @@ SenzaComponents:
   - AppLoadBalancer:
       Type: Senza::WeightedDnsElasticLoadBalancer
       HTTPPort: 8080
-      HealthCheckPath: /healtchcheck
+      HealthCheckPath: /healthcheck/
       SecurityGroups:
         - app-catwatch-lb

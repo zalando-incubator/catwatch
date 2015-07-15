@@ -1,5 +1,9 @@
 FROM zalando/openjdk:8u45-b14-2
 
+RUN mkdir /var/log/apache2_docker
+
+RUN chmod -R 777 /var/log/apache2_docker
+
 RUN apt-get update && apt-get install -y apache2
 
 RUN mkdir -p /var/www/catwatch/html
