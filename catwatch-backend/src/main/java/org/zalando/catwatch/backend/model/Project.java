@@ -8,8 +8,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
@@ -23,8 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class Project {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private ProjectKey key;
 
 	private String name = null;
 	private String url = null;
@@ -44,9 +41,26 @@ public class Project {
 	private List<String> languageList = new ArrayList<String>();
 
 	private String organizationName = null;
+	
+	
+	
+	public Project() {
+		super();
+	}
 
+	public Project(long id, Date snapshotDate) {
+		super();
+		this.key = new ProjectKey(id, snapshotDate);
+	}
+
+	public ProjectKey getKey() {
+		return key;
+	}
+
+	@ApiModelProperty(value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide.")
+	@JsonProperty("id")
 	public long getId() {
-		return id;
+		return key == null ? 0 : key.getId();
 	}
 
 	/**
@@ -208,10 +222,10 @@ public class Project {
 	/**
 	 * Project snapshot date.
 	 **/
-	@ApiModelProperty(value = "Project snapshot date.")
+	@ApiModelProperty(value = "Project snapshot date. Part of the primary key.")
 	@JsonProperty("snapshotDate")
 	public Date getSnapshotDate() {
-		return snapshotDate;
+		return snapshotDate; 
 	}
 
 	public void setSnapshotDate(Date snapshotDate) {
@@ -223,7 +237,7 @@ public class Project {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class Project {\n");
 
-		sb.append("  id: ").append(id).append("\n");
+		sb.append("  id: ").append(getId()).append("\n");
 		sb.append("  name: ").append(name).append("\n");
 		sb.append("  url: ").append(url).append("\n");
 		sb.append("  description: ").append(description).append("\n");
@@ -236,7 +250,7 @@ public class Project {
 		sb.append("  primaryLanguage: ").append(primaryLanguage).append("\n");
 		sb.append("  languageList: ").append(languageList).append("\n");
 		sb.append("  organizationName: ").append(organizationName).append("\n");
-		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
+		sb.append("  snapshotDate: ").append(getSnapshotDate()).append("\n");
 		sb.append("}\n");
 		return sb.toString();
 	}
