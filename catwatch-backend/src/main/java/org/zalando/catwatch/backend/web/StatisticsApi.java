@@ -35,7 +35,9 @@ public class StatisticsApi {
     
 	
 
-	@ApiOperation(value = "General Statistics of list of Github.com Organizations", notes = "The Statistics endpoint returns snapshot of statistics over a given period of time of the organization \nGithub account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations.\n", response = Statistics.class, responseContainer = "List")
+	@ApiOperation(
+			value = "General Statistics of list of Github.com Organizations", 
+			notes = "The Statistics endpoint returns snapshot of statistics over a given period of time of the organization \nGithub account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations.\n", response = Statistics.class, responseContainer = "List")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "An array of Statistics over selected period of time."), @ApiResponse(code = 0, message = "Unexpected error") })
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<Collection<Statistics>> statisticsGet(
@@ -57,16 +59,22 @@ public class StatisticsApi {
 		
 		List<Statistics> statistics = new ArrayList<>(orgs.size());
 		
+		for (String orgName : orgs){
+			List<Statistics> s = repository.findByOrganizationName(orgName);
+		}
+		
 		if(startDate==null && endDate==null){
-			//get statistics from all requested organizations and sum up
+			//TODO get statistics from all requested organizations and sum up
+			
+		}
+		else{
 			
 		}
 		
-		
-		
+		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
 		
 		//TODO  do some magic!
-		return new ResponseEntity<Collection<Statistics>>(HttpStatus.OK);
+		return res;
 	}
 
 }
