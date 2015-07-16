@@ -27,7 +27,7 @@ SenzaComponents:
         application_version: "{{Arguments.ImageVersion}}"
         runtime: Docker
         source: "pierone.stups.zalan.do/mentoring/catwatch:{{Arguments.ImageVersion}}"
-        health_check_path: /healthcheck/
+        health_check_path: /health
         ports:
           8080: 8080
         mint_bucket: "zalando-stups-mint-187355903146-eu-west-1"
@@ -36,6 +36,6 @@ SenzaComponents:
   - AppLoadBalancer:
       Type: Senza::WeightedDnsElasticLoadBalancer
       HTTPPort: 8080
-      HealthCheckPath: /healthcheck/
+      HealthCheckPath: /health
       SecurityGroups:
         - app-catwatch-lb
