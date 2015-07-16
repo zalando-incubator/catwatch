@@ -3,6 +3,8 @@ package org.zalando.catwatch.backend.repo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,12 @@ public class StatisticsRepositoryIT {
 	public void learningtestSaveAndLoad() throws Exception {
 		
         // given
-		Statistics statistics = new Statistics();
+		Statistics statistics = new Statistics(123, new Date());
 		statistics.setMembersCount(1234);
         repository.save(statistics);
         
         // when
-        Statistics loadedStatistics = repository.findOne(statistics.getId());
+        Statistics loadedStatistics = repository.findOne(statistics.getKey());
 
         // then
         assertThat(loadedStatistics.getMembersCount(), equalTo(1234));    }
