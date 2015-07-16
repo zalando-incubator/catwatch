@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
 
-public abstract class CorsFilterIT extends AbstractCatwatchIT {
+public class CorsFilterIT extends AbstractCatwatchIT {
 
 	@Test
 	public void testCorsHeadersInResponse_forRootPage() throws Exception {

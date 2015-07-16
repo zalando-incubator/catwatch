@@ -17,7 +17,7 @@ import org.zalando.catwatch.backend.CatWatchBackendApplication;
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
 @WebIntegrationTest
 @IntegrationTest({ "server.port=0" })
-public class AbstractCatwatchIT {
+public abstract class AbstractCatwatchIT {
 
 	@Value("${local.server.port}")
 	private int port;
