@@ -3,8 +3,6 @@ package org.zalando.catwatch.backend.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,8 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class Contributor {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private ContributorKey key;
 
 	private String name = null;
 	private String url = null;
@@ -28,22 +25,33 @@ public class Contributor {
 	private Integer personalProjectsCount = null;
 	private Integer organizationalProjectsCount = null;
 	private String organizationName = null;
-    private Date snapshotDate = null;
 
 	
 	public Contributor() {
 		super();
 	}
 
-	public Contributor(String name) {
+	public Contributor(long id, long organizationId, Date snapshotDate) {
 		super();
-		this.name = name;
+		this.key = new ContributorKey(id, organizationId, snapshotDate);
+	}
+	
+
+	public ContributorKey getKey() {
+		return key;
 	}
 
+	@ApiModelProperty(value = "the GitHub User ID of the Contributor. Part of the primary key. See official GitHub REST API guide.")
+	@JsonProperty("id")
 	public long getId() {
-		return id;
+		return key == null ? 0: key.getId();
 	}
 
+	@ApiModelProperty(value = "the GitHub ID of the organization. Part of the primary key. See official GitHub REST API guide.")
+	@JsonProperty("id")
+	public long getOrganizationId() {
+		return key == null ? 0: key.getOrganizationId();
+	}
 	/**
 	 * Name of contributor
 	 **/
@@ -138,22 +146,20 @@ public class Contributor {
 	/**
 	 * Contributor snapshot date.
 	 **/
-	@ApiModelProperty(value = "Contributor snapshot date.")
+	@ApiModelProperty(value = "Contributor snapshot date. Part of the primary key.")
 	@JsonProperty("snapshotDate")
 	public Date getSnapshotDate() {
-		return snapshotDate;
+		return key == null ? null : key.getSnapshotDate();
 	}
 
-	public void setSnapshotDate(Date snapshotDate) {
-		this.snapshotDate = snapshotDate;
-	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class Contributor {\n");
 
-		sb.append("  id: ").append(id).append("\n");
+		sb.append("  id: ").append(getId()).append("\n");
+		sb.append("  organizationId: ").append(getOrganizationId()).append("\n");
 		sb.append("  name: ").append(name).append("\n");
 		sb.append("  url: ").append(url).append("\n");
 		sb.append("  organizationalCommitsCount: ").append(organizationalCommitsCount).append("\n");
@@ -161,7 +167,7 @@ public class Contributor {
 		sb.append("  personalProjectsCount: ").append(personalProjectsCount).append("\n");
 		sb.append("  organizationalProjectsCount: ").append(organizationalProjectsCount).append("\n");
 		sb.append("  organizationName: ").append(organizationName).append("\n");
-		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
+		sb.append("  snapshotDate: ").append(getSnapshotDate()).append("\n");
 		sb.append("}\n");
 		return sb.toString();
 	}

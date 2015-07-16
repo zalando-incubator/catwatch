@@ -9,3 +9,13 @@ env:
 script:
   - ./build.sh
 
+notifications:
+  email:
+    - angela.igreja@zalando.de 
+    - ruben.barilani@zalando.de 
+    - roman.bobin@zalando.de 
+    - manuel.kunz@zalando.de 
+    - frank.schulze@zalando.de 
+    - priyadarshini.maji@zalando.de 
+    - rodrigo.witzel@zalando.de 
+

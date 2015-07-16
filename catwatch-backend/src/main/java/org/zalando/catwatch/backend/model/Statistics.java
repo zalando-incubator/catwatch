@@ -3,8 +3,6 @@ package org.zalando.catwatch.backend.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,8 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class Statistics {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private StatisticsKey key;
 
 	private Integer privateProjectCount = null;
 	private Integer publicProjectCount = null;
@@ -31,12 +28,26 @@ public class Statistics {
 	private Integer programLanguagesCount = null;
 	private Integer tagsCount = null;
 	private String organizationName = null;
-	private Date snapshotDate = null;
 
-	public long getId() {
-		return id;
+	public Statistics() {
+		super();
 	}
 
+	public Statistics(long id, Date snapshotDate) {
+		super();
+		this.key = new StatisticsKey(id, snapshotDate);
+	}
+
+	public StatisticsKey getKey() {
+		return key;
+	}
+
+	@ApiModelProperty(value = "the GitHub ID of the organization. Part of the primary key. See official GitHub REST API guide.")
+	@JsonProperty("id")
+	public long getId() {
+		return key == null ? 0: key.getId();
+	}
+	
 	/**
 	 * Count of private projects.
 	 **/
@@ -183,14 +194,17 @@ public class Statistics {
 	/**
 	 * Statistics snapshot date.
 	 **/
-	@ApiModelProperty(value = "Statistics snapshot date.")
+	@ApiModelProperty(value = "Statistics snapshot date. Part of the primary key.")
 	@JsonProperty("snapshotDate")
 	public Date getSnapshotDate() {
-		return snapshotDate;
+		return key == null ? null : key.getSnapshotDate();
 	}
-
-	public void setSnapshotDate(Date snapshotDate) {
-		this.snapshotDate = snapshotDate;
+	
+	public void setSnapshotDate(Date snapshotDate){
+		
+		if(this.key==null) this.key = new StatisticsKey();
+		
+		this.key.setSnapshotDate(snapshotDate);
 	}
 
 	@Override
@@ -198,7 +212,7 @@ public class Statistics {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class Statistics {\n");
 
-		sb.append("  id: ").append(id).append("\n");
+		sb.append("  id: ").append(getId()).append("\n");
 		sb.append("  privateProjectCount: ").append(privateProjectCount).append("\n");
 		sb.append("  publicProjectCount: ").append(publicProjectCount).append("\n");
 		sb.append("  membersCount: ").append(membersCount).append("\n");
@@ -210,7 +224,7 @@ public class Statistics {
 		sb.append("  programLanguagesCount: ").append(programLanguagesCount).append("\n");
 		sb.append("  tagsCount: ").append(tagsCount).append("\n");
 		sb.append("  organizationName: ").append(organizationName).append("\n");
-		sb.append("  snapshotDate: ").append(snapshotDate).append("\n");
+		sb.append("  snapshotDate: ").append(getSnapshotDate()).append("\n");
 		sb.append("}\n");
 		return sb.toString();
 	}

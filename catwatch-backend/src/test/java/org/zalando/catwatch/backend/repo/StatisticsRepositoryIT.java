@@ -5,12 +5,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.iterableWithSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +14,6 @@ import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.Equality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.model.StatisticsKey;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
@@ -128,8 +124,7 @@ public class StatisticsRepositoryIT {
 
 		List<Statistics> statistics;
 
-		statistics = this.repository.findByOrganizationNameOrderBySnapshotDateDesc(ORGANIZATION1,
-				new PageRequest(1, 1));
+		statistics = findLatestStatistics(ORGANIZATION1);
 
 		Assert.assertThat(statistics, Matchers.empty());
 
@@ -138,8 +133,7 @@ public class StatisticsRepositoryIT {
 
 		this.repository.save(s1);
 
-		statistics = this.repository.findByOrganizationNameOrderBySnapshotDateDesc(s1.getOrganizationName(),
-				new PageRequest(0, 1));
+		statistics = findLatestStatistics(s1.getOrganizationName());
 
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
@@ -152,8 +146,7 @@ public class StatisticsRepositoryIT {
 
 		this.repository.save(s2);
 
-		statistics = this.repository.findByOrganizationNameOrderBySnapshotDateDesc(s1.getOrganizationName(),
-				new PageRequest(0, 1));
+		statistics = findLatestStatistics(s1.getOrganizationName());
 
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
@@ -166,8 +159,7 @@ public class StatisticsRepositoryIT {
 
 		this.repository.save(s3);
 
-		statistics = this.repository.findByOrganizationNameOrderBySnapshotDateDesc(s1.getOrganizationName(),
-				new PageRequest(0, 1));
+		statistics = findLatestStatistics(s1.getOrganizationName());
 
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
@@ -181,8 +173,7 @@ public class StatisticsRepositoryIT {
 
 		this.repository.save(s4);
 
-		statistics = this.repository.findByOrganizationNameOrderBySnapshotDateDesc(s2.getOrganizationName(),
-				new PageRequest(0, 1));
+		statistics = findLatestStatistics(s2.getOrganizationName());
 
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
@@ -245,6 +236,10 @@ public class StatisticsRepositoryIT {
 //		assertThat(stats.get(2).getSnapshotDate(), equalTo(s3.getSnapshotDate()));
 	}
 
+	
+	private List<Statistics> findLatestStatistics(String organization){
+		return this.repository.findByOrganizationNameOrderByKeySnapshotDateDesc(organization, new PageRequest(0, 1));
+	}
 	private List<Statistics> findInPeriod(Date startDate, Date endDate) {
 		// return
 		// repository.findByOrganizationNameAndSnapshotDateAfterAndSnapshotDateBeforeOrderBySnapshotDateDesc(
@@ -253,14 +248,14 @@ public class StatisticsRepositoryIT {
 	}
 
 	private Statistics createAndSaveStatistics(String organizationName, Date snapshotDate) {
-		Statistics s = new Statistics();
+		Statistics s = new Statistics(new Double(Math.random()*1000).intValue(), snapshotDate);
 		s.setOrganizationName(organizationName);
 		s.setSnapshotDate(snapshotDate);
 		return repository.save(s);
 	}
 
 	private void createStatistics() {
-		s1 = new Statistics();
+		s1 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-100));
 		s1.setAllContributorsCount(10);
 		s1.setAllForksCount(12);
 		s1.setAllSizeCount(100);
@@ -273,11 +268,11 @@ public class StatisticsRepositoryIT {
 		s1.setTagsCount(6);
 		s1.setTeamsCount(0);
 
-		s2 = new Statistics();
-		s3 = new Statistics();
-		s4 = new Statistics();
-		s5 = new Statistics();
-		s6 = new Statistics();
+		s2 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-200));
+		s3 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-300));
+		s4 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-400));
+		s5 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-500));
+		s6 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-600));
 	}
 
 	private void checkEquals(Statistics expected, Statistics actual) {
@@ -314,5 +309,4 @@ public class StatisticsRepositoryIT {
 		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
 
 	}
-
 }

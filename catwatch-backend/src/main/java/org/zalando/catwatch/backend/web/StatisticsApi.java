@@ -60,16 +60,10 @@ public class StatisticsApi {
 		List<Statistics> statistics = new ArrayList<>(orgs.size());
 		
 		for (String orgName : orgs){
-			List<Statistics> s = repository.findByOrganizationName(orgName);
+			statistics = repository.findByOrganizationName(orgName);
 		}
 		
-		if(startDate==null && endDate==null){
-			//TODO get statistics from all requested organizations and sum up
-			
-		}
-		else{
-			
-		}
+		//TODO filter by start and end date
 		
 		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
 		
