@@ -3,7 +3,6 @@ package org.zalando.catwatch.backend.web;
 import java.util.Date;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

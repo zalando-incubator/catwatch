@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.model.StatisticsKey;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
@@ -194,6 +193,8 @@ public class StatisticsRepositoryIT {
 
 		Date startDate = threeDaysAgo;
 		Date endDate = twoDaysAgo;
+		
+		repository.deleteAll();
 
 		// // snapshot date is before requested period of time
 		s1 = createAndSaveStatistics(ORGANIZATION1, foursDaysAgo);
