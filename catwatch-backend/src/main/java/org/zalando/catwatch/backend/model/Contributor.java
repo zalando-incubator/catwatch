@@ -48,7 +48,7 @@ public class Contributor {
 	}
 
 	@ApiModelProperty(value = "the GitHub ID of the organization. Part of the primary key. See official GitHub REST API guide.")
-	@JsonProperty("id")
+	@JsonProperty("organizationId")
 	public long getOrganizationId() {
 		return key == null ? 0: key.getOrganizationId();
 	}
