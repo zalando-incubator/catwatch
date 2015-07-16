@@ -1,10 +1,10 @@
 
 # basic information for generating and executing this definition
 SenzaInfo:
-  StackName: catwatch
+  StackName: catwatch-web
   Parameters:
     - ImageVersion:
-        Description: "Docker image version of catwatch."
+        Description: "Docker image version of catwatch-web."
 
 # a list of senza components to apply to the definition
 SenzaComponents:
@@ -18,19 +18,19 @@ SenzaComponents:
       Type: Senza::TaupageAutoScalingGroup
       InstanceType: t2.micro
       SecurityGroups:
-        - app-catwatch
+        - app-catwatch-web
       IamRoles:
-        - app-catwatch
+        - app-catwatch-web
       ElasticLoadBalancer: AppLoadBalancer
       AssociatePublicIpAddress: false # change for standalone deployment in default VPC
       TaupageConfig:
         application_version: "{{Arguments.ImageVersion}}"
         runtime: Docker
-        source: "pierone.stups.zalan.do/mentoring/catwatch:{{Arguments.ImageVersion}}"
+        source: "pierone.stups.zalan.do/hackweek/catwatch-web:{{Arguments.ImageVersion}}"
         health_check_path: /health
         ports:
           8080: 8080
-        mint_bucket: "zalando-stups-mint-187355903146-eu-west-1"
+        mint_bucket: "zalando-stups-mint-600231584188-eu-west-1"
 
   # creates an ELB entry and Route53 domains to this ELB
   - AppLoadBalancer:
@@ -38,4 +38,4 @@ SenzaComponents:
       HTTPPort: 8080
       HealthCheckPath: /health
       SecurityGroups:
-        - app-catwatch-lb
+        - app-catwatch-web-lb
