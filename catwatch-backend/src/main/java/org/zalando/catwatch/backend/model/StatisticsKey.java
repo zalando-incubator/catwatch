@@ -3,7 +3,10 @@ package org.zalando.catwatch.backend.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+
 @SuppressWarnings("serial")
+@Embeddable
 public class StatisticsKey implements Serializable {
 
 	private long id;

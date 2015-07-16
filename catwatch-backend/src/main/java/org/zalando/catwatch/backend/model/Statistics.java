@@ -199,6 +199,13 @@ public class Statistics {
 	public Date getSnapshotDate() {
 		return key == null ? null : key.getSnapshotDate();
 	}
+	
+	public void setSnapshotDate(Date snapshotDate){
+		
+		if(this.key==null) this.key = new StatisticsKey();
+		
+		this.key.setSnapshotDate(snapshotDate);
+	}
 
 	@Override
 	public String toString() {
