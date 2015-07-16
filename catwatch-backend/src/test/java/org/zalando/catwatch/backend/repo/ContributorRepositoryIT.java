@@ -3,6 +3,8 @@ package org.zalando.catwatch.backend.repo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,18 @@ public class ContributorRepositoryIT {
 	public void learningtestSaveAndLoad() throws Exception {
 		
         // given
-        repository.save(new Contributor("Jack"));
-        repository.save(new Contributor("Chloe"));
-        Contributor kim = new Contributor("Kim");
+		Contributor sam = new Contributor(70,23,new Date());
+		sam.setName("sam");
+        repository.save(sam);
+        Contributor scott = new Contributor(70,23,new Date());
+		sam.setName("scott");
+        repository.save(scott);
+        Contributor kim = new Contributor(30,23,new Date());
+        kim.setName("Kim");
 		repository.save(kim);
 
         // when
-        Contributor loadedContributor = repository.findOne(kim.getId());
+        Contributor loadedContributor = repository.findOne(kim.getKey());
 
         // then
         assertThat(loadedContributor.getName(), equalTo("Kim"));
