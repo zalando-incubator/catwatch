@@ -9,6 +9,9 @@ env:
 script:
   - ./build.sh
 
+after_success:
+  - mvn clean test jacoco:report coveralls:report -pl catwatch-backend -Pjacoco
+
 notifications:
   email:
     - angela.igreja@zalando.de 
