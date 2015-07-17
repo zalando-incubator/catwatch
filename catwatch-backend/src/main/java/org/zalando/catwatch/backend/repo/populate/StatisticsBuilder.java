@@ -67,6 +67,7 @@ public class StatisticsBuilder {
 		s.setAllContributorsCount(statistics.getAllContributorsCount());
 		s.setMembersCount(statistics.getMembersCount());
 		s.setAllForksCount(statistics.getAllForksCount());
+		s.setOrganizationName(statistics.getOrganizationName());
 		return s;
 	}
 
