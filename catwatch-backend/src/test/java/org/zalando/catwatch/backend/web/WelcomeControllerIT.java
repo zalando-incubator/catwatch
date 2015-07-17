@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 public class WelcomeControllerIT extends AbstractCatwatchIT {
 
 	@Test
-	public void getHello() throws Exception {
+	public void testRootPage() throws Exception {
 		ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
 		assertThat(response.getBody(), containsString("<h1>CatWatch Backend</h1>"));
 	}
