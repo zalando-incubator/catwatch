@@ -47,6 +47,7 @@ public class ProjectBuilder {
 		p.setPrimaryLanguage(project.getPrimaryLanguage());
 		p.setForksCount(project.getForksCount());
 		p.setStarsCount(project.getStarsCount());
+		p.setOrganizationName(project.getOrganizationName());
 		return p;
 	}
 
