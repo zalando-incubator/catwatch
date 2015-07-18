@@ -9,5 +9,6 @@ if [ "$BUILD_TOOL" = "maven" ]; then
 else
 
     # nothing to do
-
+	cd .
+	
 fi
