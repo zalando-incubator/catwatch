@@ -4,23 +4,36 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-65266986-1/zalando/catwatch)](https://github.com/zalando/catwatch)
 
 # catwatch
+
 CatWatch presents statistics about your most popular projects on github.com and your most active contributors. The results are accessible via REST API and statistics website.
 
-Documentation for the sub modules:
+The project contains a webapp that fetches regularly statistics for selected accounts from GitHub.
+The webapp processes and saves the data in a database and then makes it available via a [REST-API](zalando.github.io/catwatch/).
 
-* [catwatch-backend](catwatch-backend/README.md)
-* [catwatch-ui-responsive](catwatch-ui-responsive/README.md)
+## Getting started
+
+Build and run the webapp either by Gradle or Maven.
+
+Gradle:
+
+    cd catwatch-background
+    
+    # build
+    ./gradlew build
+    
+    # run
+    java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar -Dorganization.list=<listOfGitHubAccounts>
 
 
-#### Architecture And Stack
+Maven:
 
-General:
+    cd catwatch-background
 
-* Continuous integration: Travis-CI
+    # build
+    mvn install
+    
+    # run
+    mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
 
-Backend:
 
-* Dependency injection: Spring
-* Webserver: embedded Tomcat (Spring Boot default)
-* Build: Maven and Gradle
-* Persistence: H2 via Spring Data JPA
+The webapp is available under http://localhost:8080
