@@ -8,7 +8,7 @@
 CatWatch presents statistics about your most popular projects on github.com and your most active contributors. The results are accessible via REST API and statistics website.
 
 The project contains a webapp that fetches regularly statistics for selected accounts from GitHub.
-The webapp processes and saves the data in a database and then makes it available via a [REST-API](zalando.github.io/catwatch/).
+The webapp processes and saves the data in a database and then makes it available via a [REST-API](https://zalando.github.io/catwatch/).
 
 ## Getting started
 
