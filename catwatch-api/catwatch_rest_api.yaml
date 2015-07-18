@@ -1,8 +1,8 @@
 # this is the CatWatch API specification (Swagger YAML)
 swagger: '2.0'
 info:
-  title: Catwatch API
-  description: Get your github statitics with the Catwatch API
+  title: CatWatch API
+  description: Get your GitHub statistics with the CatWatch API
   version: "0.1.0"
 # the domain of the service
 host: api.catwatch.com
@@ -19,7 +19,7 @@ paths:
       summary: General Statistics of list of Github.com Organizations
       description: |
         The Statistics endpoint returns snapshot of statistics over a given period of time of the organization 
-        Github account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations.
+        GitHub account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub.com              Organizations.
         
       parameters:
         - name: organizations
@@ -102,7 +102,7 @@ paths:
         - Contributor
       responses:
         200:
-          description: An array of Contributors of selected Github organization
+          description: An array of Contributors of selected GitHub organization
           schema:
             type: array
             items:
@@ -159,7 +159,7 @@ paths:
         - Project
       responses:
         200:
-          description: An array of Projects of selected Github organization
+          description: An array of Projects of selected GitHub organization
           schema:
             type: array
             items:
@@ -171,7 +171,7 @@ paths:
   /languages:
     get:
       summary: Project programming language
-      description: The languages endpoint returns information about the languages used for projects by selected Github Organizations order by the number of projects using the programming language.
+      description: The languages endpoint returns information about the languages used for projects by selected GitHub Organizations order by the number of projects using the programming language.
       parameters:
         - name: organizations
           in: query
@@ -259,7 +259,7 @@ definitions:
         description: Name of contributor
       gitHubUserName:
         type: string
-        description: Unique github name of contributor
+        description: Unique GitHub name of contributor
       url:
         type: string
         description: URL of contributor
