@@ -46,7 +46,7 @@ public class DatabasePopulator {
 		// create projects for galanto
 		int numProjects = random(50, 150);
 		for (int i = 0; i < numProjects; i++) {
-			newProject().name("galanto").save();
+			newProject().organizationName("galanto").save();
 		}
 
 	}

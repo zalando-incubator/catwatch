@@ -21,7 +21,11 @@ public class ProjectBuilder {
 		project.setName(randomProjectName());
 		project.setPrimaryLanguage(randomLanguage());
 		project.setForksCount(random(1, 10));
-		project.setStarsCount(random(1,4));
+		project.setStarsCount(random(1, 4));
+	}
+
+	private void updateUrl() {
+		project.setUrl("https://github.com/" + project.getOrganizationName() + "/" + project.getName());
 	}
 
 	public ProjectBuilder name(String name) {
@@ -29,12 +33,21 @@ public class ProjectBuilder {
 		return this;
 	}
 
+	public ProjectBuilder organizationName(String organizationName) {
+		project.setOrganizationName(organizationName);
+		return this;
+	}
+
 	public Project create() {
+		
+		updateUrl();
+		
 		Project p = new Project(project.getId(), project.getSnapshotDate());
 		p.setName(project.getName());
 		p.setPrimaryLanguage(project.getPrimaryLanguage());
 		p.setForksCount(project.getForksCount());
 		p.setStarsCount(project.getStarsCount());
+		p.setOrganizationName(project.getOrganizationName());
 		return p;
 	}
 

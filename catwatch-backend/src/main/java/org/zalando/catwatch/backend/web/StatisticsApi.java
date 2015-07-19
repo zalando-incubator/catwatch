@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,7 +61,7 @@ public class StatisticsApi {
 		List<Statistics> statistics = new ArrayList<>(orgs.size());
 		
 		for (String orgName : orgs){
-			statistics = repository.findByOrganizationName(orgName);
+			statistics.addAll(repository.findByOrganizationName(orgName));
 		}
 		
 		//TODO filter by start and end date

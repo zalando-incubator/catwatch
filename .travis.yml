@@ -9,6 +9,9 @@ env:
 script:
   - ./build.sh
 
+after_success:
+  - ./build-coverage.sh
+
 notifications:
   email:
     - angela.igreja@zalando.de 
