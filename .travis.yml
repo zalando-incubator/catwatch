@@ -10,7 +10,7 @@ script:
   - ./build.sh
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report -pl catwatch-backend -Pjacoco
+  - ./build-coverage.sh
 
 notifications:
   email:
