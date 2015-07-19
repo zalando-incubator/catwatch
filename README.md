@@ -5,12 +5,12 @@
 
 # catwatch
 
-CatWatch presents statistics about your most popular projects on github.com and your most active contributors. The results are accessible via REST API and statistics website.
+CatWatch provides a web application that fetches regularly statistics for your GitHub accounts from GitHub.
+The web application processes and saves the data in a database and then makes the data available via a REST-API.
+The provided data reveal the popularity of your projects, your most active contributors etc.
 
-In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggregated by a list of GitHub accounts.
+In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggregated over a list of GitHub accounts.
 
-The project contains a webapp that fetches regularly statistics for selected accounts from GitHub.
-The webapp processes and saves the data in a database and then makes it available via a [REST-API](https://zalando.github.io/catwatch/).
 
 ## Getting started
 
@@ -38,4 +38,6 @@ Maven:
     mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
 
 
-The webapp is available under http://localhost:8080
+The web application is available under http://localhost:8080
+
+It provides the [CatWatch REST-API](https://zalando.github.io/catwatch/).
