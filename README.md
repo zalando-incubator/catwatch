@@ -3,7 +3,7 @@
 [![Apache 2](http://img.shields.io/badge/license-Apache%202-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Analytics](https://ga-beacon.appspot.com/UA-65266986-1/zalando/catwatch)](https://github.com/zalando/catwatch)
 
-# catwatch
+# CatWatch
 
 CatWatch provides a web application that fetches regularly statistics for your GitHub accounts from GitHub.
 The web application processes and saves the data in a database and then makes the data available via a REST-API.
