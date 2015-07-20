@@ -10,7 +10,7 @@ host: catwatch-web.hackweek.zalan.do
 schemes:
   - https
 # will be prefixed to all paths
-basePath: /v1
+#basePath: /v1
 produces:
   - application/json
 paths:
