@@ -10,7 +10,7 @@ else
 
     cd catwatch-backend
     chmod +x gradlew
-	./gradlew clean build --info
+	./gradlew clean build --stacktrace
 	cd .. 
 
 fi
