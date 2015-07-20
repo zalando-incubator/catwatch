@@ -20,6 +20,7 @@ jar {
 repositories {
     mavenCentral()
     maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
+    maven { url "http://maven.jenkins-ci.org:8081/content/repositories/releases" }
 }
 
 sourceCompatibility = 1.8
