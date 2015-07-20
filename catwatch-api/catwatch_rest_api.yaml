@@ -5,7 +5,7 @@ info:
   description: Get your GitHub statistics with the CatWatch API
   version: "0.1.0"
 # the domain of the service
-host: api.catwatch.com
+host: https://catwatch-web.hackweek.zalan.do
 # array of all schemes that your API supports
 schemes:
   - https
