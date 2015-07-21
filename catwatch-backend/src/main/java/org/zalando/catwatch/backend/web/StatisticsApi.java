@@ -73,10 +73,13 @@ public class StatisticsApi {
 		
 		List<Statistics> unaggregatedStatistics = new ArrayList<>();
 		
+		
 		if(startDate == null && endDate ==null){
 			for (String orgName : orgs){
 
 				List<Statistics> s = repository.findByOrganizationNameOrderByKeySnapshotDateDesc(orgName, new PageRequest(0, 1));
+				
+				System.out.println(s.get(0));
 				
 				unaggregatedStatistics.addAll(s);
 			}
@@ -89,6 +92,7 @@ public class StatisticsApi {
 			//filter by start and end date
 			
 			statistics = getStatisticsByDate(orgs, startDate, endDate);
+
 		}
 		
 		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);

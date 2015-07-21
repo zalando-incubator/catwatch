@@ -53,10 +53,6 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 
 		ResponseEntity<Statistics[]> response = template.getForEntity(url, Statistics[].class);
 
-		// ResponseEntity<String> response = template.getForEntity(url,
-		// String.class);
-		// System.out.println(response.getBody());
-
 		Statistics[] statsResponse = response.getBody();
 
 		// then
