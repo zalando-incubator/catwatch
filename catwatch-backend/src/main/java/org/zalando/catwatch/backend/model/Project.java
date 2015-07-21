@@ -30,7 +30,7 @@ public class Project {
 	private Integer commitsCount = null;
 	private Integer forksCount = null;
 	private Integer contributorsCount = null;
-	private String score = null;
+	private Integer score = null;
 	private String lastPushed = null;
 	private String primaryLanguage = null;
 	private Date snapshotDate = null;
@@ -159,11 +159,11 @@ public class Project {
 	 **/
 	@ApiModelProperty(value = "Score of project.")
 	@JsonProperty("score")
-	public String getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(Integer score) {
 		this.score = score;
 	}
 

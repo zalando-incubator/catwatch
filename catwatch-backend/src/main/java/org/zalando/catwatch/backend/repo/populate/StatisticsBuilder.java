@@ -52,6 +52,36 @@ public class StatisticsBuilder {
 		statistics.setProgramLanguagesCount(programLanguagesCount);
 		return this;
 	}
+	
+	public StatisticsBuilder allContributersCount(int contributersCount) {
+		statistics.setAllContributorsCount(contributersCount);
+		return this;
+	}
+	
+	public StatisticsBuilder allSize(int sizeCount) {
+		statistics.setAllSizeCount(sizeCount);
+		return this;
+	}
+	
+	public StatisticsBuilder membersCount(int membersCount) {
+		statistics.setMembersCount(membersCount);
+		return this;
+	}
+	
+	public StatisticsBuilder privateProjectCount(int privateProjectCount) {
+		statistics.setPrivateProjectCount(privateProjectCount);
+		return this;
+	}
+	
+	public StatisticsBuilder tagsCount(int tagsCount) {
+		statistics.setTagsCount(tagsCount);
+		return this;
+	}
+	
+	public StatisticsBuilder teamsCount(int teamsCount) {
+		statistics.setTeamsCount(teamsCount);
+		return this;
+	}
 
 	public StatisticsBuilder days(int numDaysBeforeNow) {
 		statistics.getKey().setSnapshotDate(Date.from(now().minus(numDaysBeforeNow, DAYS)));
@@ -60,13 +90,18 @@ public class StatisticsBuilder {
 
 	public Statistics create() {
 		Statistics s = new Statistics(statistics.getId(), statistics.getSnapshotDate());
-		s.setPublicProjectCount(statistics.getPrivateProjectCount());
+		s.setPublicProjectCount(statistics.getPublicProjectCount());
 		s.setAllStarsCount(statistics.getAllStarsCount());
 		s.setAllForksCount(statistics.getAllForksCount());
 		s.setProgramLanguagesCount(statistics.getProgramLanguagesCount());
 		s.setAllContributorsCount(statistics.getAllContributorsCount());
 		s.setMembersCount(statistics.getMembersCount());
 		s.setAllForksCount(statistics.getAllForksCount());
+		s.setTeamsCount(statistics.getTeamsCount());
+		s.setTagsCount(statistics.getTagsCount());
+		s.setPrivateProjectCount(statistics.getPrivateProjectCount());
+		s.setMembersCount(statistics.getMembersCount());
+		s.setAllSizeCount(statistics.getAllSizeCount());
 		s.setOrganizationName(statistics.getOrganizationName());
 		return s;
 	}
