@@ -20,12 +20,17 @@ jar {
 repositories {
     mavenCentral()
     maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
+    maven { url "http://maven.jenkins-ci.org/content/repositories/releases" }
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    // github api
+    compile("com.squareup.okhttp:okhttp-urlconnection:2.4.0")
+    compile("com.squareup.okhttp:okhttp:2.4.0")
+    compile("org.kohsuke:github-api:1.68")
     // web
 	compile("org.springframework.boot:spring-boot-starter-web")
     compile("io.swagger:swagger-annotations:1.5.0")
@@ -35,6 +40,9 @@ dependencies {
     compile("com.h2database:h2")
     // monitoring
 	compile("org.springframework.boot:spring-boot-starter-actuator")
+    // logging
+    compile("ch.qos.logback:logback-classic:1.1.3")
+    compile("org.slf4j:slf4j-api:1.7.12")
 	// test
 	testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit")

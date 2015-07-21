@@ -30,7 +30,7 @@ SenzaComponents:
         health_check_path: /health
         ports:
           8080: 8080
-        mint_bucket: "zalando-stups-mint-187355903146-eu-west-1"
+        mint_bucket: "zalando-stups-mint-600231584188-eu-west-1"
 
   # creates an ELB entry and Route53 domains to this ELB
   - AppLoadBalancer:

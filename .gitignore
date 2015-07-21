@@ -13,6 +13,10 @@ bin/
 log/
 target/
 
+#Gradle
+build/
+.gradle/
+
 # Java
 *.class
 

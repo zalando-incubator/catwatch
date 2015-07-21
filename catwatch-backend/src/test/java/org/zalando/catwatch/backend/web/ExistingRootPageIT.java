@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
-public class WelcomeControllerIT extends AbstractCatwatchIT {
+public class ExistingRootPageIT extends AbstractCatwatchIT {
 
 	@Test
 	public void testRootPage() throws Exception {
