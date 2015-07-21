@@ -1,6 +1,12 @@
 package org.zalando.catwatch.backend.util;
 
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Assert;
@@ -116,5 +122,203 @@ public class DataAggregatorTest {
 		Assert.assertNotNull(result.getId());
 		Assert.assertTrue(result.getOrganizationName().contains(ORGANIZATION1));
 		Assert.assertTrue(result.getOrganizationName().contains(ORGANIZATION2));
+	}
+	
+	@Test
+	public void testAggregateHistoricalStatistics(){
+		
+		//given
+		List<List<Statistics>> history = generateStatisticHistory();
+		
+		//when
+		Collection<Statistics> aggregatedHistory = DataAggregator.aggregateHistoricalStatistics(history);
+		
+		//then
+		Assert.assertNotNull(aggregatedHistory);
+		Assert.assertEquals(3, aggregatedHistory.size());
+		
+		Iterator<Statistics> iter = aggregatedHistory.iterator();
+		
+		//check the first aggregated record
+		checkStatisticsRecord(history, 0, iter.next());
+		
+		//check the second aggregated record
+		checkStatisticsRecord(history, 1, iter.next());
+		
+		//check the second aggregated record
+		checkStatisticsRecord(history, 2, iter.next());
+	}
+	
+	
+	private void checkStatisticsRecord(List<List<Statistics>> statLists, int recordNr, Statistics actual){
+		
+		List<Statistics> organizationsStats = new ArrayList<>();
+		
+		for(List<Statistics> stats : statLists){
+			
+			Assert.assertTrue(stats.size()>=recordNr);
+			
+			organizationsStats.add(stats.get(recordNr));
+		}
+		
+		TestUtils.checkEquals(DataAggregator.aggregateStatistics(organizationsStats), actual, false);
+	}
+	
+	
+	private List<List<Statistics>> generateStatisticHistory(){
+		//given 
+		Date oneDayAgo = Date.from(now().minus(1, DAYS));
+		Date twoDaysAgo = Date.from(now().minus(2, DAYS));
+		Date threeDaysAgo = Date.from(now().minus(3, DAYS));
+		
+		Statistics org1Day1 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION1)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(oneDayAgo)
+				.create();
+		
+		Statistics org1Day2 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION1)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(twoDaysAgo)
+				.create();
+		
+		Statistics org1Day3 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION1)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(threeDaysAgo)
+				.create();
+		
+		
+		Statistics org2Day1 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION2)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(oneDayAgo)
+				.create();
+		
+		Statistics org2Day2 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION2)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(twoDaysAgo)
+				.create();
+		
+		Statistics org2Day3 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION2)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(threeDaysAgo)
+				.create();
+		
+		Statistics org3Day1 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION3)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(oneDayAgo)
+				.create();
+		
+		Statistics org3Day2 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION3)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(twoDaysAgo)
+				.create();
+		
+		Statistics org3Day3 = new StatisticsBuilder(null)
+				.allContributersCount(100)
+				.allForksCount(200)
+				.allSize(300)
+				.allStarsCount(400)
+				.membersCount(500)
+				.organizationName(ORGANIZATION3)
+				.privateProjectCount(600)
+				.programLanguagesCount(700)
+				.tagsCount(800)
+				.teamsCount(900)
+				.snapshotDate(threeDaysAgo)
+				.create();
+		
+		
+		List<Statistics> org1Records = new ArrayList<>();
+		org1Records.add(org1Day1);
+		org1Records.add(org1Day2);
+		org1Records.add(org1Day3);
+		
+		List<Statistics> org2Records = new ArrayList<>();
+		org2Records.add(org2Day1);
+		org2Records.add(org2Day2);
+		org2Records.add(org2Day3);
+		
+		List<Statistics> org3Records = new ArrayList<>();
+		org3Records.add(org3Day1);
+		org3Records.add(org3Day2);
+		org3Records.add(org3Day3);
+		
+		List<List<Statistics>> history = new ArrayList<>();
+		history.add(org1Records);
+		history.add(org2Records);
+		history.add(org3Records);
+		
+		return history;
 	}
 }

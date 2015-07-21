@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.util.TestUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
@@ -69,7 +70,7 @@ public class StatisticsRepositoryIT {
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
 
-		checkEquals(s1, statistics.get(0));
+		TestUtils.checkEquals(s1, statistics.get(0));
 
 		// store a second statistic for the same organizaiton
 		this.s2.setOrganizationName(ORGANIZATION1);
@@ -104,7 +105,7 @@ public class StatisticsRepositoryIT {
 						+ " should be equal to one, since the added statistic should ovveride the existing one",
 				statistics.size(), Matchers.equalTo(1));
 
-		checkEquals(statistics.get(0), s3);
+		TestUtils.checkEquals(statistics.get(0), s3);
 
 	}
 
@@ -137,7 +138,7 @@ public class StatisticsRepositoryIT {
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
 
-		checkEquals(s1, statistics.get(0));
+		TestUtils.checkEquals(s1, statistics.get(0));
 
 		// add a newer statistics entry
 		this.s2.setOrganizationName(ORGANIZATION1);
@@ -150,7 +151,7 @@ public class StatisticsRepositoryIT {
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
 
-		checkEquals(s2, statistics.get(0));
+		TestUtils.checkEquals(s2, statistics.get(0));
 
 		// add an older statistics record
 		this.s3.setOrganizationName(ORGANIZATION1);
@@ -163,7 +164,7 @@ public class StatisticsRepositoryIT {
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
 
-		checkEquals(s2, statistics.get(0));
+		TestUtils.checkEquals(s2, statistics.get(0));
 
 		// add statistics of another organization, but with the newest time
 		// stamp
@@ -177,7 +178,7 @@ public class StatisticsRepositoryIT {
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
 
-		checkEquals(s2, statistics.get(0));
+		TestUtils.checkEquals(s2, statistics.get(0));
 	}
 
 	@Test
@@ -245,7 +246,7 @@ public class StatisticsRepositoryIT {
 		// return
 		// repository.findByOrganizationNameAndSnapshotDateAfterAndSnapshotDateBeforeOrderBySnapshotDateDesc(
 		// ORGANIZATION1, startDate, endDate);
-		return repository.findX(ORGANIZATION1, startDate, endDate);
+		return repository.findStatisticsByOrganizationAndDate(ORGANIZATION1, startDate, endDate);
 	}
 
 	private Statistics createAndSaveStatistics(String organizationName, Date snapshotDate) {
@@ -276,38 +277,38 @@ public class StatisticsRepositoryIT {
 		s6 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-600));
 	}
 
-	private void checkEquals(Statistics expected, Statistics actual) {
-		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
-				actual.getAllContributorsCount());
-
-		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
-
-		Assert.assertEquals("ID is different", expected.getId(), actual.getId());
-
-		Assert.assertEquals("Number of contributors is different", expected.getAllForksCount(),
-				actual.getAllForksCount());
-
-		Assert.assertEquals("Number of size is different", expected.getAllSizeCount(), actual.getAllSizeCount());
-
-		Assert.assertEquals("Number of stars is different", expected.getAllStarsCount(), actual.getAllStarsCount());
-
-		Assert.assertEquals("Number of members is different", expected.getMembersCount(), actual.getMembersCount());
-
-		Assert.assertEquals("Oranization names are different", expected.getOrganizationName(),
-				actual.getOrganizationName());
-
-		Assert.assertEquals("Number of projects is different", expected.getPrivateProjectCount(),
-				actual.getPrivateProjectCount());
-
-		Assert.assertEquals("Number of programming languages is different", expected.getProgramLanguagesCount(),
-				actual.getProgramLanguagesCount());
-
-		Assert.assertEquals("Number of public projects is different", expected.getPublicProjectCount(),
-				actual.getPublicProjectCount());
-
-		Assert.assertEquals("Number of tags is different", expected.getTagsCount(), actual.getTagsCount());
-
-		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
-
-	}
+//	private void checkEquals(Statistics expected, Statistics actual) {
+//		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
+//				actual.getAllContributorsCount());
+//
+//		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
+//
+//		Assert.assertEquals("ID is different", expected.getId(), actual.getId());
+//
+//		Assert.assertEquals("Number of contributors is different", expected.getAllForksCount(),
+//				actual.getAllForksCount());
+//
+//		Assert.assertEquals("Number of size is different", expected.getAllSizeCount(), actual.getAllSizeCount());
+//
+//		Assert.assertEquals("Number of stars is different", expected.getAllStarsCount(), actual.getAllStarsCount());
+//
+//		Assert.assertEquals("Number of members is different", expected.getMembersCount(), actual.getMembersCount());
+//
+//		Assert.assertEquals("Oranization names are different", expected.getOrganizationName(),
+//				actual.getOrganizationName());
+//
+//		Assert.assertEquals("Number of projects is different", expected.getPrivateProjectCount(),
+//				actual.getPrivateProjectCount());
+//
+//		Assert.assertEquals("Number of programming languages is different", expected.getProgramLanguagesCount(),
+//				actual.getProgramLanguagesCount());
+//
+//		Assert.assertEquals("Number of public projects is different", expected.getPublicProjectCount(),
+//				actual.getPublicProjectCount());
+//
+//		Assert.assertEquals("Number of tags is different", expected.getTagsCount(), actual.getTagsCount());
+//
+//		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
+//
+//	}
 }
