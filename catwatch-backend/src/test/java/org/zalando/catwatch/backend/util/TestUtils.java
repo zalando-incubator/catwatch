@@ -8,12 +8,17 @@ import org.zalando.catwatch.backend.model.Statistics;
 public class TestUtils {
 	
 	public static void checkEquals(Statistics expected, Statistics actual) {
+		
+		checkEquals(expected, actual, true);
+	}
+	
+	public static void checkEquals(Statistics expected, Statistics actual, boolean checkIds) {
 		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
 				actual.getAllContributorsCount());
 
 		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
 
-		Assert.assertEquals("ID is different", expected.getId(), actual.getId());
+		if(checkIds) Assert.assertEquals("ID is different", expected.getId(), actual.getId());
 
 		Assert.assertEquals("Number of contributors is different", expected.getAllForksCount(),
 				actual.getAllForksCount());
@@ -39,9 +44,7 @@ public class TestUtils {
 		Assert.assertEquals("Number of tags is different", expected.getTagsCount(), actual.getTagsCount());
 
 		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
-
 	}
-	
 	
 	public static void checkAggregatedStatistics(Statistics actual, ArrayList<Statistics> arrayList) {
 		Integer 

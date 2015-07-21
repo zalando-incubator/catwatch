@@ -82,6 +82,11 @@ public class StatisticsBuilder {
 		statistics.setTeamsCount(teamsCount);
 		return this;
 	}
+	
+	public StatisticsBuilder snapshotDate(Date snapshotDate) {
+		statistics.setSnapshotDate(snapshotDate);
+		return this;
+	}
 
 	public StatisticsBuilder days(int numDaysBeforeNow) {
 		statistics.getKey().setSnapshotDate(Date.from(now().minus(numDaysBeforeNow, DAYS)));

@@ -2,12 +2,15 @@ package org.zalando.catwatch.backend.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.util.DataAggregator;
 import org.zalando.catwatch.backend.util.StringParser;
 
 import io.swagger.annotations.Api;
@@ -48,28 +52,85 @@ public class StatisticsApi {
 			
 			@ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)") 
 			@RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false) 
-			Date startDate, 
+			String startDate, 
 			
 			@ApiParam(value = "Date till which statistics records will be fetched from database(default = current date)") 
 			@RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false) 
-			Date endDate
+			String endDate
 
 	) throws NotFoundException {
 		
-		Collection<String> orgs = StringParser.parseStringList(organizations, ",");
+		String organisationList = organizations;
 		
-		List<Statistics> statistics = new ArrayList<>(orgs.size());
-		
-		for (String orgName : orgs){
-			statistics.addAll(repository.findByOrganizationName(orgName));
+		if(organisationList==null){
+			//TODO read organizations from config file
 		}
 		
-		//TODO filter by start and end date
+		Collection<String> orgs = StringParser.parseStringList(organisationList, ",");
+		
+		Collection<Statistics> statistics = new ArrayList<>(orgs.size());
+		
+		
+		List<Statistics> unaggregatedStatistics = new ArrayList<>();
+		
+		
+		if(startDate == null && endDate ==null){
+			for (String orgName : orgs){
+
+				List<Statistics> s = repository.findByOrganizationNameOrderByKeySnapshotDateDesc(orgName, new PageRequest(0, 1));
+				
+				System.out.println(s.get(0));
+				
+				unaggregatedStatistics.addAll(s);
+			}
+			
+			Statistics aggregatedStatistics = DataAggregator.aggregateStatistics(unaggregatedStatistics);
+			
+			statistics.add(aggregatedStatistics);
+		}
+		else{
+			//filter by start and end date
+			
+			statistics = getStatisticsByDate(orgs, startDate, endDate);
+
+		}
 		
 		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
 		
-		//TODO  do some magic!
 		return res;
+	}
+	
+	
+	private Collection<Statistics> getStatisticsByDate(Collection<String> orgs, String startDate, String endDate){
+		
+		if(endDate!=null && startDate==null){
+			throw new IllegalArgumentException("No start date specified");
+		}
+		
+		Date start, end;
+		try {
+			start = StringParser.getDate(startDate);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid date format for stardDate");
+		}
+		
+		
+		try {
+			end = endDate == null ? new Date() : StringParser.getDate(endDate);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Invalid date format for endDate");
+		}
+		
+		List<List<Statistics>> statisticsLists = new ArrayList<>();
+		
+		//get statistics for each organization
+		for (String orgName : orgs){
+
+			List<Statistics> s = repository.findStatisticsByOrganizationAndDate(orgName, start, end);
+			statisticsLists.add(s);
+		}
+		
+		return DataAggregator.aggregateHistoricalStatistics(statisticsLists);
 	}
 
 }
