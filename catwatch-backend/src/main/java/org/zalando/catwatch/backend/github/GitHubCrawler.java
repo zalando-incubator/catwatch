@@ -19,10 +19,22 @@ import java.util.concurrent.Callable;
 
 import static java.util.stream.Collectors.*;
 
-// TODO javadoc
+/**
+ * A task to get organisation snapshot from GitHub using API V3.
+ * <p>
+ * The code of this class is not optimised in terms of number of API requests in
+ * favour of code simplicity and readability. However, this should not affect
+ * API rate limit since http cache is used. If Api limit is reached the task is
+ * blocked until the limit is reset.
+ *
+ * @see RateLimitHandler
+ * @see <a href="https://developer.github.com/v3/#rate-limiting">API documentation from GitHub</a>
+ */
 public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
 
-    // TODO javadoc
+    /**
+     * Helper class for returning computation results.
+     */
     public static class Snapshot {
         public Statistics statistics;
         public Collection<Project> projects;
@@ -38,7 +50,13 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
     private final String cachePath;
     private final int cacheSize;
 
-    // TODO javadoc
+    /**
+     * Constructs new task with the specified parameters.
+     *
+     * @param organisationTitle title of organisation on GitHub
+     * @param cachePath         path to the cache folder
+     * @param cacheSize         allocated cache size in megabytes
+     */
     public GitHubCrawler(String organisationTitle, String cachePath, int cacheSize) {
         this.snapshotDate = Date.from(ZonedDateTime.now().toInstant());
         this.organisationTitle = organisationTitle;
@@ -46,7 +64,12 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         this.cacheSize = cacheSize * MEGABYTE;
     }
 
-    // TODO javadoc
+    /**
+     * Initializes cache and collects organisation statistics from GitHub.
+     *
+     * @return Snapshot object containing organisation statistics.
+     * @throws Exception
+     */
     @Override
     public Snapshot call() throws Exception {
         File cacheDirectory = new File(cachePath);
@@ -56,8 +79,8 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
                         new OkUrlFactory(
                                 new OkHttpClient().setCache(cache))))
                 .build();
-        GHOrganization organization = gitHub.getOrganization(organisationTitle);
-        List<GHRepository> repositories = organization.listRepositories(MAX_PAGE_SIZE).asList().stream()
+        final GHOrganization organization = gitHub.getOrganization(organisationTitle);
+        final List<GHRepository> repositories = organization.listRepositories(MAX_PAGE_SIZE).asList().stream()
                 .filter(r -> !r.isPrivate())
                 .collect(toList());
 
@@ -70,7 +93,6 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         return snapshot;
     }
 
-    // TODO javadoc
     private Statistics collectStatistics(List<GHRepository> repositories, GHOrganization organization) throws IOException {
         Statistics statistics = new Statistics(organization.getId(), snapshotDate);
 
@@ -106,7 +128,6 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         return statistics;
     }
 
-    // TODO javadoc
     private Collection<Project> collectProjects(List<GHRepository> repositories) throws IOException, URISyntaxException {
         List<Project> projects = new ArrayList<>();
 
@@ -132,7 +153,6 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         return projects;
     }
 
-    // TODO javadoc
     private Collection<Contributor> collectContributors(List<GHRepository> repositories, GHOrganization organization) throws IOException, URISyntaxException {
         Collection<Contributor> contributors = new ArrayList<>();
 
@@ -153,7 +173,7 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
                 .collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparingInt(GHObject::getId))),
                         ArrayList::new));
 
-        // Build list of contributors
+        // Build a list of contributors
         for (GHRepository.Contributor ghContributor : ghContributors) {
             Contributor contributor = new Contributor(ghContributor.getId(), organization.getId(), snapshotDate);
 
@@ -170,7 +190,6 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         return contributors;
     }
 
-    // TODO javadoc
     private Collection<Language> collectLanguages(List<GHRepository> repositories) {
         Collection<Language> languages = new ArrayList<>();
 
@@ -198,7 +217,9 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         return languages;
     }
 
-    // TODO javadoc
+    /**
+     * Helper method to rethrow checked exception.
+     */
     private PagedIterable<GHRepository.Contributor> getContributors(GHRepository repository) {
         try {
             return repository.listContributors();
@@ -207,7 +228,9 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         }
     }
 
-    // TODO javadoc
+    /**
+     * Helper method to rethrow checked exception.
+     */
     private PagedIterable<GHTag> getTags(GHRepository repository) {
         try {
             return repository.listTags();
@@ -216,7 +239,9 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
         }
     }
 
-    // TODO javadoc
+    /**
+     * Helper method to rethrow checked exception.
+     */
     private Map<String, Long> getLanguages(GHRepository repository) {
         try {
             return repository.listLanguages();
