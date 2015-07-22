@@ -2,8 +2,8 @@ package org.zalando.catwatch.backend.model;
 
 import java.util.Date;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,18 +15,20 @@ import io.swagger.annotations.ApiModelProperty;
 		+ "Equals to a GitHub acocunt. See https://developer.github.com/v3/users/#get-a-single-user")
 public class Contributor {
 
-	@Id
+	@EmbeddedId
 	private ContributorKey key;
 
 	private String name = null;
 	private String url = null;
 	private Integer organizationalCommitsCount = null;
+	/**
+	 * todo
+	 */
 	private Integer personalCommitsCount = null;
 	private Integer personalProjectsCount = null;
 	private Integer organizationalProjectsCount = null;
 	private String organizationName = null;
 
-	
 	public Contributor() {
 		super();
 	}
