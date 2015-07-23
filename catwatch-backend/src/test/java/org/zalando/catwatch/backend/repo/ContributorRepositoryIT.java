@@ -38,20 +38,21 @@ public class ContributorRepositoryIT {
 		Contributor cb2 = newContributor().days(2).orgCommits(21).id(cb1.getId()).save();
 
 		// when
-		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca1.getSnapshotDate(), null, null);
+		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca1.getSnapshotDate(), null, null,
+				null);
 
 		// then
 		assertContributors(contributors, ca1, cb1);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca2.getSnapshotDate(), null, null);
+		contributors = repository.findAllTimeTopContributors(null, ca2.getSnapshotDate(), null, null, null);
 
 		// then
 		assertContributors(contributors, cb2, ca2);
 
 		// when
 		try {
-			contributors = repository.findAllTimeTopContributors(null, null, null, null);
+			contributors = repository.findAllTimeTopContributors(null, null, null, null, null);
 		} catch (NullPointerException e) {
 			// then
 			assertThat(e.getMessage(), containsString("snapshot date must not be null but was"));
@@ -69,16 +70,49 @@ public class ContributorRepositoryIT {
 
 		// when
 		List<Contributor> contributors = repository.findAllTimeTopContributors(ca1.getOrganizationId(),
-				ca1.getSnapshotDate(), null, null);
+				ca1.getSnapshotDate(), null, null, null);
 
 		// then
 		assertContributors(contributors, ca1);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca1.getSnapshotDate(), null, null);
+		contributors = repository.findAllTimeTopContributors(null, ca1.getSnapshotDate(), null, null, null);
 
 		// then
 		assertContributors(contributors, ca1, cb1);
+	}
+
+	@Test
+	public void findAllTimeTopContributors_FilterByNamePrefix() throws Exception {
+
+		// given
+		repository.deleteAll();
+		Contributor c = newContributor().name("John").save();
+
+		// when
+		List<Contributor> contributors = repository.findAllTimeTopContributors(null, c.getSnapshotDate(), "Joh", null,
+				null);
+
+		// then
+		assertContributors(contributors, c);
+
+		// when
+		contributors = repository.findAllTimeTopContributors(null, c.getSnapshotDate(), "John", null, null);
+
+		// then
+		assertContributors(contributors, c);
+
+		// when
+		contributors = repository.findAllTimeTopContributors(null, c.getSnapshotDate(), "Jah", null, null);
+
+		// then
+		assertContributors(contributors);
+
+		// when
+		contributors = repository.findAllTimeTopContributors(null, c.getSnapshotDate(), "Johnny", null, null);
+
+		// then
+		assertContributors(contributors);
 	}
 
 	@Test
@@ -92,37 +126,37 @@ public class ContributorRepositoryIT {
 		Contributor cd = newContributor().days(1).orgCommits(20).save();
 
 		// when
-		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), 0, 2);
+		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 0, 2);
 
 		// then
 		assertContributors(contributors, ca, cb);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), 1, 2);
+		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 1, 2);
 
 		// then
 		assertContributors(contributors, cb, cc);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), 3, 2);
+		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 3, 2);
 
 		// then
 		assertContributors(contributors, cd);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), 4, 2);
+		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 4, 2);
 
 		// then
 		assertContributors(contributors);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 2);
+		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, null, 2);
 
 		// then
 		assertContributors(contributors, ca, cb);
 
 		// when
-		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), 1, null);
+		contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, 1, null);
 
 		// then
 		assertContributors(contributors, cb, cc, cd);
@@ -137,7 +171,8 @@ public class ContributorRepositoryIT {
 		Contributor cb = newContributor().days(1).orgCommits(23).save();
 
 		// when
-		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, null);
+		List<Contributor> contributors = repository.findAllTimeTopContributors(null, ca.getSnapshotDate(), null, null,
+				null);
 
 		// then
 		assertContributors(contributors, cb, ca);

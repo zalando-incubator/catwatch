@@ -23,8 +23,8 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 	private EntityManager em;
 
 	@Override
-	public List<Contributor> findAllTimeTopContributors(Long organizationId, Date snapshotDate, Integer offset,
-			Integer limit) {
+	public List<Contributor> findAllTimeTopContributors(Long organizationId, Date snapshotDate, String namePrefix,
+			Integer offset, Integer limit) {
 
 		checkNotNull(snapshotDate, "snapshot date must not be null but was");
 
@@ -37,18 +37,24 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 
 		// define constraints
 		List<Predicate> andPredicates = new ArrayList<Predicate>();
-		if (organizationId != null) {
-			andPredicates.add(cb.equal(key.get("organizationId"), organizationId));
+		{
+			if (organizationId != null) {
+				andPredicates.add(cb.equal(key.get("organizationId"), organizationId));
+			}
+			
+			andPredicates.add(cb.equal(key.<Date> get("snapshotDate"), snapshotDate));
+			
+			if (namePrefix != null) {
+				andPredicates.add(cb.like(contributor.get("name"), namePrefix + "%"));
+			}
 		}
-		 andPredicates.add(cb.equal(key.<Date>get("snapshotDate"),
-		 snapshotDate));
 
 		return em
 				.createQuery(cq //
 						.select(contributor) //
 						.where(andPredicates.toArray(new Predicate[andPredicates.size()])) //
 						.orderBy(cb.desc(contributor.get("organizationalCommitsCount"))))
-				.setFirstResult(offset == null ? 0: offset) //
+				.setFirstResult(offset == null ? 0 : offset) //
 				.setMaxResults(limit == null ? 10000000 : limit) //
 				.getResultList();
 	}
