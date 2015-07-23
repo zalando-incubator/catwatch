@@ -11,7 +11,12 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <root level="debug">
+    <logger name="org.zalando.catwatch">
+        <level value="DEBUG" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
