@@ -2,7 +2,6 @@ package org.zalando.catwatch.backend.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,14 +9,18 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.SystemPropertyUtils;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.util.Constants;
@@ -38,7 +41,8 @@ public class StatisticsApi {
     @Autowired
     private StatisticsRepository repository;
     
-	
+    @Autowired
+    private Environment env;
 
 	@ApiOperation(
 			value = "General Statistics of list of Github.com Organizations", 
@@ -46,8 +50,8 @@ public class StatisticsApi {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "An array of Statistics over selected period of time."), @ApiResponse(code = 0, message = "Unexpected error") })
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ResponseEntity<Collection<Statistics>> statisticsGet(
-			@ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = true) 
-			@RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = true) 
+			@ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = false) 
+			@RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = false) 
 			String organizations, 
 			
 			@ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)") 
@@ -63,7 +67,7 @@ public class StatisticsApi {
 		String organisationList = organizations;
 		
 		if(organisationList==null){
-			//TODO read organizations from config file
+			organisationList = getOrganizationConfig();
 		}
 		
 		Collection<String> orgs = StringParser.parseStringList(organisationList, ",");
@@ -79,20 +83,21 @@ public class StatisticsApi {
 
 				List<Statistics> s = repository.findByOrganizationNameOrderByKeySnapshotDateDesc(orgName, new PageRequest(0, 1));
 				
-				System.out.println(s.get(0));
-				
 				unaggregatedStatistics.addAll(s);
 			}
 			
-			Statistics aggregatedStatistics = DataAggregator.aggregateStatistics(unaggregatedStatistics);
+			if(unaggregatedStatistics!=null && unaggregatedStatistics.size()>0){
+				Statistics aggregatedStatistics = DataAggregator.aggregateStatistics(unaggregatedStatistics);
+				
+				statistics.add(aggregatedStatistics);
+			}
 			
-			statistics.add(aggregatedStatistics);
 		}
 		else{
 			//filter by start and end date
 			
+			
 			statistics = getStatisticsByDate(orgs, startDate, endDate);
-
 		}
 		
 		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
@@ -101,24 +106,47 @@ public class StatisticsApi {
 	}
 	
 	
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public String handleException(Exception e) {
+	    return e.getMessage();
+	}
+	
+	
+	
+	private String getOrganizationConfig() {
+		
+		if(!env.containsProperty(Constants.CONFIG_ORGANIZATION_LIST)){
+			//TODO throw new exception
+		}
+		
+		return env.getProperty("organization.list");
+	}
+
+
 	private Collection<Statistics> getStatisticsByDate(Collection<String> orgs, String startDate, String endDate){
 		
 		if(endDate!=null && startDate==null){
 			throw new IllegalArgumentException("No start date specified");
 		}
 		
+		if(startDate==null && endDate!=null){
+			throw new IllegalArgumentException("Start date parameter missing");
+		}
+		
 		Date start, end;
 		try {
 			start = StringParser.getDate(startDate);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format for stardDate");
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for stardDate");
 		}
 		
 		
 		try {
 			end = endDate == null ? new Date() : StringParser.getDate(endDate);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format for endDate");
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for endDate");
 		}
 		
 		List<List<Statistics>> statisticsLists = new ArrayList<>();

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.StringParser;
 import org.zalando.catwatch.backend.util.TestUtils;
 
@@ -48,8 +48,7 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 
 		// when
 		String organisations = s1.getOrganizationName() + "," + s2.getOrganizationName();
-		String url = base.toString() + Constants.API_RESOURCE_STATISTICS + "?"
-				+ Constants.API_REQUEST_PARAM_ORGANIZATIONS + "=" + organisations;
+		String url = TestUtils.createStatisticsUrl(organisations, null, null);
 
 		ResponseEntity<Statistics[]> response = template.getForEntity(url, Statistics[].class);
 
@@ -103,28 +102,15 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 		String end = StringParser.getISO8601StringForDate(twoDaysAgo);
 
 		// create url
-		StringBuilder sb = new StringBuilder().append(base.toString()).append(Constants.API_RESOURCE_STATISTICS)
-				.append("?" + Constants.API_REQUEST_PARAM_ORGANIZATIONS + "=" + ORGANIZATION1)
-				.append("&" + Constants.API_REQUEST_PARAM_STARTDATE + "=" + start)
-				.append("&" + Constants.API_REQUEST_PARAM_ENDDATE + "=" + end);
-
-		String url = sb.toString();
+		String url = TestUtils.createStatisticsUrl(ORGANIZATION1, start, end);
 		
-		System.out.println("calling url "+url);
-
 		// when
 		ResponseEntity<Statistics[]> response = template.getForEntity(url, Statistics[].class);
 
-		// ResponseEntity<String> response = template.getForEntity(url,
-		// String.class);
-		// System.out.println(response.getBody());
-		
 		List<Statistics> statsResponse = Arrays.asList(response.getBody());
 		
 		System.out.println(statsResponse);
 		
-		//Statistics[] statsResponse = response.getBody();
-
 		// then
 		Assert.assertNotNull(statsResponse);
 
@@ -175,17 +161,16 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 		s2.setTeamsCount(1);
 		s2.setOrganizationName("organization2");
 
-		s3 = new Statistics(new Double(Math.random() * 10000).intValue(),
-				new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
-		s3.setOrganizationName("organization3");
+		s3 = new StatisticsBuilder(null)
+				.organizationName("organization3")
+				.create();
 
-		s4 = new Statistics(new Double(Math.random() * 10000).intValue(),
-				new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
-		s4.setOrganizationName("organization4");
-
-		s5 = new Statistics(new Double(Math.random() * 10000).intValue(),
-				new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
-		s5.setOrganizationName("organization5");
-
+		s4 = new StatisticsBuilder(null)
+				.organizationName("organization4")
+				.create();
+		
+		s5 = new StatisticsBuilder(null)
+				.organizationName("organization5")
+				.create();
 	}
 }
