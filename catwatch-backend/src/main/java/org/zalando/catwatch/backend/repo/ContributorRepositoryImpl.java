@@ -45,7 +45,7 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 			andPredicates.add(cb.equal(key.<Date> get("snapshotDate"), snapshotDate));
 			
 			if (namePrefix != null) {
-				andPredicates.add(cb.like(contributor.get("name"), namePrefix + "%"));
+				andPredicates.add(cb.like(contributor.get("name"), namePrefix.replace("%", "[%]") + "%"));
 			}
 		}
 
@@ -84,7 +84,7 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 				andPredicates.add(cb.<Date> lessThanOrEqualTo(key.<Date> get("snapshotDate"), endDate));
 			}
 			if (namePrefix != null) {
-				andPredicates.add(cb.like(contributor.get("name"), namePrefix + "%"));
+				andPredicates.add(cb.like(contributor.get("name"), namePrefix.replace("%", "[%]") + "%"));
 			}
 		}
 

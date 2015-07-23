@@ -116,6 +116,21 @@ public class ContributorRepositoryIT {
 	}
 
 	@Test
+	public void findAllTimeTopContributors_FilterByNamePrefix_EdgeCases() throws Exception {
+
+		// given
+		repository.deleteAll();
+		Contributor c = newContributor().name("abcxyz").save();
+
+		// when
+		List<Contributor> contributors = repository.findAllTimeTopContributors(null, c.getSnapshotDate(), "%xyz", null,
+				null);
+
+		// then
+		assertContributors(contributors);
+	}
+
+	@Test
 	public void findAllTimeTopContributors_Pagination() throws Exception {
 
 		// given
