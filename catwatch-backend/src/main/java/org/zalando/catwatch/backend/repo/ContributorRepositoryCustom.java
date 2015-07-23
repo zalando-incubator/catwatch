@@ -3,7 +3,6 @@ package org.zalando.catwatch.backend.repo;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.ContributorKey;
 

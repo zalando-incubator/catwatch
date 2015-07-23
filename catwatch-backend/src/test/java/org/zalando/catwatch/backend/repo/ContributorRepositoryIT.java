@@ -10,9 +10,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,8 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
-
-import com.squareup.okhttp.internal.DiskLruCache.Editor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
