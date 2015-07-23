@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+      		url "https://plugins.gradle.org/m2/"
+    	}
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.4")
     }
 }
 
@@ -11,6 +15,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 jar {
     baseName = 'catwatch-backend'
@@ -38,6 +43,7 @@ dependencies {
     // persistence
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
+    compile("com.mysema.querydsl:querydsl-jpa:3.6.5")
     // monitoring
 	compile("org.springframework.boot:spring-boot-starter-actuator")
     // logging
@@ -56,4 +62,8 @@ dependencies {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
+}
+
+querydsl {
+  jpa = true
 }
