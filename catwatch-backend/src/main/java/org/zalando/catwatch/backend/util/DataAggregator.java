@@ -106,6 +106,8 @@ public class DataAggregator {
 			unaggregatedStatistics  = new ArrayList<>();
 			for (List<Statistics> orgStats : statisticsLists){
 				
+				if(orgStats.isEmpty()) continue;
+				
 				//FIXME figure out how to map the records
 				//for now just use the order
 				unaggregatedStatistics.add(orgStats.get(i));

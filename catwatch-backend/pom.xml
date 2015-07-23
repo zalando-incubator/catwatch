@@ -19,6 +19,12 @@
 			<groupId>org.kohsuke</groupId>
 			<artifactId>github-api</artifactId>
 			<version>1.68</version>
+			<exclusions>
+				<exclusion>
+				    <groupId>com.infradna.tool</groupId>
+				    <artifactId>bridge-method-annotation</artifactId>
+  				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
@@ -64,6 +70,12 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+        <!-- util -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
 		<!-- test scope -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,6 +109,18 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -161,7 +185,7 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 	<repositories>
 		<repository>
 			<id>spring-releases</id>
