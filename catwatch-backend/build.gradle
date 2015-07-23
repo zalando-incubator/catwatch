@@ -35,7 +35,9 @@ dependencies {
     // github api
     compile("com.squareup.okhttp:okhttp-urlconnection:2.4.0")
     compile("com.squareup.okhttp:okhttp:2.4.0")
-    compile("org.kohsuke:github-api:1.68")
+    compile("org.kohsuke:github-api:1.68") {
+    	exclude module: 'bridge-method-annotation'
+    }
     // web
 	compile("org.springframework.boot:spring-boot-starter-web")
     compile("io.swagger:swagger-annotations:1.5.0")
