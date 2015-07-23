@@ -1,10 +1,18 @@
 package org.zalando.catwatch.backend.repo;
 
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Date.from;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,6 +24,8 @@ import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
 
+import com.squareup.okhttp.internal.DiskLruCache.Editor;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
 public class ContributorRepositoryIT {
@@ -25,6 +35,84 @@ public class ContributorRepositoryIT {
 
 	public ContributorBuilder newContributor() {
 		return new ContributorBuilder(repository);
+	}
+
+	@Test
+	public void testFindOrganizationId() throws Exception {
+
+		// given
+		repository.deleteAll();
+
+		// when
+		Long id = repository.findOrganizationId("here");
+
+		// then
+		assertNull(id);
+
+		// given
+		Contributor c = newContributor().organizationName("here").save();
+
+		// when
+		id = repository.findOrganizationId(c.getOrganizationName());
+
+		// then
+		assertThat(id, equalTo(c.getOrganizationId()));
+
+		// when
+		id = repository.findOrganizationId("something different");
+
+		// then
+		assertNull(id);
+
+		// when
+		try {
+			repository.findOrganizationId(null);
+		} catch (NullPointerException e) {
+			// then
+			assertThat(e.getMessage(), containsString("organizationName must not be null but was"));
+		}
+	}
+
+	@Test
+	public void testFindPreviousSnapShotDate() throws Exception {
+
+		// given
+		repository.deleteAll();
+		Date now = from(now());
+
+		// when
+		Date date = repository.findPreviousSnapShotDate(now);
+
+		// then
+		assertNull(date);
+
+		// given
+		Contributor c1 = newContributor().days(1).save();
+		Contributor c2 = newContributor().days(3).save();
+		c1 = repository.findOne(c1.getKey());
+		c2 = repository.findOne(c2.getKey());
+
+		// when
+		date = repository.findPreviousSnapShotDate(null);
+
+		// then
+		assertSameInstant(c1.getSnapshotDate(), date);
+
+		// when
+		date = repository.findPreviousSnapShotDate(c1.getSnapshotDate());
+
+		// then
+		assertSameInstant(c1.getSnapshotDate(), date);
+
+		// when
+		date = repository.findPreviousSnapShotDate(from(now().minus(2, DAYS)));
+
+		// then
+		assertSameInstant(c2.getSnapshotDate(), date);
+	}
+
+	private void assertSameInstant(Date expectedDate, Date date) {
+		assertThat(date.getTime(), equalTo(expectedDate.getTime()));
 	}
 
 	@Test
@@ -308,6 +396,13 @@ public class ContributorRepositoryIT {
 		assertContributors(contributors, cb1, ca1, cb2, ca2);
 	}
 
+	/**
+	 * In such a test you usually test the fetching / loading behaviour, so that
+	 * the JPA mapping is tested. This mapping can be very tricky and errornous
+	 * in detail. Therefore, the test has its right to exist.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testSaveAndFindOne() throws Exception {
 
