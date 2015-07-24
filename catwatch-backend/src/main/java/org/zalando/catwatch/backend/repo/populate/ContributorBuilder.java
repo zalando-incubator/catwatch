@@ -45,7 +45,7 @@ public class ContributorBuilder {
 		contributor.setOrganizationName(organizationName);
 		return this;
 	}
-	
+
 	public ContributorBuilder organizationId(long organizationId) {
 		contributor.getKey().setOrganizationId(organizationId);
 		return this;
@@ -62,6 +62,9 @@ public class ContributorBuilder {
 		c.setName(contributor.getName());
 		c.setOrganizationName(contributor.getOrganizationName());
 		c.setOrganizationalCommitsCount(contributor.getOrganizationalCommitsCount());
+		c.setOrganizationalProjectsCount(contributor.getOrganizationalProjectsCount());
+		c.setPersonalCommitsCount(contributor.getPersonalCommitsCount());
+		c.setPersonalProjectsCount(contributor.getPersonalProjectsCount());
 		return c;
 	}
 
