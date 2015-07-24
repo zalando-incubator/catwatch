@@ -208,7 +208,8 @@ public class Project {
         this.primaryLanguage = primaryLanguage;
     }
 
-    @Override
+
+       @Override
     public String toString() {
         return "Project{" + "id=" + id + ", languageList=" + languageList + ", gitHubProjectId=" + gitHubProjectId
                 + ", snapshotDate=" + snapshotDate + ", name='" + name + '\'' + ", organizationName='"
