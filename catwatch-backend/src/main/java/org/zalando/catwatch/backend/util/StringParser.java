@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.google.common.collect.Lists;
+
 public class StringParser {
 	
 	
@@ -23,6 +25,8 @@ public class StringParser {
 	public static Collection<String> parseStringList(String stringList, String delimiter){
 		
 		if(stringList == null) return Collections.emptyList();
+		
+		if(!stringList.contains(delimiter)) return Lists.newArrayList(stringList);
 		
 		String[] array = stringList.split(delimiter);
 		

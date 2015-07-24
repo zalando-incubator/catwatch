@@ -99,4 +99,37 @@ public class TestUtils {
 		}
 	}
 
+	public static String createAbsoluteStatisticsUrl (String base, String organizations, String startDate, String endDate){
+		String url = base + Constants.API_RESOURCE_STATISTICS;
+		
+		if(organizations!=null){
+			url+="?"+Constants.API_REQUEST_PARAM_ORGANIZATIONS+"="+organizations;
+		}
+		
+		
+		if(startDate!=null){
+			if(url.contains("?")){
+				url += "&" + Constants.API_REQUEST_PARAM_STARTDATE+"="+startDate;
+			}
+			else{
+				url += "?" + Constants.API_REQUEST_PARAM_STARTDATE+"="+startDate;
+			}
+		}
+		
+		
+		if(endDate!=null){
+			if(url.contains("?")){
+				url += "&" + Constants.API_REQUEST_PARAM_ENDDATE+"="+endDate;
+			}
+			else{
+				url += "?" + Constants.API_REQUEST_PARAM_ENDDATE+"="+endDate;
+			}
+		}
+		
+		return url;
+	}
+	
+	public static String createRelativeStatisticsUrl (String organizations, String startDate, String endDate){
+		return createAbsoluteStatisticsUrl("", organizations, startDate, endDate);
+	}
 }
