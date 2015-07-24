@@ -8,6 +8,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
@@ -21,171 +23,63 @@ import io.swagger.annotations.ApiModelProperty;
 public class Project {
 
     @Id
-    private ProjectKey key;
-
-    private String name = null;
-    private String url = null;
-    private String description = null;
-    private Integer starsCount = null;
-    private Integer commitsCount = null;
-    private Integer forksCount = null;
-    private Integer contributorsCount = null;
-    private Integer score = null;
-    private String lastPushed = null;
-    private String primaryLanguage = null;
-    private Date snapshotDate = null;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cust_id", columnDefinition = "serial")
+    private int id;
 
     @ElementCollection
     @CollectionTable(name = "LANG_LIST", joinColumns = @JoinColumn(name = "PROJECT_ID"))
     @Column(name = "LANGUAGE")
     private List<String> languageList = new ArrayList<>();
 
-    private String organizationName = null;
+    @Column(name = "git_hub_project_id")
+    private long gitHubProjectId;
 
-    public Project() {
-        super();
-    }
+    @Column(name = "snapshot_date")
+    private Date snapshotDate = null;
 
-    public Project(final long id, final Date snapshotDate) {
-        super();
-        this.key = new ProjectKey(id, snapshotDate);
-    }
+    @Column(name = "name")
+    private String name = null;
+
+    @Column(name = "organization_name")
+    private String organizationName;
+
+    @Column(name = "url")
+    private String url = null;
+
+    @Column(name = "description")
+    private String description = null;
+
+    @Column(name = "stars_count")
+    private Integer starsCount = null;
+
+    @Column(name = "commits_count")
+    private Integer commitsCount = null;
+
+    @Column(name = "forks_count")
+    private Integer forksCount = null;
+
+    @Column(name = "contributors_count")
+    private Integer contributorsCount = null;
+
+    @Column(name = "score")
+    private Integer score = null;
+
+    @Column(name = "last_pushed")
+    private String lastPushed = null;
+
+    @Column(name = "primary_language")
+    private String primaryLanguage = null;
 
     @JsonIgnore
-    public ProjectKey getKey() {
-        return key;
+    public int getId() {
+        return id;
     }
 
-    @ApiModelProperty(
-        value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide."
-    )
-    public long getId() {
-        return key == null ? 0 : key.getId();
+    public void setId(final int id) {
+        this.id = id;
     }
 
-    /**
-     * Name of project.
-     */
-    @ApiModelProperty(value = "Name of project")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    /**
-     * URL of project.
-     */
-    @ApiModelProperty(value = "URL of project")
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(final String url) {
-        this.url = url;
-    }
-
-    /**
-     * Description of project.
-     */
-    @ApiModelProperty(value = "Description of project")
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    /**
-     * Count of stars for the project.
-     */
-    @ApiModelProperty(value = "Count of stars for the project.")
-    public Integer getStarsCount() {
-        return starsCount;
-    }
-
-    public void setStarsCount(final Integer starsCount) {
-        this.starsCount = starsCount;
-    }
-
-    /**
-     * Count of commits for the project.
-     */
-    @ApiModelProperty(value = "Count of commits for the project.")
-    public Integer getCommitsCount() {
-        return commitsCount;
-    }
-
-    public void setCommitsCount(final Integer commitsCount) {
-        this.commitsCount = commitsCount;
-    }
-
-    /**
-     * Count of forks of project.
-     */
-    @ApiModelProperty(value = "Count of forks of project.")
-    public Integer getForksCount() {
-        return forksCount;
-    }
-
-    public void setForksCount(final Integer forksCount) {
-        this.forksCount = forksCount;
-    }
-
-    /**
-     * Count of contributors of project.
-     */
-    @ApiModelProperty(value = "Count of contributors of project.")
-    public Integer getContributorsCount() {
-        return contributorsCount;
-    }
-
-    public void setContributorsCount(final Integer contributorsCount) {
-        this.contributorsCount = contributorsCount;
-    }
-
-    /**
-     * Score of project.
-     */
-    @ApiModelProperty(value = "Score of project.")
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(final Integer score) {
-        this.score = score;
-    }
-
-    /**
-     * Last pushed data of project.
-     */
-    @ApiModelProperty(value = "Last pushed data of project.")
-    public String getLastPushed() {
-        return lastPushed;
-    }
-
-    public void setLastPushed(final String lastPushed) {
-        this.lastPushed = lastPushed;
-    }
-
-    /**
-     * Primary programming language of project.
-     */
-    @ApiModelProperty(value = "Primary programming language of project")
-    public String getPrimaryLanguage() {
-        return primaryLanguage;
-    }
-
-    public void setPrimaryLanguage(final String primaryLanguage) {
-        this.primaryLanguage = primaryLanguage;
-    }
-
-    /**
-     * List of programming languages of project.
-     */
     @ApiModelProperty(value = "List of programming languages of project")
     public List<String> getLanguageList() {
         return languageList;
@@ -195,21 +89,17 @@ public class Project {
         this.languageList = languageList;
     }
 
-    /**
-     * Organization of the Project.
-     */
-    @ApiModelProperty(value = "Organization of the Project.")
-    public String getOrganizationName() {
-        return organizationName;
+    @ApiModelProperty(
+        value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide."
+    )
+    public long getGitHubProjectId() {
+        return gitHubProjectId;
     }
 
-    public void setOrganizationName(final String organizationName) {
-        this.organizationName = organizationName;
+    public void setGitHubProjectId(final long gitHubProjectId) {
+        this.gitHubProjectId = gitHubProjectId;
     }
 
-    /**
-     * Project snapshot date.
-     */
     @ApiModelProperty(value = "Project snapshot date. Part of the primary key.")
     public Date getSnapshotDate() {
         return snapshotDate;
@@ -219,26 +109,112 @@ public class Project {
         this.snapshotDate = snapshotDate;
     }
 
+    @ApiModelProperty(value = "Name of project")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    @ApiModelProperty(value = "Organization of the Project.")
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(final String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    @ApiModelProperty(value = "URL of project")
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
+    }
+
+    @ApiModelProperty(value = "Description of project")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    @ApiModelProperty(value = "Count of stars for the project.")
+    public Integer getStarsCount() {
+        return starsCount;
+    }
+
+    public void setStarsCount(final Integer starsCount) {
+        this.starsCount = starsCount;
+    }
+
+    @ApiModelProperty(value = "Count of commits for the project.")
+    public Integer getCommitsCount() {
+        return commitsCount;
+    }
+
+    public void setCommitsCount(final Integer commitsCount) {
+        this.commitsCount = commitsCount;
+    }
+
+    @ApiModelProperty(value = "Count of forks of project.")
+    public Integer getForksCount() {
+        return forksCount;
+    }
+
+    public void setForksCount(final Integer forksCount) {
+        this.forksCount = forksCount;
+    }
+
+    @ApiModelProperty(value = "Count of contributors of project.")
+    public Integer getContributorsCount() {
+        return contributorsCount;
+    }
+
+    public void setContributorsCount(final Integer contributorsCount) {
+        this.contributorsCount = contributorsCount;
+    }
+
+    @ApiModelProperty(value = "Score of project.")
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(final Integer score) {
+        this.score = score;
+    }
+
+    @ApiModelProperty(value = "Last pushed data of project.")
+    public String getLastPushed() {
+        return lastPushed;
+    }
+
+    public void setLastPushed(final String lastPushed) {
+        this.lastPushed = lastPushed;
+    }
+
+    @ApiModelProperty(value = "Primary programming language of project")
+    public String getPrimaryLanguage() {
+        return primaryLanguage;
+    }
+
+    public void setPrimaryLanguage(final String primaryLanguage) {
+        this.primaryLanguage = primaryLanguage;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Project {\n");
-
-        sb.append("  id: ").append(getId()).append("\n");
-        sb.append("  name: ").append(name).append("\n");
-        sb.append("  url: ").append(url).append("\n");
-        sb.append("  description: ").append(description).append("\n");
-        sb.append("  starsCount: ").append(starsCount).append("\n");
-        sb.append("  commitsCount: ").append(commitsCount).append("\n");
-        sb.append("  forksCount: ").append(forksCount).append("\n");
-        sb.append("  contributorsCount: ").append(contributorsCount).append("\n");
-        sb.append("  score: ").append(score).append("\n");
-        sb.append("  lastPushed: ").append(lastPushed).append("\n");
-        sb.append("  primaryLanguage: ").append(primaryLanguage).append("\n");
-        sb.append("  languageList: ").append(languageList).append("\n");
-        sb.append("  organizationName: ").append(organizationName).append("\n");
-        sb.append("  snapshotDate: ").append(getSnapshotDate()).append("\n");
-        sb.append("}\n");
-        return sb.toString();
+        return "Project{" + "id=" + id + ", languageList=" + languageList + ", gitHubProjectId=" + gitHubProjectId
+                + ", snapshotDate=" + snapshotDate + ", name='" + name + '\'' + ", organizationName='"
+                + organizationName + '\'' + ", url='" + url + '\'' + ", description='" + description + '\''
+                + ", starsCount=" + starsCount + ", commitsCount=" + commitsCount + ", forksCount=" + forksCount
+                + ", contributorsCount=" + contributorsCount + ", score=" + score + ", lastPushed='" + lastPushed + '\''
+                + ", primaryLanguage='" + primaryLanguage + '\'' + '}';
     }
 }
