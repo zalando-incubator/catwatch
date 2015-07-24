@@ -1,16 +1,13 @@
 package org.zalando.catwatch.backend.github;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 import org.kohsuke.github.*;
-import org.kohsuke.github.extras.OkHttpConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
@@ -24,83 +21,61 @@ import static java.util.stream.Collectors.*;
  * <p>
  * The code of this class is not optimised in terms of number of API requests in
  * favour of code simplicity and readability. However, this should not affect
- * API rate limit since http cache is used. If Api limit is reached the task is
+ * API rate limit if http cache is used. If Api limit is reached the task is
  * blocked until the limit is reset.
  *
  * @see RateLimitHandler
  * @see <a href="https://developer.github.com/v3/#rate-limiting">API documentation from GitHub</a>
  */
-public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
+public class TakeSnapshotTask implements Callable<Snapshot> {
 
-    /**
-     * Helper class for returning computation results.
-     */
-    public static class Snapshot {
-        public Statistics statistics;
-        public Collection<Project> projects;
-        public Collection<Contributor> contributors;
-        public Collection<Language> languages;
-    }
-
+    private static final Logger logger = LoggerFactory.getLogger(TakeSnapshotTask.class);
     private static final int MAX_PAGE_SIZE = 100;
-    private static final int MEGABYTE = 1024 * 1024;
 
+    private final GitHub gitHub;
+    private final String organisationName;
     private final Date snapshotDate;
-    private final String organisationTitle;
-    private final String cachePath;
-    private final int cacheSize;
 
-    /**
-     * Constructs new task with the specified parameters.
-     *
-     * @param organisationTitle title of organisation on GitHub
-     * @param cachePath         path to the cache folder
-     * @param cacheSize         allocated cache size in megabytes
-     */
-    public GitHubCrawler(String organisationTitle, String cachePath, int cacheSize) {
+    public TakeSnapshotTask(GitHub gitHub, String organisationName) {
+        this.gitHub = gitHub;
+        this.organisationName = organisationName;
         this.snapshotDate = Date.from(ZonedDateTime.now().toInstant());
-        this.organisationTitle = organisationTitle;
-        this.cachePath = cachePath;
-        this.cacheSize = cacheSize * MEGABYTE;
     }
 
-    /**
-     * Initializes cache and collects organisation statistics from GitHub.
-     *
-     * @return Snapshot object containing organisation statistics.
-     * @throws Exception
-     */
     @Override
     public Snapshot call() throws Exception {
-        File cacheDirectory = new File(cachePath);
-        Cache cache = new Cache(cacheDirectory, cacheSize);
-        GitHub gitHub = GitHubBuilder.fromCredentials().withConnector(
-                new OkHttpConnector(
-                        new OkUrlFactory(
-                                new OkHttpClient().setCache(cache))))
-                .build();
-        final GHOrganization organization = gitHub.getOrganization(organisationTitle);
-        final List<GHRepository> repositories = organization.listRepositories(MAX_PAGE_SIZE).asList().stream()
+        logger.info("Taking snapshot of organization '{}'.", organisationName);
+
+        final GHOrganization organization = gitHub.getOrganization(organisationName);
+        final List<GHRepository> publicRepositories = organization.listRepositories(MAX_PAGE_SIZE).asList().stream()
                 .filter(r -> !r.isPrivate())
                 .collect(toList());
 
-        Snapshot snapshot = new Snapshot();
-        snapshot.statistics = collectStatistics(repositories, organization);
-        snapshot.projects = collectProjects(repositories);
-        snapshot.contributors = collectContributors(repositories, organization);
-        snapshot.languages = collectLanguages(repositories);
-
-        return snapshot;
+        return new Snapshot(
+                collectStatistics(organization, publicRepositories),
+                collectProjects(organization, publicRepositories),
+                collectContributors(organization, publicRepositories),
+                collectLanguages(publicRepositories));
     }
 
-    private Statistics collectStatistics(List<GHRepository> repositories, GHOrganization organization) throws IOException {
+    private Statistics collectStatistics(GHOrganization organization, Collection<GHRepository> repositories) throws IOException {
+        logger.info("Started collecting statistics for organization '{}'", organisationName);
+
         Statistics statistics = new Statistics(organization.getId(), snapshotDate);
 
         statistics.setPublicProjectCount(organization.getPublicRepoCount());
         statistics.setMembersCount(organization.listPublicMembers().asList().size());
-        statistics.setTeamsCount(organization.listTeams().asList().size());
+        // TODO Ensure that the current user has admin rights in organization. Until then listing teams can throw no access exception
+//        statistics.setTeamsCount(organization.listTeams().asList().size());
         statistics.setAllContributorsCount((int) repositories.stream()
-                .map(this::getContributors)
+                .map(repository -> {
+                    try {
+                        return repository.listContributors();
+                    } catch (IOException e) {
+                        logger.error("Failed to list contributors for project '{}'", repository.getName());
+                        throw new RuntimeException(e);
+                    }
+                })
                 .map(PagedIterable::asList)
                 .flatMap(List::stream)
                 .map(GHRepository.Contributor::getId)
@@ -120,15 +95,26 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
                 .distinct()
                 .count());
         statistics.setTagsCount((int) repositories.stream()
-                .map(this::getTags)
+                .map(repository -> {
+                    try {
+                        return repository.listTags();
+                    } catch (IOException e) {
+                        logger.error("Failed to list tags for project '{}'", repository.getName());
+                        throw new RuntimeException(e);
+                    }
+                })
                 .map(PagedIterable::asList)
                 .count());
         statistics.setOrganizationName(organization.getName());
 
+        logger.info("Finished collecting statistics for organization '{}'", organisationName);
+
         return statistics;
     }
 
-    private Collection<Project> collectProjects(List<GHRepository> repositories) throws IOException, URISyntaxException {
+    private Collection<Project> collectProjects(GHOrganization organization, Collection<GHRepository> repositories) throws IOException, URISyntaxException {
+        logger.info("Started collecting projects for organization '{}'", organisationName);
+
         List<Project> projects = new ArrayList<>();
 
         for (GHRepository repository : repositories) {
@@ -141,24 +127,35 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
             project.setCommitsCount(repository.listCommits().asList().size());
             project.setForksCount(repository.getForks());
             project.setContributorsCount(repository.listContributors().asList().size());
-            project.setScore(0); // TODO implement
             project.setLastPushed(repository.getPushedAt().toString());
             project.setPrimaryLanguage(repository.getLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
-            project.setOrganizationName(organisationTitle);
+            project.setOrganizationName(organization.getName());
+            project.setScore(getProjectScore(repository));
 
             projects.add(project);
         }
 
+        logger.info("Finished collecting projects for organization '{}'", organisationName);
+
         return projects;
     }
 
-    private Collection<Contributor> collectContributors(List<GHRepository> repositories, GHOrganization organization) throws IOException, URISyntaxException {
+    private Collection<Contributor> collectContributors(GHOrganization organization, Collection<GHRepository> repositories) throws IOException, URISyntaxException {
+        logger.info("Started collecting contributors for organization '{}'", organisationName);
+
         Collection<Contributor> contributors = new ArrayList<>();
 
         // Get a list of all contributors of all repositories
         Collection<GHRepository.Contributor> ghContributors = repositories.stream()
-                .map(this::getContributors)
+                .map(repository -> {
+                    try {
+                        return repository.listContributors();
+                    } catch (IOException e) {
+                        logger.error("Failed to list contributors for project '{}'", repository.getName());
+                        throw new RuntimeException(e);
+                    }
+                })
                 .map(PagedIterable::asList)
                 .flatMap(List::stream)
                 .collect(toList());
@@ -182,19 +179,30 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
             contributor.setOrganizationalCommitsCount((int) idStatisticsMap.get(ghContributor.getId()).getSum());
             contributor.setOrganizationalProjectsCount((int) idStatisticsMap.get(ghContributor.getId()).getCount());
             contributor.setPersonalProjectsCount(ghContributor.getPublicRepoCount());
-            contributor.setOrganizationName(organisationTitle);
+            contributor.setOrganizationName(organisationName);
 
             contributors.add(contributor);
         }
 
+        logger.info("Finished collecting contributors for organization '{}'", organisationName);
+
         return contributors;
     }
 
-    private Collection<Language> collectLanguages(List<GHRepository> repositories) {
+    private Collection<Language> collectLanguages(Collection<GHRepository> repositories) {
+        logger.info("Started collecting languages for organization '{}'", organisationName);
+
         Collection<Language> languages = new ArrayList<>();
 
         Map<String, LongSummaryStatistics> stat = repositories.stream()
-                .map(this::getLanguages)
+                .map(repository -> {
+                    try {
+                        return repository.listLanguages();
+                    } catch (IOException e) {
+                        logger.error("Failed to list languages for project '{}'", repository.getName());
+                        throw new RuntimeException(e);
+                    }
+                })
                 .map(Map::entrySet)
                 .flatMap(Set::stream)
                 .collect(groupingBy(Map.Entry::getKey,
@@ -214,39 +222,18 @@ public class GitHubCrawler implements Callable<GitHubCrawler.Snapshot> {
             languages.add(language);
         }
 
+        logger.info("Finished collecting languages for organization '{}'", organisationName);
+
         return languages;
     }
 
-    /**
-     * Helper method to rethrow checked exception.
-     */
-    private PagedIterable<GHRepository.Contributor> getContributors(GHRepository repository) {
-        try {
-            return repository.listContributors();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    // TODO implement me
+    private int getProjectScore(GHRepository repository) {
+        return 0;
     }
 
-    /**
-     * Helper method to rethrow checked exception.
-     */
-    private PagedIterable<GHTag> getTags(GHRepository repository) {
-        try {
-            return repository.listTags();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Helper method to rethrow checked exception.
-     */
-    private Map<String, Long> getLanguages(GHRepository repository) {
-        try {
-            return repository.listLanguages();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    // TODO implement me
+    private int getContributorScore(GHRepository.Contributor contributor) {
+        return 0;
     }
 }
