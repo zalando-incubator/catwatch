@@ -23,6 +23,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Iterable<Project> findProjects(final String organizations, final Optional<Integer> limit,
             final Optional<Integer> offset, final Optional<Date> startDate, final Optional<Date> endDate,
             final Optional<String> sortBy, final Optional<String> query) {
+
         // TODO: aggregate the results for startDate and endDate
         return projectRepository.findProjects(organizations, limit, offset, startDate, sortBy, query);
     }
