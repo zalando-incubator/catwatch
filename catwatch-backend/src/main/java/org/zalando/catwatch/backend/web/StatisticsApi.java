@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -119,9 +118,10 @@ public class StatisticsApi {
 		
 		if(!env.containsProperty(Constants.CONFIG_ORGANIZATION_LIST)){
 			//TODO throw new exception
+			return "";
 		}
 		
-		return env.getProperty("organization.list");
+		return env.getProperty(Constants.CONFIG_ORGANIZATION_LIST);
 	}
 
 
@@ -137,16 +137,20 @@ public class StatisticsApi {
 		
 		Date start, end;
 		try {
-			start = StringParser.getDate(startDate);
+			start = StringParser.parseIso8601Date(startDate);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for stardDate");
 		}
 		
 		
 		try {
-			end = endDate == null ? new Date() : StringParser.getDate(endDate);
+			end = endDate == null ? new Date() : StringParser.parseIso8601Date(endDate);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for endDate");
+		}
+		
+		if(start.after(end)){
+			throw new IllegalArgumentException("Start date is after end date");
 		}
 		
 		List<List<Statistics>> statisticsLists = new ArrayList<>();

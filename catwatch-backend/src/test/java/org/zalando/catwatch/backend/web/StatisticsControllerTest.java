@@ -64,66 +64,70 @@ public class StatisticsControllerTest {
 
         configuredOrganizations = env.getProperty(Constants.CONFIG_ORGANIZATION_LIST);
     }
+    
+	
+	@Test
+	public void testDateParams() throws Exception{
+		
+		Date oneDayAgo = Date.from(now().minus(1, DAYS));
+		Date twoDaysAgo = Date.from(now().minus(2, DAYS));
+		Date threeDaysAgo = Date.from(now().minus(3, DAYS));
+		String organization = StringParser.parseStringList(configuredOrganizations, ",").iterator().next();
+		
+		if(organization==null) return;
+		
+		//when 
+		repository.deleteAll();
+		String from = StringParser.getISO8601StringForDate(threeDaysAgo);
+		String to = StringParser.getISO8601StringForDate(oneDayAgo);
+		
+		//do request with valid time formats
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
+		
+		//then
+		.andExpect(status().isOk())
+		.andExpect(content().string("[]"));
+//		
+		//when 
+		insertStatisics(organization, twoDaysAgo);
+		
+		//do request with valid time formats
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
+				
+		//then
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(1)));
+		
+		
+		//do request with no startDate
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, to)))
+						
+		//then
+		.andExpect(status().is(400));
+		
+		
+		//do request with no endDate time
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, null)))
+								
+		//then
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(1)));
+		
+		
+		//do request with invalid endDate time
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, new Date().toString())))
+										
+		//then
+		.andExpect(status().is(400));
+		
+		
+		//do request with invalid endDate time
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, to, from)))
+												
+		//then
+		.andExpect(status().is(400));
+	}
 
-    @Ignore
-    @Test
-    public void testDateParams() throws Exception {
-
-        Date oneDayAgo = Date.from(now().minus(1, DAYS));
-        Date twoDaysAgo = Date.from(now().minus(2, DAYS));
-        Date threeDaysAgo = Date.from(now().minus(3, DAYS));
-        String organization = StringParser.parseStringList(configuredOrganizations, ",").iterator().next();
-
-        if (organization == null) {
-            return;
-        }
-
-        // when
-        repository.deleteAll();
-
-        String from = threeDaysAgo.toString(); // StringParser.getISO8601StringForDate(threeDaysAgo);
-        String to = oneDayAgo.toString();      // StringParser.getISO8601StringForDate(oneDayAgo);
-
-        // do request with valid time formats
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
-
-               // then
-               .andExpect(status().isOk()).andExpect(content().string("[]"));
-
-//
-        // when
-        insertStatisics(organization, twoDaysAgo);
-
-        // do request with valid time formats
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
-
-               // then
-               .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-
-        // do request with no startDate
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, null, to)))
-
-               // then
-               .andExpect(status().is(400));
-
-        // do request with no endDate time
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, from, null)))
-
-               // then
-               .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
-
-        // do request with invalid endDate time
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, from, new Date().toString())))
-
-               // then
-               .andExpect(status().is(400));
-
-        // do request with invalid endDate time
-        mockMvc.perform(get(createRelativeStatisticsUrl(null, to, from)))
-
-               // then
-               .andExpect(status().is(400));
-    }
 
     @Test
     public void testWithoutOrganizationParam() throws Exception {

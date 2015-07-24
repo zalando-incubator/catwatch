@@ -6,57 +6,122 @@ import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
 
+import java.util.Date;
+import java.util.List;
+
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 public class ProjectBuilder {
 
-    private Project project;
+	private Project project;
 
-    private ProjectRepository projectRepository;
+	private ProjectRepository projectRepository;
 
-    public ProjectBuilder(final ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-        project = new Project();
-        project.setGitHubProjectId(freshId());
-        project.setSnapshotDate(randomDate());
-        project.setName(randomProjectName());
-        project.setPrimaryLanguage(randomLanguage());
-        project.setForksCount(random(1, 10));
-        project.setStarsCount(random(1, 4));
-    }
+	public ProjectBuilder(final ProjectRepository projectRepository) {
+		this.projectRepository = projectRepository;
+		project = new Project();
+		project.setGitHubProjectId(freshId());
+		project.setSnapshotDate(randomDate());
+		project.setName(randomProjectName());
+		project.setPrimaryLanguage(randomLanguage());
+		project.setForksCount(random(1, 10));
+		project.setStarsCount(random(1, 4));
+	}
 
-    private void updateUrl() {
-        project.setUrl("https://github.com/" + project.getOrganizationName() + "/" + project.getName());
-    }
+	private void updateUrl() {
+		project.setUrl("https://github.com/" + project.getOrganizationName() + "/" + project.getName());
+	}
 
-    public ProjectBuilder name(final String name) {
-        project.setName(name);
-        return this;
-    }
+	public ProjectBuilder name(String name) {
+		project.setName(name);
+		return this;
+	}
+	
+	public ProjectBuilder gitHubProjectId(long gitHubProjectId) {
+		project.setGitHubProjectId(gitHubProjectId);
+		return this;
+	}
+	
+	public ProjectBuilder snapshotDate(Date snapshotDate) {
+		project.setSnapshotDate(snapshotDate);
+		return this;
+	}
+	
 
-    public ProjectBuilder organizationName(final String organizationName) {
-        project.setOrganizationName(organizationName);
-        return this;
-    }
+	public ProjectBuilder organizationName(String organizationName) {
+		project.setOrganizationName(organizationName);
+		return this;
+	}
 
-    public Project create() {
+	public ProjectBuilder primaryLanguage(String primaryLanguage) {
+		project.setPrimaryLanguage(primaryLanguage);
+		return this;
+	}
 
-        updateUrl();
+	public ProjectBuilder forksCount(int forksCount) {
+		project.setForksCount(forksCount);
+		return this;
+	}
 
-        Project p = new Project();
-        p.setGitHubProjectId(project.getGitHubProjectId());
-        p.setSnapshotDate(project.getSnapshotDate());
-        p.setName(project.getName());
-        p.setPrimaryLanguage(project.getPrimaryLanguage());
-        p.setForksCount(project.getForksCount());
-        p.setStarsCount(project.getStarsCount());
-        p.setOrganizationName(project.getOrganizationName());
-        return p;
-    }
+	public ProjectBuilder starsCount(int starsCount) {
+		project.setStarsCount(starsCount);
+		return this;
+	}
 
-    public Project save() {
-        return projectRepository.save(create());
-    }
+	public ProjectBuilder commitsCount(int commitsCount) {
+		project.setCommitsCount(commitsCount);
+		return this;
+	}
+
+	public ProjectBuilder contributorsCount(int contributorsCount) {
+		project.setContributorsCount(contributorsCount);
+		return this;
+	}
+
+	public ProjectBuilder description(String description) {
+		project.setDescription(description);
+		return this;
+	}
+
+	public ProjectBuilder lastPushed(String lastPushed) {
+		project.setLastPushed(lastPushed);
+		return this;
+	}
+
+	public ProjectBuilder score(int score) {
+		project.setScore(score);
+		return this;
+	}
+
+	public ProjectBuilder score(List<String> languageList) {
+		project.setLanguageList(languageList);
+		return this;
+	}
+
+	public Project create() {
+
+		updateUrl();
+
+		Project p = new Project();
+		p.setGitHubProjectId(project.getGitHubProjectId());
+		p.setSnapshotDate(project.getSnapshotDate());
+		p.setName(project.getName());
+		p.setPrimaryLanguage(project.getPrimaryLanguage());
+		p.setForksCount(project.getForksCount());
+		p.setStarsCount(project.getStarsCount());
+		p.setOrganizationName(project.getOrganizationName());
+		p.setCommitsCount(project.getCommitsCount());
+		p.setContributorsCount(project.getContributorsCount());
+		p.setDescription(project.getDescription());
+		p.setLastPushed(project.getLastPushed());
+		p.setScore(project.getScore());
+		p.setLanguageList(project.getLanguageList());
+		return p;
+	}
+
+	public Project save() {
+		return projectRepository.save(create());
+	}
 
 }
