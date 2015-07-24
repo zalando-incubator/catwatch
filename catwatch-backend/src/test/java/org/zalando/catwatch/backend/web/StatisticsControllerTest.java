@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.zalando.catwatch.backend.util.TestUtils.createStatisticsUrl;
+import static org.zalando.catwatch.backend.util.TestUtils.createRelativeStatisticsUrl;
 
 import java.util.Date;
 
@@ -27,6 +27,7 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.StringParser;
+import org.zalando.catwatch.backend.util.TestUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
@@ -68,11 +69,11 @@ public class StatisticsControllerTest{
 		
 		//when 
 		repository.deleteAll();
-		String from = StringParser.getISO8601StringForDate(threeDaysAgo);
-		String to = StringParser.getISO8601StringForDate(oneDayAgo);
+		String from = threeDaysAgo.toString(); //StringParser.getISO8601StringForDate(threeDaysAgo);
+		String to = oneDayAgo.toString(); //StringParser.getISO8601StringForDate(oneDayAgo);
 		
 		//do request with valid time formats
-		mockMvc.perform(get(createStatisticsUrl(null, from, to)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
 		
 		//then
 		.andExpect(status().isOk())
@@ -82,7 +83,7 @@ public class StatisticsControllerTest{
 		insertStatisics(organization, twoDaysAgo);
 		
 		//do request with valid time formats
-		mockMvc.perform(get(createStatisticsUrl(null, from, to)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
 				
 		//then
 		.andExpect(status().isOk())
@@ -90,14 +91,14 @@ public class StatisticsControllerTest{
 		
 		
 		//do request with no startDate
-		mockMvc.perform(get(createStatisticsUrl(null, null, to)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, to)))
 						
 		//then
 		.andExpect(status().is(400));
 		
 		
 		//do request with no endDate time
-		mockMvc.perform(get(createStatisticsUrl(null, from, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, null)))
 								
 		//then
 		.andExpect(status().isOk())
@@ -105,8 +106,15 @@ public class StatisticsControllerTest{
 		
 		
 		//do request with invalid endDate time
-		mockMvc.perform(get(createStatisticsUrl(null, from, new Date().toString())))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, new Date().toString())))
 										
+		//then
+		.andExpect(status().is(400));
+		
+		
+		//do request with invalid endDate time
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, to, from)))
+												
 		//then
 		.andExpect(status().is(400));
 	}
@@ -118,7 +126,7 @@ public class StatisticsControllerTest{
 		repository.deleteAll();
 		
 		//do
-		mockMvc.perform(get(createStatisticsUrl(null, null, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, null)))
 		
 		//then
 		.andExpect(status().isOk())
@@ -129,7 +137,7 @@ public class StatisticsControllerTest{
 		insertStatisics("unknownOrganization");
 		
 		//do 
-		mockMvc.perform(get(createStatisticsUrl(null, null, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, null)))
 		
 		//then
 		.andExpect(status().isOk())
@@ -143,7 +151,7 @@ public class StatisticsControllerTest{
 			insertStatisics(organization);
 					
 			//do 
-			mockMvc.perform(get(createStatisticsUrl(null, null, null)))
+			mockMvc.perform(get(createRelativeStatisticsUrl(null, null, null)))
 					
 			//then
 			.andExpect(status().isOk())
@@ -152,7 +160,7 @@ public class StatisticsControllerTest{
 			Statistics s = insertStatisics(organization);
 			
 			//do 
-			mockMvc.perform(get(createStatisticsUrl(null, null, null)))
+			mockMvc.perform(get(createRelativeStatisticsUrl(null, null, null)))
 					
 			//then
 			.andExpect(status().isOk())
@@ -171,7 +179,7 @@ public class StatisticsControllerTest{
 		insertStatisics("unknownOrganization");
 		
 		//do 
-		mockMvc.perform(get(createStatisticsUrl(organization, null, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(organization, null, null)))
 		
 		//then
 		.andExpect(status().isOk())
@@ -183,7 +191,7 @@ public class StatisticsControllerTest{
 		insertStatisics(organization);
 		
 		//do 
-		mockMvc.perform(get(createStatisticsUrl(organization, null, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(organization, null, null)))
 				
 		//then
 		.andExpect(status().isOk())
@@ -191,7 +199,7 @@ public class StatisticsControllerTest{
 		
 		
 		//do (evil organization name/list) 
-		mockMvc.perform(get(createStatisticsUrl(","+organization+",", null, null)))
+		mockMvc.perform(get(createRelativeStatisticsUrl(","+organization+",", null, null)))
 						
 		//then
 		.andExpect(status().isOk())
