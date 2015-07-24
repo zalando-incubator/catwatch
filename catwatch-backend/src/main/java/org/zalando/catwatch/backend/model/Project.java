@@ -33,7 +33,6 @@ public class Project {
 	private Integer score = null;
 	private String lastPushed = null;
 	private String primaryLanguage = null;
-	private Date snapshotDate = null;
 	  
 	@ElementCollection
 	@CollectionTable(name = "LANG_LIST", joinColumns = @JoinColumn(name = "PROJECT_ID") )
@@ -225,11 +224,15 @@ public class Project {
 	@ApiModelProperty(value = "Project snapshot date. Part of the primary key.")
 	@JsonProperty("snapshotDate")
 	public Date getSnapshotDate() {
-		return snapshotDate; 
+		return key == null ? null : key.getSnapshotDate();
 	}
 
 	public void setSnapshotDate(Date snapshotDate) {
-		this.snapshotDate = snapshotDate;
+
+		if (this.key == null)
+			this.key = new ProjectKey();
+
+		this.key.setSnapshotDate(snapshotDate);
 	}
 
 	@Override

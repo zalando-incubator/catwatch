@@ -6,6 +6,8 @@ import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
 
+import java.util.List;
+
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 
@@ -37,7 +39,52 @@ public class ProjectBuilder {
 		project.setOrganizationName(organizationName);
 		return this;
 	}
+	
+	public ProjectBuilder primaryLanguage(String primaryLanguage) {
+		project.setPrimaryLanguage(primaryLanguage);
+		return this;
+	}
 
+	public ProjectBuilder forksCount(int forksCount){
+		project.setForksCount(forksCount);
+		return this;
+	}
+	
+	public ProjectBuilder starsCount(int starsCount){
+		project.setStarsCount(starsCount);
+		return this;
+	}
+	
+	public ProjectBuilder commitsCount(int commitsCount){
+		project.setCommitsCount(commitsCount);
+		return this;
+	}
+	
+	public ProjectBuilder contributorsCount(int contributorsCount){
+		project.setContributorsCount(contributorsCount);
+		return this;
+	}
+	
+	public ProjectBuilder description(String description){
+		project.setDescription(description);
+		return this;
+	}
+	
+	public ProjectBuilder lastPushed(String lastPushed){
+		project.setLastPushed(lastPushed);
+		return this;
+	}
+	
+	public ProjectBuilder score(int score){
+		project.setScore(score);
+		return this;
+	}
+	
+	public ProjectBuilder score(List<String> languageList){
+		project.setLanguageList(languageList);
+		return this;
+	}
+	
 	public Project create() {
 		
 		updateUrl();
@@ -48,6 +95,12 @@ public class ProjectBuilder {
 		p.setForksCount(project.getForksCount());
 		p.setStarsCount(project.getStarsCount());
 		p.setOrganizationName(project.getOrganizationName());
+		p.setCommitsCount(project.getCommitsCount());
+		p.setContributorsCount(project.getContributorsCount());
+		p.setDescription(project.getDescription());
+		p.setLastPushed(project.getLastPushed());
+		p.setScore(project.getScore());
+		p.setLanguageList(project.getLanguageList());
 		return p;
 	}
 
