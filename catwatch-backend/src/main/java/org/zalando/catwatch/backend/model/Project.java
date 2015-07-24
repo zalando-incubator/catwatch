@@ -36,40 +36,40 @@ public class Project {
     private long gitHubProjectId;
 
     @Column(name = "snapshot_date")
-    private Date snapshotDate = null;
+    private Date snapshotDate;
 
     @Column(name = "name")
-    private String name = null;
+    private String name;
 
     @Column(name = "organization_name")
     private String organizationName;
 
     @Column(name = "url")
-    private String url = null;
+    private String url;
 
     @Column(name = "description")
-    private String description = null;
+    private String description;
 
     @Column(name = "stars_count")
-    private Integer starsCount = null;
+    private Integer starsCount;
 
     @Column(name = "commits_count")
-    private Integer commitsCount = null;
+    private Integer commitsCount;
 
     @Column(name = "forks_count")
-    private Integer forksCount = null;
+    private Integer forksCount;
 
     @Column(name = "contributors_count")
-    private Integer contributorsCount = null;
+    private Integer contributorsCount;
 
     @Column(name = "score")
-    private Integer score = null;
+    private Integer score;
 
     @Column(name = "last_pushed")
-    private String lastPushed = null;
+    private String lastPushed;
 
     @Column(name = "primary_language")
-    private String primaryLanguage = null;
+    private String primaryLanguage;
 
     @JsonIgnore
     public int getId() {
