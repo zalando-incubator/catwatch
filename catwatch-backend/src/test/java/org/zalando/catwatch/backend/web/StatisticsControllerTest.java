@@ -27,7 +27,6 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.StringParser;
-import org.zalando.catwatch.backend.util.TestUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
@@ -69,8 +68,8 @@ public class StatisticsControllerTest{
 		
 		//when 
 		repository.deleteAll();
-		String from = threeDaysAgo.toString(); //StringParser.getISO8601StringForDate(threeDaysAgo);
-		String to = oneDayAgo.toString(); //StringParser.getISO8601StringForDate(oneDayAgo);
+		String from = StringParser.getISO8601StringForDate(threeDaysAgo);
+		String to = StringParser.getISO8601StringForDate(oneDayAgo);
 		
 		//do request with valid time formats
 		mockMvc.perform(get(createRelativeStatisticsUrl(null, from, to)))
