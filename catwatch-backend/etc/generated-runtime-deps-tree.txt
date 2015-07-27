@@ -4,7 +4,8 @@ org.zalando:catwatch-backend:jar:0.0.1-SNAPSHOT
 |  +- commons-codec:commons-codec:jar:1.7:compile
 |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.4.6:compile (version managed from 2.2.3)
 |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.4.6:compile
-|  \- commons-io:commons-io:jar:1.4:compile
+|  +- commons-io:commons-io:jar:1.4:compile
+|  \- com.infradna.tool:bridge-method-annotation:jar:1.14:compile
 +- com.squareup.okhttp:okhttp:jar:2.4.0:compile
 |  \- com.squareup.okio:okio:jar:1.4.0:compile
 +- com.squareup.okhttp:okhttp-urlconnection:jar:2.4.0:compile
@@ -65,17 +66,22 @@ org.zalando:catwatch-backend:jar:0.0.1-SNAPSHOT
 +- com.mysema.querydsl:querydsl-jpa:jar:3.6.5:compile
 |  +- com.mysema.querydsl:querydsl-core:jar:3.6.5:compile
 |  |  +- com.google.code.findbugs:jsr305:jar:1.3.9:compile
-|  |  +- com.mysema.commons:mysema-commons-lang:jar:0.2.4:compile
-|  |  \- com.infradna.tool:bridge-method-annotation:jar:1.13:compile
+|  |  \- com.mysema.commons:mysema-commons-lang:jar:0.2.4:compile
 |  \- org.slf4j:slf4j-api:jar:1.7.12:compile
 +- com.h2database:h2:jar:1.4.187:compile
++- org.postgresql:postgresql:jar:9.4-1201-jdbc41:compile
 +- org.springframework.boot:spring-boot-starter-actuator:jar:1.2.5.RELEASE:compile
 |  \- org.springframework.boot:spring-boot-actuator:jar:1.2.5.RELEASE:compile
 +- com.google.guava:guava:jar:18.0:compile
++- commons-beanutils:commons-beanutils:jar:1.9.2:compile
+|  +- commons-logging:commons-logging:jar:1.1.1:compile
+|  \- commons-collections:commons-collections:jar:3.2.1:compile
 +- org.springframework.boot:spring-boot-starter-test:jar:1.2.5.RELEASE:test
 +- junit:junit:jar:4.12:test
 +- org.mockito:mockito-core:jar:1.10.19:test
 |  \- org.objenesis:objenesis:jar:2.1:test
 +- org.hamcrest:hamcrest-core:jar:1.3:test
 +- org.hamcrest:hamcrest-library:jar:1.3:test
-\- org.springframework:spring-test:jar:4.1.7.RELEASE:test
++- org.springframework:spring-test:jar:4.1.7.RELEASE:test
+\- com.jayway.jsonpath:json-path:jar:0.9.1:test
+   \- net.minidev:json-smart:jar:1.2:test

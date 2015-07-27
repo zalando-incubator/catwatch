@@ -45,6 +45,7 @@ dependencies {
     // persistence
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
+    compile("org.postgresql:postgresql:9.4-1201-jdbc41")
     compile("com.mysema.querydsl:querydsl-jpa:3.6.5")
     // monitoring
 	compile("org.springframework.boot:spring-boot-starter-actuator")

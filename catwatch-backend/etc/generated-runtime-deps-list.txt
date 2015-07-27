@@ -11,16 +11,19 @@ The following files have been resolved:
    com.google.code.findbugs:jsr305:jar:1.3.9:compile
    com.google.guava:guava:jar:18.0:compile
    com.h2database:h2:jar:1.4.187:compile
-   com.infradna.tool:bridge-method-annotation:jar:1.13:compile
+   com.infradna.tool:bridge-method-annotation:jar:1.14:compile
    com.mysema.commons:mysema-commons-lang:jar:0.2.4:compile
    com.mysema.querydsl:querydsl-core:jar:3.6.5:compile
    com.mysema.querydsl:querydsl-jpa:jar:3.6.5:compile
    com.squareup.okhttp:okhttp:jar:2.4.0:compile
    com.squareup.okhttp:okhttp-urlconnection:jar:2.4.0:compile
    com.squareup.okio:okio:jar:1.4.0:compile
+   commons-beanutils:commons-beanutils:jar:1.9.2:compile
    commons-codec:commons-codec:jar:1.7:compile
+   commons-collections:commons-collections:jar:3.2.1:compile
    commons-io:commons-io:jar:1.4:compile
    commons-lang:commons-lang:jar:2.6:compile
+   commons-logging:commons-logging:jar:1.1.1:compile
    dom4j:dom4j:jar:1.6.1:compile
    io.swagger:swagger-annotations:jar:1.5.0:compile
    javax.transaction:javax.transaction-api:jar:1.2:compile
@@ -43,6 +46,7 @@ The following files have been resolved:
    org.jboss.logging:jboss-logging:jar:3.1.3.GA:compile
    org.jboss.logging:jboss-logging-annotations:jar:1.2.0.Beta1:compile
    org.kohsuke:github-api:jar:1.68:compile
+   org.postgresql:postgresql:jar:9.4-1201-jdbc41:compile
    org.slf4j:jcl-over-slf4j:jar:1.7.12:compile
    org.slf4j:jul-to-slf4j:jar:1.7.12:compile
    org.slf4j:log4j-over-slf4j:jar:1.7.12:compile

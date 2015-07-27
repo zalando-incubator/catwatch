@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 
@@ -18,12 +19,19 @@ public class DatabasePopulator {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+	@Autowired
+	private ContributorRepository contributorRepository;
+
 	public StatisticsBuilder newStat() {
 		return new StatisticsBuilder(statisticsRepository);
 	}
 
 	public ProjectBuilder newProject() {
 		return new ProjectBuilder(projectRepository);
+	}
+
+	public ContributorBuilder newContributor() {
+		return new ContributorBuilder(contributorRepository);
 	}
 
 	@PostConstruct
@@ -49,6 +57,9 @@ public class DatabasePopulator {
 			newProject().organizationName("galanto").save();
 		}
 
+		// create contributors for galanto
+		newContributor().organizationName("galanto").save();
+		newContributor().organizationName("galanto").save();
 	}
 
 }
