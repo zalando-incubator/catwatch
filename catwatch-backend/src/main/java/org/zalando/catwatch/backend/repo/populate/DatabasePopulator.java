@@ -1,10 +1,12 @@
 package org.zalando.catwatch.backend.repo.populate;
 
+import static org.zalando.catwatch.backend.repo.DatabasePing.isDatabaseAvailable;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
@@ -22,6 +24,9 @@ public class DatabasePopulator {
 	@Autowired
 	private ContributorRepository contributorRepository;
 
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	public StatisticsBuilder newStat() {
 		return new StatisticsBuilder(statisticsRepository);
 	}
@@ -36,6 +41,10 @@ public class DatabasePopulator {
 
 	@PostConstruct
 	public void postConstruct() {
+		
+		if (!isDatabaseAvailable(jdbcTemplate)) {
+			return; // return so that the application context can start at least
+		}
 
 		// create statistics for two companies (latest)
 		newStat() //
