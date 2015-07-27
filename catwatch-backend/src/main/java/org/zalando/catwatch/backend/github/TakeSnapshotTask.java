@@ -65,14 +65,18 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         statistics.setPublicProjectCount(organization.getPublicRepoCount());
         statistics.setMembersCount(organization.listPublicMembers().asList().size());
-        // TODO Ensure that the current user has admin rights in organization. Until then listing teams can throw no access exception
-//        statistics.setTeamsCount(organization.listTeams().asList().size());
+        try {
+            statistics.setTeamsCount(organization.listTeams().asList().size());
+        } catch (Exception e) {
+            logger.warn("Failed to set teams count for organization '{}': user has no rights to see teams.", organisationName);
+            statistics.setTeamsCount(0);
+        }
         statistics.setAllContributorsCount((int) repositories.stream()
                 .map(repository -> {
                     try {
                         return repository.listContributors();
                     } catch (IOException e) {
-                        logger.error("Failed to list contributors for project '{}'", repository.getName());
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 })
@@ -99,7 +103,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                     try {
                         return repository.listTags();
                     } catch (IOException e) {
-                        logger.error("Failed to list tags for project '{}'", repository.getName());
+                        logger.error("Failed to list tags for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 })
@@ -152,7 +156,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                     try {
                         return repository.listContributors();
                     } catch (IOException e) {
-                        logger.error("Failed to list contributors for project '{}'", repository.getName());
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 })
@@ -184,6 +188,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             contributors.add(contributor);
         }
 
+        // TODO contributor.setPersonalCommitsCount()
+
         logger.info("Finished collecting contributors for organization '{}'", organisationName);
 
         return contributors;
@@ -199,7 +205,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                     try {
                         return repository.listLanguages();
                     } catch (IOException e) {
-                        logger.error("Failed to list languages for project '{}'", repository.getName());
+                        logger.error("Failed to list languages for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 })
@@ -217,7 +223,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
             language.setName(entry.getKey());
             language.setProjectsCount((int) entry.getValue().getCount());
-            language.setPercentage((int) (entry.getValue().getSum() / allLanguageSize));
+            language.setPercentage((int) (entry.getValue().getSum() * 100 / allLanguageSize));
 
             languages.add(language);
         }
@@ -229,11 +235,11 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
     // TODO implement me
     private int getProjectScore(GHRepository repository) {
-        return 0;
+        return 1;
     }
 
     // TODO implement me
     private int getContributorScore(GHRepository.Contributor contributor) {
-        return 0;
+        return 1;
     }
 }
