@@ -106,14 +106,45 @@ public class ContributorsApi {
 
 	) throws NotFoundException {
 
-		validate(organizations, offset, limit, sortBy);
+		validate(organizations, offset, limit, sortBy, startDate, endDate);
 
-		if (startDate != null && endDate != null && repository.findPreviousSnapShotDate(iso8601(endDate)) != null) {
+		if (startDate != null && endDate != null && repository.findPreviousSnapShotDate(iso8601(endDate)) != null
+				&& repository.findPreviousSnapShotDate(iso8601(startDate)) != null) {
+
 			return contributorsGet_timeSpan(organizations, limit, offset, startDate, endDate, sortBy, q);
+
+		} else if (startDate == null && endDate == null //
+				&& repository.findPreviousSnapShotDate(iso8601(endDate)) != null) {
+
+			return contributorsGet_noTimeSpan(organizations, limit, offset, endDate, sortBy, q);
+
 		} else {
+
 			throw new UnsupportedOperationException(
 					"this parameter configuration is not implemented yet" + " .. start date, end date required atm");
+
 		}
+	}
+
+	private List<Contributor> contributorsGet_noTimeSpan(String organizations, Integer limit, Integer offset,String endDate, String sortBy, String q) throws NotFoundException {
+
+		Date endDateDate = endDate != null ? iso8601(endDate) : new Date();
+		Date endDateInDb = repository.findPreviousSnapShotDate(endDateDate);
+
+		ArrayListMultimap<Long, Contributor> multiMap = ArrayListMultimap.create();
+
+		orgs(organizations).values().stream().forEach(organizationId -> {
+
+			List<Contributor> contributors = repository.findAllTimeTopContributors(organizationId, endDateInDb, q, null,
+					null);
+
+			contributors.stream().forEach(c -> multiMap.put(c.getKey().getId(), c));
+		});
+
+		List<Contributor> sorted = multiMap.asMap().values().stream().map(list -> add(list)).collect(toList());
+		Collections.sort(sorted, comparator(sortBy(sortBy)));
+
+		return sublist(limit, offset, sorted);
 	}
 
 	private List<Contributor> contributorsGet_timeSpan(String organizations, Integer limit, Integer offset,
@@ -150,6 +181,14 @@ public class ContributorsApi {
 		Collections.sort(sorted, comparator(sortBy(sortBy))); // or
 																// stream.sorted(comparator)
 
+		return sublist(limit, offset, sorted);
+	}
+
+	//
+	// util
+	//
+
+	private List<Contributor> sublist(Integer limit, Integer offset, List<Contributor> sorted) {
 		int endIndex;
 		if (offset(offset) + limit(limit) > sorted.size()) {
 			endIndex = sorted.size();
@@ -165,7 +204,8 @@ public class ContributorsApi {
 	// validate / process arguments
 	//
 
-	private void validate(String organizations, Integer offset, Integer limit, String sortBy) {
+	private void validate(String organizations, Integer offset, Integer limit, String sortBy, String startDate,
+			String endDate) {
 
 		checkArgument(offset(offset) >= 0, "offset must be greater than zero but was " + offset);
 
@@ -176,6 +216,14 @@ public class ContributorsApi {
 		checkArgument(sortBy(sortBy) != null, "sortBy must be empty or have a valid value but was " + sortBy
 				+ ". Valid values are " + on(",").join(SORT_BY_LIST));
 
+		checkArgument(endDate == null || repository.findPreviousSnapShotDate(iso8601(endDate)) != null,
+				"endDate is set to " + endDate + "but there is no snapshot data before that date");
+
+		checkArgument(startDate == null || repository.findPreviousSnapShotDate(iso8601(startDate)) != null,
+				"startDate is set to " + startDate + "but there is no snapshot data before that date");
+
+		checkArgument(startDate == null || endDate == null || iso8601(startDate).before(iso8601(endDate)),
+				"startDate " + startDate + " must be before endDate" + endDate + " but was not");
 	}
 
 	private Map<String, Long> orgs(String organizations) {
