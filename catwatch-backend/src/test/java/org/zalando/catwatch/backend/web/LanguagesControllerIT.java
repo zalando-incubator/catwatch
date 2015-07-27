@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.populate.BuilderUtil;
 import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
@@ -62,7 +61,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT{
 		
 		for (int i=0; i<nrOfProjects; i++){
 			lang = BuilderUtil.randomLanguage();
-			new ProjectBuilder(repository).primaryLanguage(lang).save();
+			new ProjectBuilder(repository, new Date()).primaryLanguage(lang).save();
 			languages.add(lang);
 		}
 		
