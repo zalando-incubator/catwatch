@@ -86,32 +86,42 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         statistics.setPublicProjectCount(organization.getPublicRepoCount());
         statistics.setMembersCount(organization.listPublicMembers().asList().size());
-
-        // TODO Ensure that the current user has admin rights in organization. Until then listing teams can throw no
-        // access exception
-// statistics.setTeamsCount(organization.listTeams().asList().size());
-        statistics.setAllContributorsCount((int) repositories.stream().map(repository -> {
-                try {
-                    return repository.listContributors();
-                } catch (IOException e) {
-                    logger.error("Failed to list contributors for project '{}'", repository.getName());
-                    throw new RuntimeException(e);
-                }
-            }).map(PagedIterable::asList).flatMap(List::stream).map(GHRepository.Contributor::getId).distinct()
+        try {
+            statistics.setTeamsCount(organization.listTeams().asList().size());
+        } catch (Exception e) {
+            logger.warn("Failed to set teams count for organization '{}': user has no rights to see teams.", organisationName);
+            statistics.setTeamsCount(0);
+        }
+        statistics.setAllContributorsCount((int) repositories.stream()
+                .map(repository -> {
+                    try {
+                        return repository.listContributors();
+                    } catch (IOException e) {
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(PagedIterable::asList)
+                .flatMap(List::stream)
+                .map(GHRepository.Contributor::getId)
+                .distinct()
                 .count());
         statistics.setAllStarsCount(repositories.stream().map(GHRepository::getWatchers).reduce(0, Integer::sum));
         statistics.setAllForksCount(repositories.stream().map(GHRepository::getForks).reduce(0, Integer::sum));
         statistics.setAllSizeCount(repositories.stream().map(GHRepository::getSize).reduce(0, Integer::sum));
         statistics.setProgramLanguagesCount((int) repositories.stream().map(GHRepository::getLanguage).distinct()
                 .count());
-        statistics.setTagsCount((int) repositories.stream().map(repository -> {
-                try {
-                    return repository.listTags();
-                } catch (IOException e) {
-                    logger.error("Failed to list tags for project '{}'", repository.getName());
-                    throw new RuntimeException(e);
-                }
-            }).map(PagedIterable::asList).count());
+        statistics.setTagsCount((int) repositories.stream()
+                .map(repository -> {
+                    try {
+                        return repository.listTags();
+                    } catch (IOException e) {
+                        logger.error("Failed to list tags for project '{}' of '{}'", repository.getName(), organisationName);
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(PagedIterable::asList)
+                .count());
         statistics.setOrganizationName(organization.getName());
 
         logger.info("Finished collecting statistics for organization '{}'", organisationName);
@@ -140,7 +150,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setLastPushed(repository.getPushedAt().toString());
             project.setPrimaryLanguage(repository.getLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
-            project.setOrganizationName(organization.getName());
+            project.setOrganizationName(organization.getLogin());
             project.setScore(getProjectScore(repository));
 
             projects.add(project);
@@ -162,7 +172,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                     try {
                         return repository.listContributors();
                     } catch (IOException e) {
-                        logger.error("Failed to list contributors for project '{}'", repository.getName());
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 }).map(PagedIterable::asList).flatMap(List::stream).collect(toList());
@@ -189,6 +199,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             contributors.add(contributor);
         }
 
+        // TODO contributor.setPersonalCommitsCount()
+
         logger.info("Finished collecting contributors for organization '{}'", organisationName);
 
         return contributors;
@@ -203,7 +215,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                     try {
                         return repository.listLanguages();
                     } catch (IOException e) {
-                        logger.error("Failed to list languages for project '{}'", repository.getName());
+                        logger.error("Failed to list languages for project '{}' of '{}'", repository.getName(), organisationName);
                         throw new RuntimeException(e);
                     }
                 }).map(Map::entrySet).flatMap(Set::stream).collect(groupingBy(Map.Entry::getKey,
@@ -217,7 +229,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
             language.setName(entry.getKey());
             language.setProjectsCount((int) entry.getValue().getCount());
-            language.setPercentage((int) (entry.getValue().getSum() / allLanguageSize));
+            language.setPercentage((int) (entry.getValue().getSum() * 100 / allLanguageSize));
 
             languages.add(language);
         }
@@ -228,12 +240,12 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
     }
 
     // TODO implement me
-    private int getProjectScore(final GHRepository repository) {
-        return 0;
+    private int getProjectScore(GHRepository repository) {
+        return 1;
     }
 
     // TODO implement me
-    private int getContributorScore(final GHRepository.Contributor contributor) {
-        return 0;
+    private int getContributorScore(GHRepository.Contributor contributor) {
+        return 1;
     }
 }
