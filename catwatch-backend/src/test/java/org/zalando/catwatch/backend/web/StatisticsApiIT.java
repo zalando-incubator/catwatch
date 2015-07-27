@@ -21,7 +21,7 @@ import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.StringParser;
 import org.zalando.catwatch.backend.util.TestUtils;
 
-public class StatisticsControllerIT extends AbstractCatwatchIT {
+public class StatisticsApiIT extends AbstractCatwatchIT {
 
 	@Autowired
 	private StatisticsRepository repository;

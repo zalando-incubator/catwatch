@@ -2,36 +2,25 @@ package org.zalando.catwatch.backend.web;
 
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
-
 import static org.hamcrest.Matchers.hasSize;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import static org.zalando.catwatch.backend.util.TestUtils.createRelativeStatisticsUrl;
 
 import java.util.Date;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
-
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.SpringApplicationConfiguration;
-
 import org.springframework.core.env.Environment;
-
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -41,7 +30,7 @@ import org.zalando.catwatch.backend.util.StringParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-public class StatisticsControllerTest {
+public class StatisticsApiTest {
 
     @Autowired
     private StatisticsApi statisticsApi;
