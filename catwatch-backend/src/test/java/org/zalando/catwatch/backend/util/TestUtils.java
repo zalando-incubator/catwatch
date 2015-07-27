@@ -16,7 +16,7 @@ public class TestUtils {
 		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
 				actual.getAllContributorsCount());
 
-		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
+		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate().getTime(), actual.getSnapshotDate().getTime());
 
 		if(checkIds) Assert.assertEquals("ID is different", expected.getId(), actual.getId());
 

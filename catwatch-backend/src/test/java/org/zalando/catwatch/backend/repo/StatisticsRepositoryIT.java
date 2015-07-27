@@ -13,23 +13,15 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.util.TestUtils;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-@Transactional
-public class StatisticsRepositoryIT {
+public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 
 	@Autowired
-	StatisticsRepository repository;
+	private StatisticsRepository repository;
 
 	private Statistics s1, s2, s3, s4, s5, s6;
 
@@ -194,7 +186,7 @@ public class StatisticsRepositoryIT {
 
 		Date startDate = threeDaysAgo;
 		Date endDate = twoDaysAgo;
-		
+
 		repository.deleteAll();
 
 		// // snapshot date is before requested period of time
@@ -215,33 +207,40 @@ public class StatisticsRepositoryIT {
 
 		// then
 		assertThat(stats, hasSize(2));
-		assertThat(stats.get(0).getSnapshotDate(), equalTo(s3.getSnapshotDate()));
-		assertThat(stats.get(1).getSnapshotDate(), equalTo(s2.getSnapshotDate()));
+		assertThat(stats.get(0).getSnapshotDate().getTime(), equalTo(s3.getSnapshotDate().getTime()));
+		assertThat(stats.get(1).getSnapshotDate().getTime(), equalTo(s2.getSnapshotDate().getTime()));
 
 		// when
-//		stats = findInPeriod(null, endDate);
-//
-//		// then
-//		assertThat(stats, hasSize(4));
-//		assertThat(stats.get(0).getSnapshotDate(), equalTo(s4.getSnapshotDate()));
-//		assertThat(stats.get(1).getSnapshotDate(), equalTo(s3.getSnapshotDate()));
-//		assertThat(stats.get(2).getSnapshotDate(), equalTo(s2.getSnapshotDate()));
-//		assertThat(stats.get(3).getSnapshotDate(), equalTo(s1.getSnapshotDate()));
+		// stats = findInPeriod(null, endDate);
+		//
+		// // then
+		// assertThat(stats, hasSize(4));
+		// assertThat(stats.get(0).getSnapshotDate(),
+		// equalTo(s4.getSnapshotDate()));
+		// assertThat(stats.get(1).getSnapshotDate(),
+		// equalTo(s3.getSnapshotDate()));
+		// assertThat(stats.get(2).getSnapshotDate(),
+		// equalTo(s2.getSnapshotDate()));
+		// assertThat(stats.get(3).getSnapshotDate(),
+		// equalTo(s1.getSnapshotDate()));
 
 		// when
-//		stats = findInPeriod(startDate, null);
-//
-//		// then
-//		assertThat(stats, hasSize(3));
-//		assertThat(stats.get(0).getSnapshotDate(), equalTo(s6.getSnapshotDate()));
-//		assertThat(stats.get(1).getSnapshotDate(), equalTo(s4.getSnapshotDate()));
-//		assertThat(stats.get(2).getSnapshotDate(), equalTo(s3.getSnapshotDate()));
+		// stats = findInPeriod(startDate, null);
+		//
+		// // then
+		// assertThat(stats, hasSize(3));
+		// assertThat(stats.get(0).getSnapshotDate(),
+		// equalTo(s6.getSnapshotDate()));
+		// assertThat(stats.get(1).getSnapshotDate(),
+		// equalTo(s4.getSnapshotDate()));
+		// assertThat(stats.get(2).getSnapshotDate(),
+		// equalTo(s3.getSnapshotDate()));
 	}
 
-	
-	private List<Statistics> findLatestStatistics(String organization){
+	private List<Statistics> findLatestStatistics(String organization) {
 		return this.repository.findByOrganizationNameOrderByKeySnapshotDateDesc(organization, new PageRequest(0, 1));
 	}
+
 	private List<Statistics> findInPeriod(Date startDate, Date endDate) {
 		// return
 		// repository.findByOrganizationNameAndSnapshotDateAfterAndSnapshotDateBeforeOrderBySnapshotDateDesc(
@@ -250,14 +249,14 @@ public class StatisticsRepositoryIT {
 	}
 
 	private Statistics createAndSaveStatistics(String organizationName, Date snapshotDate) {
-		Statistics s = new Statistics(new Double(Math.random()*1000).intValue(), snapshotDate);
+		Statistics s = new Statistics(new Double(Math.random() * 1000).intValue(), snapshotDate);
 		s.setOrganizationName(organizationName);
 		s.setSnapshotDate(snapshotDate);
 		return repository.save(s);
 	}
 
 	private void createStatistics() {
-		s1 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-100));
+		s1 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 100));
 		s1.setAllContributorsCount(10);
 		s1.setAllForksCount(12);
 		s1.setAllSizeCount(100);
@@ -270,45 +269,57 @@ public class StatisticsRepositoryIT {
 		s1.setTagsCount(6);
 		s1.setTeamsCount(0);
 
-		s2 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-200));
-		s3 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-300));
-		s4 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-400));
-		s5 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-500));
-		s6 = new Statistics(new Double(Math.random()*1000).intValue(), new Date(System.currentTimeMillis()-600));
+		s2 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 200));
+		s3 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 300));
+		s4 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 400));
+		s5 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 500));
+		s6 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 600));
 	}
 
-//	private void checkEquals(Statistics expected, Statistics actual) {
-//		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
-//				actual.getAllContributorsCount());
-//
-//		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
-//
-//		Assert.assertEquals("ID is different", expected.getId(), actual.getId());
-//
-//		Assert.assertEquals("Number of contributors is different", expected.getAllForksCount(),
-//				actual.getAllForksCount());
-//
-//		Assert.assertEquals("Number of size is different", expected.getAllSizeCount(), actual.getAllSizeCount());
-//
-//		Assert.assertEquals("Number of stars is different", expected.getAllStarsCount(), actual.getAllStarsCount());
-//
-//		Assert.assertEquals("Number of members is different", expected.getMembersCount(), actual.getMembersCount());
-//
-//		Assert.assertEquals("Oranization names are different", expected.getOrganizationName(),
-//				actual.getOrganizationName());
-//
-//		Assert.assertEquals("Number of projects is different", expected.getPrivateProjectCount(),
-//				actual.getPrivateProjectCount());
-//
-//		Assert.assertEquals("Number of programming languages is different", expected.getProgramLanguagesCount(),
-//				actual.getProgramLanguagesCount());
-//
-//		Assert.assertEquals("Number of public projects is different", expected.getPublicProjectCount(),
-//				actual.getPublicProjectCount());
-//
-//		Assert.assertEquals("Number of tags is different", expected.getTagsCount(), actual.getTagsCount());
-//
-//		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
-//
-//	}
+	// private void checkEquals(Statistics expected, Statistics actual) {
+	// Assert.assertEquals("Number of contributors is different",
+	// expected.getAllContributorsCount(),
+	// actual.getAllContributorsCount());
+	//
+	// Assert.assertEquals("Snapshot date is different",
+	// expected.getSnapshotDate(), actual.getSnapshotDate());
+	//
+	// Assert.assertEquals("ID is different", expected.getId(), actual.getId());
+	//
+	// Assert.assertEquals("Number of contributors is different",
+	// expected.getAllForksCount(),
+	// actual.getAllForksCount());
+	//
+	// Assert.assertEquals("Number of size is different",
+	// expected.getAllSizeCount(), actual.getAllSizeCount());
+	//
+	// Assert.assertEquals("Number of stars is different",
+	// expected.getAllStarsCount(), actual.getAllStarsCount());
+	//
+	// Assert.assertEquals("Number of members is different",
+	// expected.getMembersCount(), actual.getMembersCount());
+	//
+	// Assert.assertEquals("Oranization names are different",
+	// expected.getOrganizationName(),
+	// actual.getOrganizationName());
+	//
+	// Assert.assertEquals("Number of projects is different",
+	// expected.getPrivateProjectCount(),
+	// actual.getPrivateProjectCount());
+	//
+	// Assert.assertEquals("Number of programming languages is different",
+	// expected.getProgramLanguagesCount(),
+	// actual.getProgramLanguagesCount());
+	//
+	// Assert.assertEquals("Number of public projects is different",
+	// expected.getPublicProjectCount(),
+	// actual.getPublicProjectCount());
+	//
+	// Assert.assertEquals("Number of tags is different",
+	// expected.getTagsCount(), actual.getTagsCount());
+	//
+	// Assert.assertEquals("Number of teams is different",
+	// expected.getTeamsCount(), actual.getTeamsCount());
+	//
+	// }
 }

@@ -13,20 +13,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-public class ContributorRepositoryIT {
+public class ContributorRepositoryIT extends AbstractRepositoryIT {
 
 	@Autowired
-	ContributorRepository repository;
+	private ContributorRepository repository;
 
 	public ContributorBuilder newContributor() {
 		return new ContributorBuilder(repository);

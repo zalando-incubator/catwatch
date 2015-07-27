@@ -11,6 +11,7 @@ env:
 
 before_script:
   - psql -c 'create database catwatch;' -U postgres
+  - psql -c "create user cat1 with password 'cat1';" -U postgres
 
 script:
   - ./build.sh
