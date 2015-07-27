@@ -98,7 +98,7 @@ public class ProjectBuilder {
         return this;
     }
 
-    public ProjectBuilder score(final List<String> languageList) {
+    public ProjectBuilder languages(final List<String> languageList) {
         project.setLanguageList(languageList);
         return this;
     }
@@ -127,5 +127,6 @@ public class ProjectBuilder {
     public Project save() {
         return projectRepository.save(create());
     }
+
 
 }

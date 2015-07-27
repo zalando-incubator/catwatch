@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class LanguagesApi {
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
             final String q) throws NotFoundException {
 
-        List<Language> languages = getLanguages(organizations, new LanguagePercentComparator());
+        List<Language> languages = getMainLanguages(organizations, new LanguagePercentComparator());
 
         // TODO apply limit
 
@@ -80,6 +81,7 @@ public class LanguagesApi {
         return new ResponseEntity<Collection<Language>>(languages, HttpStatus.OK);
     }
 
+    
     private List<Language> getLanguages(final String organizations, final Comparator<Language> c) {
 
         Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
@@ -127,13 +129,63 @@ public class LanguagesApi {
 
         return languages;
     }
+    
+    
+    private List<Language> getMainLanguages(final String organizations, final Comparator<Language> c) {
 
+        Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
+        List<Project> projectList = new ArrayList<>();
+
+        // get the projects
+        for (String org : organizationList) {
+
+            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null));
+
+            Iterator<Project> iter = projects.iterator();
+            while (iter.hasNext()) {
+                projectList.add(iter.next());
+            }
+        }
+
+        // count the languages
+
+        List<String> languageList = new ArrayList<>();
+
+        for (Project p : projectList) {
+            languageList.add(p.getPrimaryLanguage());
+        }
+
+        List<Language> languages = new ArrayList<>();
+
+        Set<String> languageSet = new HashSet<>(languageList);
+
+        int frequency = 0;
+
+        for (String language : languageSet) {
+            Language l = new Language(language);
+            frequency = Collections.frequency(languageList, language);
+
+            l.setPercentage((int) Math.round(((double) frequency) / languageList.size() * 100));
+            l.setProjectsCount(frequency);
+
+            languages.add(l);
+        }
+
+        // sort
+        if (languages.size() > 1) {
+            Collections.sort(languages, c);
+        }
+
+        return languages;
+    }
+
+    
     private class LanguagePercentComparator implements Comparator<Language> {
 
         @Override
         public int compare(final Language l1, final Language l2) {
 
-            if (l1.getPercentage() > l2.getPercentage()) {
+            if (l1.getPercentage() >= l2.getPercentage()) {
                 return 1;
             } else {
                 return -1;
