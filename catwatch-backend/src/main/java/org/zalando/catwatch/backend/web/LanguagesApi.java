@@ -81,7 +81,6 @@ public class LanguagesApi {
         return new ResponseEntity<Collection<Language>>(languages, HttpStatus.OK);
     }
 
-    
     private List<Language> getLanguages(final String organizations, final Comparator<Language> c) {
 
         Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
@@ -90,7 +89,7 @@ public class LanguagesApi {
         // get the projects
         for (String org : organizationList) {
 
-            Iterable<Project> projects = repository.findProjects(org, null, null, null, null, null);
+            Iterable<Project> projects = repository.findProjects(org, null);
 
             Iterator<Project> iter = projects.iterator();
             while (iter.hasNext()) {
@@ -129,8 +128,7 @@ public class LanguagesApi {
 
         return languages;
     }
-    
-    
+
     private List<Language> getMainLanguages(final String organizations, final Comparator<Language> c) {
 
         Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
@@ -139,7 +137,7 @@ public class LanguagesApi {
         // get the projects
         for (String org : organizationList) {
 
-            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null), Optional.ofNullable(null));
+            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null));
 
             Iterator<Project> iter = projects.iterator();
             while (iter.hasNext()) {
@@ -179,7 +177,6 @@ public class LanguagesApi {
         return languages;
     }
 
-    
     private class LanguagePercentComparator implements Comparator<Language> {
 
         @Override
