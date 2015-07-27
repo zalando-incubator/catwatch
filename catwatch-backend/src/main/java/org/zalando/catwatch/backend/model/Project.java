@@ -8,6 +8,8 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
@@ -23,6 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class Project {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "serial")
     private int id;
 
@@ -30,6 +33,9 @@ public class Project {
     @CollectionTable(name = "language_list", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "language")
     private List<String> languageList = new ArrayList<>();
+
+    @Column(name = "git_hub_project_id")
+    private long gitHubProjectId;
 
     @Column(name = "snapshot_date")
     private Date snapshotDate;
@@ -83,6 +89,17 @@ public class Project {
 
     public void setLanguageList(final List<String> languageList) {
         this.languageList = languageList;
+    }
+
+    @ApiModelProperty(
+        value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide."
+    )
+    public long getGitHubProjectId() {
+        return gitHubProjectId;
+    }
+
+    public void setGitHubProjectId(final long gitHubProjectId) {
+        this.gitHubProjectId = gitHubProjectId;
     }
 
     @ApiModelProperty(value = "Project snapshot date. Part of the primary key.")
@@ -195,7 +212,7 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", languageList=" + languageList
+        return "Project{" + "id=" + id + ", languageList=" + languageList + ", gitHubProjectId=" + gitHubProjectId
                 + ", snapshotDate=" + snapshotDate + ", name='" + name + '\'' + ", organizationName='"
                 + organizationName + '\'' + ", url='" + url + '\'' + ", description='" + description + '\''
                 + ", starsCount=" + starsCount + ", commitsCount=" + commitsCount + ", forksCount=" + forksCount

@@ -137,7 +137,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         for (GHRepository repository : repositories) {
             Project project = new Project();
-            project.setId(repository.getId());
+            project.setGitHubProjectId(repository.getId());
             project.setSnapshotDate(snapshotDate);
 
             project.setName(repository.getName());

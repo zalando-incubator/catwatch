@@ -21,6 +21,7 @@ public class ProjectBuilder {
         this.projectRepository = projectRepository;
 
         project = new Project();
+        project.setGitHubProjectId(freshId());
         project.setSnapshotDate(date);
         project.setName(randomProjectName());
         project.setPrimaryLanguage(randomLanguage());
@@ -35,6 +36,11 @@ public class ProjectBuilder {
 
     public ProjectBuilder name(final String name) {
         project.setName(name);
+        return this;
+    }
+
+    public ProjectBuilder gitHubProjectId(final long gitHubProjectId) {
+        project.setGitHubProjectId(gitHubProjectId);
         return this;
     }
 
@@ -98,6 +104,7 @@ public class ProjectBuilder {
         updateUrl();
 
         Project p = new Project();
+        p.setGitHubProjectId(project.getGitHubProjectId());
         p.setSnapshotDate(project.getSnapshotDate());
         p.setName(project.getName());
         p.setPrimaryLanguage(project.getPrimaryLanguage());
