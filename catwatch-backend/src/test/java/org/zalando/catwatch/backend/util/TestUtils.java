@@ -16,7 +16,7 @@ public class TestUtils {
 		Assert.assertEquals("Number of contributors is different", expected.getAllContributorsCount(),
 				actual.getAllContributorsCount());
 
-		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate(), actual.getSnapshotDate());
+		Assert.assertEquals("Snapshot date is different", expected.getSnapshotDate().getTime(), actual.getSnapshotDate().getTime());
 
 		if(checkIds) Assert.assertEquals("ID is different", expected.getId(), actual.getId());
 
@@ -99,8 +99,8 @@ public class TestUtils {
 		}
 	}
 
-	public static String createStatisticsUrl (String organizations, String startDate, String endDate){
-		String url = Constants.API_RESOURCE_STATISTICS;
+	public static String createAbsoluteStatisticsUrl (String base, String organizations, String startDate, String endDate){
+		String url = base + Constants.API_RESOURCE_STATISTICS;
 		
 		if(organizations!=null){
 			url+="?"+Constants.API_REQUEST_PARAM_ORGANIZATIONS+"="+organizations;
@@ -127,5 +127,9 @@ public class TestUtils {
 		}
 		
 		return url;
+	}
+	
+	public static String createRelativeStatisticsUrl (String organizations, String startDate, String endDate){
+		return createAbsoluteStatisticsUrl("", organizations, startDate, endDate);
 	}
 }

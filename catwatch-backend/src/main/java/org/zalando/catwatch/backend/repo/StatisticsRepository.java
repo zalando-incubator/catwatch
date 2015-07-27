@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.model.StatisticsKey;
 
-public interface StatisticsRepository extends CrudRepository<Statistics, Long>{
+public interface StatisticsRepository extends CrudRepository<Statistics, StatisticsKey>{
 	
 	List<Statistics> findByOrganizationName(String name);
 	

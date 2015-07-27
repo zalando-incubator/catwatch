@@ -21,8 +21,8 @@
 			<version>1.68</version>
 			<exclusions>
 				<exclusion>
-				    <groupId>com.infradna.tool</groupId>
-				    <artifactId>bridge-method-annotation</artifactId>
+				    <groupId>org.jenkins-ci</groupId>
+				    <artifactId>annotation-indexer</artifactId>
   				</exclusion>
 			</exclusions>
 		</dependency>
@@ -63,6 +63,17 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <exclusions>
+                <exclusion>
+                  <groupId>org.slf4j</groupId>
+                  <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+		
 
 		<!-- monitoring etc. -->
 		<dependency>
@@ -74,6 +85,10 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
 		</dependency>
 
 		<!-- test scope -->
@@ -115,7 +130,6 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version>
 		</dependency>
 
 		<dependency>

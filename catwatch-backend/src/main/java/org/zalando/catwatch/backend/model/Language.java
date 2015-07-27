@@ -14,7 +14,12 @@ public class Language  {
   private Integer projectsCount = null;
   private Integer percentage = null;
 
+  public Language(){
+  }
   
+  public Language(String name){
+	  this.name = name;
+  }
   /**
    * Name of the programming language used.
    **/

@@ -88,12 +88,21 @@
                 <artifactId>querydsl-jpa</artifactId>
                 <version>3.6.5</version>
             </dependency>
+	        <dependency>
+	            <groupId>org.postgresql</groupId>
+	            <artifactId>postgresql</artifactId>
+	            <version>9.4-1201-jdbc41</version>
+	        </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>18.0</version>
             </dependency>
-
+			<dependency>
+			    <groupId>commons-beanutils</groupId>
+			    <artifactId>commons-beanutils</artifactId>
+			    <version>1.9.2</version>
+			</dependency>
         </dependencies>
     </dependencyManagement>
     <build>

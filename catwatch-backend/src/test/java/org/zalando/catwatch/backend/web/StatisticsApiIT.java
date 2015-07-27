@@ -4,6 +4,7 @@ import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.Assert.assertThat;
+import static org.zalando.catwatch.backend.util.TestUtils.createAbsoluteStatisticsUrl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.StringParser;
 import org.zalando.catwatch.backend.util.TestUtils;
 
-public class StatisticsControllerIT extends AbstractCatwatchIT {
+public class StatisticsApiIT extends AbstractCatwatchIT {
 
 	@Autowired
 	private StatisticsRepository repository;
@@ -48,7 +49,7 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 
 		// when
 		String organisations = s1.getOrganizationName() + "," + s2.getOrganizationName();
-		String url = TestUtils.createStatisticsUrl(organisations, null, null);
+		String url = TestUtils.createAbsoluteStatisticsUrl(this.base.toString(), organisations, null, null);
 
 		ResponseEntity<Statistics[]> response = template.getForEntity(url, Statistics[].class);
 
@@ -102,7 +103,7 @@ public class StatisticsControllerIT extends AbstractCatwatchIT {
 		String end = StringParser.getISO8601StringForDate(twoDaysAgo);
 
 		// create url
-		String url = TestUtils.createStatisticsUrl(ORGANIZATION1, start, end);
+		String url = createAbsoluteStatisticsUrl(this.base.toString(), ORGANIZATION1, start, end);
 		
 		// when
 		ResponseEntity<Statistics[]> response = template.getForEntity(url, Statistics[].class);
