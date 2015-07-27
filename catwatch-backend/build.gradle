@@ -36,7 +36,7 @@ dependencies {
     compile("com.squareup.okhttp:okhttp-urlconnection:2.4.0")
     compile("com.squareup.okhttp:okhttp:2.4.0")
     compile("org.kohsuke:github-api:1.68") {
-    	exclude module: 'bridge-method-annotation'
+    	exclude module: 'org.jenkins-ci'
     }
     // web
 	compile("org.springframework.boot:spring-boot-starter-web")
@@ -53,6 +53,7 @@ dependencies {
     compile("org.slf4j:slf4j-api:1.7.12")
     // util
     compile("com.google.guava:guava:18.0")
+    compile("commons-beanutils:commons-beanutils:1.9.2")
 	// test
 	testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("junit:junit")
@@ -60,6 +61,7 @@ dependencies {
 	testCompile("org.hamcrest:hamcrest-core")
 	testCompile("org.hamcrest:hamcrest-library")
 	testCompile("org.springframework:spring-test")
+	testCompile("com.jayway.jsonpath:json-path:0.9.1")
 }
 
 task wrapper(type: Wrapper) {
