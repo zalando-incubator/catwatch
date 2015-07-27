@@ -2,7 +2,6 @@ package org.zalando.catwatch.backend.repo.populate;
 
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.freshId;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
 
@@ -18,20 +17,17 @@ public class ProjectBuilder {
 
     private ProjectRepository projectRepository;
 
-    public ProjectBuilder(final ProjectRepository projectRepository) {
+    public ProjectBuilder(final ProjectRepository projectRepository, final Date date) {
         this.projectRepository = projectRepository;
 
-        Date date = randomDate();
-        for (int i = 0; i < 5; i++) {
-            project = new Project();
-            project.setGitHubProjectId(freshId());
-            project.setSnapshotDate(date);
-            project.setName(randomProjectName());
-            project.setPrimaryLanguage(randomLanguage());
-            project.setForksCount(random(1, 10));
-            project.setStarsCount(random(1, 4));
-            project.setCommitsCount(random(1, 1000));
-        }
+        project = new Project();
+        project.setGitHubProjectId(freshId());
+        project.setSnapshotDate(date);
+        project.setName(randomProjectName());
+        project.setPrimaryLanguage(randomLanguage());
+        project.setForksCount(random(1, 10));
+        project.setStarsCount(random(1, 4));
+        project.setCommitsCount(random(1, 1000));
     }
 
     private void updateUrl() {

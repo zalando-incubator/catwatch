@@ -2,12 +2,18 @@ package org.zalando.catwatch.backend.repo.populate;
 
 import static org.zalando.catwatch.backend.repo.DatabasePing.isDatabaseAvailable;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
+import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
+
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.stereotype.Component;
+
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -15,60 +21,63 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 @Component
 public class DatabasePopulator {
 
-	@Autowired
-	private StatisticsRepository statisticsRepository;
+    @Autowired
+    private StatisticsRepository statisticsRepository;
 
-	@Autowired
-	private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
-	@Autowired
-	private ContributorRepository contributorRepository;
+    @Autowired
+    private ContributorRepository contributorRepository;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
-	public StatisticsBuilder newStat() {
-		return new StatisticsBuilder(statisticsRepository);
-	}
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	public ProjectBuilder newProject() {
-		return new ProjectBuilder(projectRepository);
-	}
+    public StatisticsBuilder newStat() {
+        return new StatisticsBuilder(statisticsRepository);
+    }
 
-	public ContributorBuilder newContributor() {
-		return new ContributorBuilder(contributorRepository);
-	}
+    public ProjectBuilder newProject(final Date date) {
+        return new ProjectBuilder(projectRepository, date);
+    }
 
-	@PostConstruct
-	public void postConstruct() {
-		
-		if (!isDatabaseAvailable(jdbcTemplate)) {
-			return; // return so that the application context can start at least
-		}
+    public ContributorBuilder newContributor() {
+        return new ContributorBuilder(contributorRepository);
+    }
 
-		// create statistics for two companies (latest)
-		newStat() //
-				.organizationName("galanto") //
-				.publicProjectCount(34) //
-				.allStarsCount(54) //
-				.allForksCount(110) //
-				.days(1).save();
-		newStat() //
-				.organizationName("galanto-italic") //
-				.publicProjectCount(56) //
-				.allStarsCount(93) //
-				.allForksCount(249) //
-				.days(1).save();
+    @PostConstruct
+    public void postConstruct() {
 
-		// create projects for galanto
-		int numProjects = random(50, 150);
-		for (int i = 0; i < numProjects; i++) {
-			newProject().organizationName("galanto").save();
-		}
+        if (!isDatabaseAvailable(jdbcTemplate)) {
+            return;                             // return so that the application context can start at least
+        }
 
-		// create contributors for galanto
-		newContributor().organizationName("galanto").save();
-		newContributor().organizationName("galanto").save();
-	}
+        // create statistics for two companies (latest)
+        newStat()                           //
+        .organizationName("galanto")        //
+                    .publicProjectCount(34) //
+                    .allStarsCount(54)      //
+                    .allForksCount(110)     //
+                    .days(1).save();
+        newStat()                           //
+        .organizationName("galanto-italic") //
+                    .publicProjectCount(56) //
+                    .allStarsCount(93)      //
+                    .allForksCount(249)     //
+                    .days(1).save();
+
+        // create projects for galanto
+        int numProjects = random(50, 150);
+        for (int i = 0; i < numProjects; i++) {
+            Date date = randomDate();
+            for (int i2 = 0; i2 < 10; i2++) {
+                newProject(date).organizationName("galanto").save();
+            }
+        }
+
+        // create contributors for galanto
+        newContributor().organizationName("galanto").save();
+        newContributor().organizationName("galanto").save();
+    }
 
 }
