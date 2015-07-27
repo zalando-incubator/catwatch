@@ -137,7 +137,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         for (GHRepository repository : repositories) {
             Project project = new Project();
-            project.setGitHubProjectId(repository.getId());
+            project.setId(repository.getId());
             project.setSnapshotDate(snapshotDate);
 
             project.setName(repository.getName());
@@ -150,7 +150,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setLastPushed(repository.getPushedAt().toString());
             project.setPrimaryLanguage(repository.getLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
-            project.setOrganizationName(organization.getName());
+            project.setOrganizationName(organization.getLogin());
             project.setScore(getProjectScore(repository));
 
             projects.add(project);
