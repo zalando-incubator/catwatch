@@ -76,5 +76,6 @@ querydsl {
 test {
     testLogging {
         showStandardStreams = true // make sure output from standard out or error is shown in Gradle output
+	}
 }
 
