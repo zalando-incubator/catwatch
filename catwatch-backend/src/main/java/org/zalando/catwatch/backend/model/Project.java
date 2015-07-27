@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,6 +20,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
+@Table(name = "project")
 @ApiModel(description = "Represents a GitHub repository. See https://developer.github.com/v3/repos/")
 public class Project {
 
@@ -28,8 +30,8 @@ public class Project {
     private int id;
 
     @ElementCollection
-    @CollectionTable(name = "LANG_LIST", joinColumns = @JoinColumn(name = "PROJECT_ID"))
-    @Column(name = "LANGUAGE")
+    @CollectionTable(name = "language_list", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "language")
     private List<String> languageList = new ArrayList<>();
 
     @Column(name = "git_hub_project_id")
@@ -208,8 +210,7 @@ public class Project {
         this.primaryLanguage = primaryLanguage;
     }
 
-
-       @Override
+    @Override
     public String toString() {
         return "Project{" + "id=" + id + ", languageList=" + languageList + ", gitHubProjectId=" + gitHubProjectId
                 + ", snapshotDate=" + snapshotDate + ", name='" + name + '\'' + ", organizationName='"
