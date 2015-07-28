@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,9 +69,6 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 		List<Language> languageList = generateLanguageList(languageNames);
 		
-		 Arrays.asList("Java", "JS", "HTML5", "CSS", "Python", "C++", "Go", "Scala", "Groovy",
-					"C#", "Clojure", "VB", "ObjectiveC");
-
 		int limit = 6;
 		int offset = 0;
 
