@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,7 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,11 @@ import org.zalando.catwatch.backend.util.TestUtils;
 
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 
-	
-	private final String 
-			ORG1= "organization1",
-			ORG2 = "organization2";
+	private final String LANG_CS = "C#", LANG_JAVA = "Java", LANG_CPP = "C++", LANG_CL = "Closure", LANG_CSS = "CSS",
+			LANG_HTML = "HTML5", LANG_JS = "JavaScript", LANG_PSCL = "Pascal", LANG_GO = "Go", LANG_SCALA = "Scala",
+			LANG_PY = "Python", LANG_GRV = "Groovy", LANG_VB = "VB";
+
+	private final String ORG1 = "organization1", ORG2 = "organization2";
 	@Autowired
 	ProjectRepository repository;
 
@@ -38,55 +42,142 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		this.repository.deleteAll();
 		fillRepositoryRandom(6, ORG2);
 		List<String> languageNames = fillRepositoryRandom(40, ORG1);
-		
+
 		List<Language> sortedLanguages = generateLanguageList(languageNames);
 
 		// when
-		String url = TestUtils.createAbsoluteStatisticsUrl(this.base.toString(), ORG1, null, null);
+		String url = TestUtils.createAbsoluteLanguagesUrl(this.base.toString(), ORG1, null, null, null);
 
 		ResponseEntity<Language[]> response = template.getForEntity(url, Language[].class);
 
-		Language[] statsResponse = response.getBody();
+		Language[] langResponse = response.getBody();
 
 		// then
-		//FIXME Assert.assertThat(statsResponse.length, Matchers.equalTo(sortedLanguages.size()));
+		Assert.assertThat(langResponse.length, Matchers.equalTo(5));
+
+		checkLanguages(langResponse, sortedLanguages, 0);
+	}
+
+	@Test
+	public void testGetLanguagesWithOffsetAndLimit() {
+
+		// given
+		this.repository.deleteAll();
+		fillRepositoryRandom(6, ORG2);
+		
+		List<String> languageNames = fillRepository(ORG1);
+
+		List<Language> languageList = generateLanguageList(languageNames);
+		
+		int limit = 6;
+		int offset = 0;
+
+		// when
+		String url = TestUtils.createAbsoluteLanguagesUrl(this.base.toString(), ORG1, limit, offset, null);
+
+		ResponseEntity<Language[]> response = template.getForEntity(url, Language[].class);
+
+		Language[] langResponse = response.getBody();
+
+		Assert.assertThat(langResponse.length, Matchers.equalTo(limit));
+
+		checkLanguages(langResponse, languageList, offset);
+
+		offset += limit;
+
+		limit = 3;
+
+		// when
+		url = TestUtils.createAbsoluteLanguagesUrl(this.base.toString(), ORG1, limit, offset, null);
+
+		response = template.getForEntity(url, Language[].class);
+
+		langResponse = response.getBody();
+
+		checkLanguages(langResponse, languageList, offset);
+
 	}
 
 	
 	@Test
-	public void testGetLanguagesWithOffsetAndLimit() {
-	}
+	public void testGetLanguagesWithQueryFilter() {
 
-	
+		// given
+		this.repository.deleteAll();
+		fillRepositoryRandom(6, ORG2);
+		
+		List<String> languageNames = fillRepository(ORG1);
+
+		List<Language> languageList = generateLanguageList(languageNames);
+		
+		// when
+		String url = TestUtils.createAbsoluteLanguagesUrl(this.base.toString(), ORG1, null, null, LANG_CPP);
+
+		ResponseEntity<Language[]> response = template.getForEntity(url, Language[].class);
+
+		Language[] langResponse = response.getBody();
+
+		//FIXME Assert.assertThat(langResponse.length, Matchers.equalTo(Collections.frequency(languageNames, LANG_CPP)));
+
+	}
 	
 	private List<String> fillRepositoryRandom(final int nrOfProjects, String organization) {
 
-		
-		System.out.println("Creating projects");
-		
 		List<String> languages = new ArrayList<>();
-		
+
 		Date now = new Date();
 		for (int i = 0; i < nrOfProjects; i++) {
 			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
-					.primaryLanguage(BuilderUtil.randomLanguage())
-					.organizationName(organization)
-					.snapshotDate(now)
-					.name("p"+i)
-					.save();
-			
-			System.out.println("Stored project with name "+p.getName());
-			
+					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
+					.name("p" + i).save();
+
 			languages.add(p.getPrimaryLanguage());
 		}
-		
-		//Assert.assertEquals(nrOfProjects, Lists.newArrayList(repository.findAll()).size());
-		
-		Assert.assertEquals(nrOfProjects, repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
+
+		Assert.assertEquals(nrOfProjects,
+				repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
 
 		return languages;
 	}
 
+	private List<String> fillRepository(String organization) {
+
+		List<String> langs = Arrays.asList(
+				LANG_JAVA, LANG_JAVA, LANG_JAVA, LANG_JAVA, LANG_JAVA, LANG_JAVA, LANG_JAVA,
+				LANG_HTML, LANG_HTML, LANG_HTML, LANG_HTML, LANG_HTML, 
+				LANG_SCALA, LANG_SCALA, LANG_SCALA, LANG_SCALA, 
+				LANG_CPP, LANG_CPP, LANG_CPP, 
+				LANG_CSS, LANG_CSS, LANG_CSS, LANG_CSS, LANG_CSS, 
+				LANG_JS, LANG_JS, LANG_JS, LANG_JS, LANG_JS, LANG_JS, LANG_JS, 
+				LANG_GO,
+				LANG_VB, LANG_VB,
+				LANG_CS, LANG_CS,
+				LANG_GRV,
+				LANG_PY, LANG_PY, LANG_PY,
+				LANG_PSCL
+				);
+		
+		Collections.shuffle(langs);
+		
+		List<String> result = new ArrayList<>();
+		
+		Date now = new Date();
+		for (int i = 0; i < langs.size(); i++) {
+			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
+					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
+					.name("p" + i).save();
+
+			result.add(p.getPrimaryLanguage());
+		}
+
+		Assert.assertEquals(langs.size(),
+				repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
+
+		return result;
+	}
+
+	
+	
 	private class LanguageComparator implements Comparator<Language> {
 
 		Collection<String> stringCollection;
@@ -146,5 +237,31 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		Collections.sort(languages, new LanguageComparator(languageNames));
 
 		return languages;
+	}
+
+	private void checkLanguages(Language[] actualLangs, List<Language> expectedLangs, int offset) {
+		int tmpProjectCount = Integer.MAX_VALUE, tmpPercentage = Integer.MAX_VALUE;
+
+		Language actual, expected;
+
+		for (int i = 0; i < actualLangs.length; i++) {
+
+			actual = actualLangs[i];
+			expected = expectedLangs.get(offset + i);
+
+			Assert.assertThat(actual.getPercentage(), Matchers.lessThanOrEqualTo(tmpPercentage));
+
+			Assert.assertThat(actual.getProjectsCount(), Matchers.lessThanOrEqualTo(tmpProjectCount));
+
+			// Assert.assertThat(actual.getName(),
+			// Matchers.equalTo(expected.getName()));
+
+			Assert.assertThat(actual.getPercentage(), Matchers.equalTo(expected.getPercentage()));
+
+			Assert.assertThat(actual.getProjectsCount(), Matchers.equalTo(expected.getProjectsCount()));
+
+			tmpPercentage = actual.getPercentage();
+			tmpProjectCount = actual.getProjectsCount();
+		}
 	}
 }
