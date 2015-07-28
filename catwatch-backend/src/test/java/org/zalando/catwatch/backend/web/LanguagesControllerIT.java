@@ -24,6 +24,8 @@ import org.zalando.catwatch.backend.repo.populate.BuilderUtil;
 import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
 import org.zalando.catwatch.backend.util.TestUtils;
 
+import com.google.common.collect.Lists;
+
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 	
@@ -68,10 +70,12 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		
 		List<String> languages = new ArrayList<>();
 		
+		Date now = new Date();
 		for (int i = 0; i < nrOfProjects; i++) {
 			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
 					.primaryLanguage(BuilderUtil.randomLanguage())
 					.organizationName(organization)
+					.snapshotDate(now)
 					.name("p"+i)
 					.save();
 			
@@ -80,7 +84,9 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 			languages.add(p.getPrimaryLanguage());
 		}
 		
-//		FIXME Assert.assertEquals(nrOfProjects, repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
+		//Assert.assertEquals(nrOfProjects, Lists.newArrayList(repository.findAll()).size());
+		
+		Assert.assertEquals(nrOfProjects, repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
 
 		return languages;
 	}
