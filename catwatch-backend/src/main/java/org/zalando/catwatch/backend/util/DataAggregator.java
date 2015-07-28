@@ -75,7 +75,7 @@ public class DataAggregator {
 			organizations += delimeter + org;
 		}
 		
-		//save aggegated values in new statistics object
+		//save aggregated values in new statistics object
 		Statistics s = new Statistics(new Double(Math.random()*10000).intValue() , snapshotDate);
 		s.setAllContributorsCount(contributers);
 		s.setAllForksCount(forks);
