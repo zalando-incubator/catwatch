@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zalando.catwatch.backend.scheduler.Fetcher;
-import org.zalando.catwatch.backend.scheduler.TaskScheduler;
 
 @Controller
 public class FetchController {
