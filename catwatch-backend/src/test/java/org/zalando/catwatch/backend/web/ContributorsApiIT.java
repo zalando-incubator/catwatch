@@ -5,6 +5,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Date.from;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ENDDATE;
@@ -15,6 +17,7 @@ import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,61 +29,78 @@ import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
 
 public class ContributorsApiIT extends AbstractCatwatchIT {
 
-	@Autowired
-	private ContributorRepository repository;
+    @Autowired
+    private ContributorRepository repository;
 
-	public ContributorBuilder newContributor() {
-		return new ContributorBuilder(repository);
-	}
+    public ContributorBuilder newContributor() {
+        return new ContributorBuilder(repository);
+    }
 
-	@Test
-	public void testContributorsGet_FindInPeriodOfTime() throws Exception {
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testContributorsGet_Serialization() throws Exception {
 
-		// given
-		repository.deleteAll();
+        // given
+        repository.deleteAll();
+        Contributor c = newContributor().id(11).days(2).organizationId(1).organizationName("a").orgCommits(28).save();
+        assertNotNull(c.getSnapshotDate());
 
-		newContributor().id(11).days(2).organizationId(1).organizationName("a").orgCommits(28).save();
-		newContributor().id(11).days(3).organizationId(1).organizationName("a").orgCommits(23).save();
-		newContributor().id(11).days(4).organizationId(1).organizationName("a").orgCommits(20).save();
+        // when
+        String url = contributorUrl().queryParam("organizations", "a").toUriString();
+        Map<String, Object>[] contributors = template.getForEntity(url, Map[].class).getBody();
 
-		newContributor().id(12).days(2).organizationId(2).organizationName("b").orgCommits(18).save();
-		newContributor().id(12).days(4).organizationId(2).organizationName("b").orgCommits(16).save();
+        // then
+        assertEquals(contributors.length, 1);
+        assertThat(contributors[0].get("id"), equalTo((int) c.getId()));
+        assertThat(contributors[0].get("snapshotDate"), equalTo(c.getSnapshotDate().getTime()));
+    }
 
-		newContributor().id(13).days(2).organizationId(1).organizationName("a").orgCommits(7).save();
-		newContributor().id(13).days(4).organizationId(1).organizationName("a").orgCommits(4).save();
+    @Test
+    public void testContributorsGet_FindInPeriodOfTime() throws Exception {
 
-		Date endDate = from(now());
-		Date startDate = from(Instant.now().minus(3, DAYS).minus(12, HOURS));
+        // given
+        repository.deleteAll();
 
-		// when
-		// (TODO does not work with " a, b " yet -> "%20a,b")
-		String url = contributorUrl() //
-				.queryParam(API_REQUEST_PARAM_ORGANIZATIONS, "a,b")
-				.queryParam(API_REQUEST_PARAM_STARTDATE, iso8601(startDate)) //
-				.queryParam(API_REQUEST_PARAM_ENDDATE, iso8601(endDate)) //
-				.toUriString();
+        newContributor().id(11).days(2).organizationId(1).organizationName("a").orgCommits(28).save();
+        newContributor().id(11).days(3).organizationId(1).organizationName("a").orgCommits(23).save();
+        newContributor().id(11).days(4).organizationId(1).organizationName("a").orgCommits(20).save();
 
-		// ResponseEntity<String> response = template.getForEntity(url,
-		// String.class);
-		ResponseEntity<Contributor[]> response = template.getForEntity(url, Contributor[].class);
+        newContributor().id(12).days(2).organizationId(2).organizationName("b").orgCommits(18).save();
+        newContributor().id(12).days(4).organizationId(2).organizationName("b").orgCommits(16).save();
 
-		// then
-		Contributor[] contributors = response.getBody();
-		//System.out.println(Arrays.asList(contributors));
+        newContributor().id(13).days(2).organizationId(1).organizationName("a").orgCommits(7).save();
+        newContributor().id(13).days(4).organizationId(1).organizationName("a").orgCommits(4).save();
 
-		assertThat(contributors[0].getId(), equalTo(11L));
-		assertThat(contributors[0].getOrganizationalCommitsCount(), equalTo(8));
+        Date endDate = from(now());
+        Date startDate = from(Instant.now().minus(3, DAYS).minus(12, HOURS));
 
-		assertThat(contributors[1].getId(), equalTo(13L));
-		assertThat(contributors[1].getOrganizationalCommitsCount(), equalTo(3));
+        // when
+        // (TODO does not work with " a, b " yet -> "%20a,b")
+        String url = contributorUrl()
+                //
+                .queryParam(API_REQUEST_PARAM_ORGANIZATIONS, "a,b")
+                .queryParam(API_REQUEST_PARAM_STARTDATE, iso8601(startDate)) //
+                .queryParam(API_REQUEST_PARAM_ENDDATE, iso8601(endDate)) //
+                .toUriString();
 
-		assertThat(contributors[2].getId(), equalTo(12L));
-		assertThat(contributors[2].getOrganizationalCommitsCount(), equalTo(2));
+        ResponseEntity<Contributor[]> response = template.getForEntity(url, Contributor[].class);
 
-		assertThat(contributors.length, equalTo(3));
-	}
+        // then
+        Contributor[] contributors = response.getBody();
 
-	private UriComponentsBuilder contributorUrl() {
-		return fromHttpUrl(base.toString() + API_RESOURCE_CONTRIBUTORS);
-	}
+        assertThat(contributors[0].getId(), equalTo(11L));
+        assertThat(contributors[0].getOrganizationalCommitsCount(), equalTo(8));
+
+        assertThat(contributors[1].getId(), equalTo(13L));
+        assertThat(contributors[1].getOrganizationalCommitsCount(), equalTo(3));
+
+        assertThat(contributors[2].getId(), equalTo(12L));
+        assertThat(contributors[2].getOrganizationalCommitsCount(), equalTo(2));
+
+        assertThat(contributors.length, equalTo(3));
+    }
+
+    private UriComponentsBuilder contributorUrl() {
+        return fromHttpUrl(base.toString() + API_RESOURCE_CONTRIBUTORS);
+    }
 }

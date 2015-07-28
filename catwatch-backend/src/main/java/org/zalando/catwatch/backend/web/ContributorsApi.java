@@ -5,15 +5,22 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Sets.intersection;
+import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Date.from;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.zalando.catwatch.backend.util.Constants.CONFIG_ORGANIZATION_LIST;
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,12 +48,6 @@ import org.zalando.catwatch.backend.util.Constants;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Sets.SetView;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Controller
 @RequestMapping(value = Constants.API_RESOURCE_CONTRIBUTORS, produces = { APPLICATION_JSON_VALUE })
@@ -114,7 +115,7 @@ public class ContributorsApi {
 			return contributorsGet_timeSpan(organizations, limit, offset, startDate, endDate, sortBy, q);
 
 		} else if (startDate == null && endDate == null //
-				&& repository.findPreviousSnapShotDate(iso8601(endDate)) != null) {
+				&& repository.findPreviousSnapShotDate(from(now())) != null) {
 
 			return contributorsGet_noTimeSpan(organizations, limit, offset, endDate, sortBy, q);
 
@@ -264,7 +265,7 @@ public class ContributorsApi {
 	private Contributor add(Collection<Contributor> collection) {
 		Contributor any = collection.iterator().next();
 
-		Contributor c = new Contributor(any.getId(), any.getOrganizationId(), null);
+		Contributor c = new Contributor(any.getId(), any.getOrganizationId(), any.getSnapshotDate());
 		c.setName(any.getName());
 		c.setUrl(any.getUrl());
 		c.setOrganizationalCommitsCount(0);
@@ -284,7 +285,7 @@ public class ContributorsApi {
 	}
 
 	private Contributor diff(Contributor start, Contributor end) {
-		Contributor c = new Contributor(end.getId(), end.getOrganizationId(), null);
+		Contributor c = new Contributor(end.getId(), end.getOrganizationId(), end.getSnapshotDate());
 		c.setName(end.getName());
 		c.setUrl(end.getUrl());
 
