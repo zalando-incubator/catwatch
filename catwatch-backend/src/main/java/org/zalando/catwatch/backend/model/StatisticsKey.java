@@ -1,48 +1,57 @@
 package org.zalando.catwatch.backend.model;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
 import javax.persistence.Embeddable;
+
+import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
+import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @SuppressWarnings("serial")
 @Embeddable
 public class StatisticsKey implements Serializable {
 
-	private long id;
+    private long id;
 
-	private Date snapshotDate = null;
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    private Date snapshotDate = null;
 
-	public StatisticsKey() {
-		super();
-	}
+    public StatisticsKey() {
+        super();
+    }
 
-	public StatisticsKey(long id, Date snapshotDate) {
-		super();
-		this.id = id;
-		this.snapshotDate = snapshotDate;
-	}
+    public StatisticsKey(final long id, final Date snapshotDate) {
+        super();
+        this.id = id;
+        this.snapshotDate = snapshotDate;
+    }
 
-	/**
-	 * See {@link Statistics#getId()}
-	 */
-	public long getId() {
-		return id;
-	}
+    /**
+     * See {@link Statistics#getId()}.
+     */
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(final long id) {
+        this.id = id;
+    }
 
-	/**
-	 * See {@link Statistics#getSnapshotDate()}
-	 */
-	public Date getSnapshotDate() {
-		return snapshotDate;
-	}
+    /**
+     * See {@link Statistics#getSnapshotDate()}.
+     */
+    public Date getSnapshotDate() {
+        return snapshotDate;
+    }
 
-	public void setSnapshotDate(Date snapshotDate) {
-		this.snapshotDate = snapshotDate;
-	}
+    public void setSnapshotDate(final Date snapshotDate) {
+        this.snapshotDate = snapshotDate;
+    }
 
 }

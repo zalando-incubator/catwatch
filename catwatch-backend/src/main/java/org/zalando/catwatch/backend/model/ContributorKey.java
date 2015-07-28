@@ -1,60 +1,68 @@
 package org.zalando.catwatch.backend.model;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
+import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
+import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 @SuppressWarnings("serial")
-public class ContributorKey implements Serializable{
+public class ContributorKey implements Serializable {
 
-	private long id;
+    private long id;
 
-	private long organizationId;
-	
-	private Date snapshotDate = null;
+    private long organizationId;
 
-	
-	public ContributorKey() {
-		super();
-	}
+    @JsonSerialize(using = JsonDateSerializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    private Date snapshotDate = null;
 
-	public ContributorKey(long id, long organizationId, Date snapshotDate) {
-		super();
-		this.id = id;
-		this.organizationId = organizationId;
-		this.snapshotDate = snapshotDate;
-	}
+    public ContributorKey() {
+        super();
+    }
 
-	/**
-	 * See {@link Contributor#getId()}
-	 */
-	public long getId() {
-		return id;
-	}
+    public ContributorKey(final long id, final long organizationId, final Date snapshotDate) {
+        super();
+        this.id = id;
+        this.organizationId = organizationId;
+        this.snapshotDate = snapshotDate;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    /**
+     * See {@link Contributor#getId()}.
+     */
+    public long getId() {
+        return id;
+    }
 
-	/**
-	 * See {@link Contributor#getOrganizationId()}
-	 */
-	public long getOrganizationId() {
-		return organizationId;
-	}
+    public void setId(final long id) {
+        this.id = id;
+    }
 
-	public void setOrganizationId(long organizationId) {
-		this.organizationId = organizationId;
-	}
+    /**
+     * See {@link Contributor#getOrganizationId()}.
+     */
+    public long getOrganizationId() {
+        return organizationId;
+    }
 
-	/**
-	 * See {@link Contributor#getSnapshotDate()}
-	 */
-	public Date getSnapshotDate() {
-		return snapshotDate;
-	}
+    public void setOrganizationId(final long organizationId) {
+        this.organizationId = organizationId;
+    }
 
-	public void setSnapshotDate(Date snapshotDate) {
-		this.snapshotDate = snapshotDate;
-	}
+    /**
+     * See {@link Contributor#getSnapshotDate()}.
+     */
+    public Date getSnapshotDate() {
+        return snapshotDate;
+    }
+
+    public void setSnapshotDate(final Date snapshotDate) {
+        this.snapshotDate = snapshotDate;
+    }
 
 }

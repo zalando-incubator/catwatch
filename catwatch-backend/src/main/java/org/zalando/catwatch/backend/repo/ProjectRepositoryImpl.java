@@ -69,6 +69,11 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         }
     }
 
+    /**
+     * @param   snapshot
+     *
+     * @return  date that is closest in the past. If there is no earlier date in the past, nothing is returned
+     */
     private Optional<Date> getSnapshotDateMatch(final Date snapshot) {
         QProject project = QProject.project;
         List<Project> projectList = new JPAQuery(entityManager).from(project)
