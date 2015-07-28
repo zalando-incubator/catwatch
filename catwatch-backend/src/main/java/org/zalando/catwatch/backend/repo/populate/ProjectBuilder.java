@@ -8,13 +8,14 @@ import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 public class ProjectBuilder {
 
-    public Project getProject() {
-        return project;
-    }
-
     private Project project;
 
     private ProjectRepository projectRepository;
+
+    public ProjectBuilder(final ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+        this.project = new Project();
+    }
 
     public ProjectBuilder(final ProjectRepository projectRepository, final Date date, final Long gitHubProjectId,
             final String name, final String language, final Integer forksCount, final Integer starsCount,
@@ -35,6 +36,10 @@ public class ProjectBuilder {
 
     private void updateUrl() {
         project.setUrl("https://github.com/" + project.getOrganizationName() + "/" + project.getName());
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     public ProjectBuilder name(final String name) {
