@@ -27,9 +27,18 @@ public class ExportImportController {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String deleteAll() {
+        contributorRepository.deleteAll();
+        projectRepository.deleteAll();
+        statisticsRepository.deleteAll();
+        return "OK";
+    }
+
     @RequestMapping(value = "/import", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public String importJson(HttpServletRequest request, @RequestBody DatabaseDto dto) {
+    public String importJson(@RequestBody DatabaseDto dto) {
 		contributorRepository.save(dto.contributors);
 		projectRepository.save(dto.projects);
 		statisticsRepository.save(dto.statistics);
@@ -38,7 +47,7 @@ public class ExportImportController {
 
     @RequestMapping(value = "/export", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public DatabaseDto exportJson(HttpServletRequest request, @RequestParam(required = false) String matchId) {
+    public DatabaseDto exportJson() {
 		DatabaseDto dto = new DatabaseDto();
 		dto.contributors.addAll(newArrayList(contributorRepository.findAll()));
 		dto.projects.addAll(newArrayList(projectRepository.findAll()));
