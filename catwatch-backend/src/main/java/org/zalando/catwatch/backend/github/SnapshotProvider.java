@@ -65,8 +65,7 @@ public class SnapshotProvider {
     }
 
     public Future<Snapshot> takeSnapshot(String organizationName) throws IOException {
-        GitHub gitHub = GitHubBuilder
-                .fromCredentials()
+        GitHub gitHub = new GitHubBuilder()
                 .withPassword(login, password)
                 .withConnector(new OkHttpConnector(new OkUrlFactory(httpClient)))
                 .build();

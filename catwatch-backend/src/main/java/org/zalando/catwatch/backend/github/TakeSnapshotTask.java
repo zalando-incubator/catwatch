@@ -88,8 +88,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         statistics.setMembersCount(organization.listPublicMembers().asList().size());
         try {
             statistics.setTeamsCount(organization.listTeams().asList().size());
-        } catch (Exception e) {
-            logger.warn("Failed to set teams count for organization '{}': user has no rights to see teams.", organisationName);
+        } catch (Throwable e) {
+            logger.warn("Failed to set teams count for organization '{}': no admin rights.", organisationName);
             statistics.setTeamsCount(0);
         }
         statistics.setAllContributorsCount((int) repositories.stream()
