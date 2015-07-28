@@ -53,8 +53,8 @@ public class ProjectsApi {
     )
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<Collection<Project>> projectsGet(
-            @ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = true)
-            @RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = true)
+            @ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = false)
+            @RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = false)
             final String organizations,
             @ApiParam(value = "Number of items to retrieve. Default is 5.")
             @RequestParam(value = Constants.API_REQUEST_PARAM_LIMIT, required = false)
@@ -78,7 +78,11 @@ public class ProjectsApi {
             final String sortBy,
             @ApiParam(value = "query paramater for search query (this will be project names prefix)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
-            final String q) throws NotFoundException {
+            final String q,
+            @ApiParam(value = "query paramater for filtering by primary programming language")
+            @RequestParam(value = Constants.API_REQUEST_PARAM_LANGUAGE, required = false)
+            final String language
+            ) throws NotFoundException {
 
         Optional<Date> optionalStartDate = startDate != null ? Optional.ofNullable(startDate)
                                                              : Optional.ofNullable(null);
@@ -86,7 +90,7 @@ public class ProjectsApi {
 
         Iterable<Project> projects = projectService.findProjects(organizations, Optional.ofNullable(limit),
                 Optional.ofNullable(offset), optionalStartDate, optionalEndDate, Optional.ofNullable(sortBy),
-                Optional.ofNullable(q));
+                Optional.ofNullable(q),Optional.ofNullable(language));
 
         return new ResponseEntity<>(Lists.newArrayList(projects), HttpStatus.OK);
     }

@@ -34,23 +34,23 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Iterable<Project> findProjects(final String organizations, final Optional<Integer> limit,
                                           final Optional<Integer> offset, final Optional<Date> startDate, final Optional<Date> endDate,
-                                          final Optional<String> sortBy, final Optional<String> query) {
+                                          final Optional<String> sortBy, final Optional<String> query, final Optional<String> language) {
 
         List<Project> resultList = new ArrayList<>();
         for (String organization : getOrganizations(organizations)) {
             if (startDate.isPresent() && endDate.isPresent()) {
-                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query);
-                List<Project> endProjects = projectRepository.findProjects(organization, endDate.get(), query);
+                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query,language);
+                List<Project> endProjects = projectRepository.findProjects(organization, endDate.get(), query, language);
                 resultList.addAll(getMergedProjectList(startProjects, endProjects));
             } else if (startDate.isPresent() && !endDate.isPresent()) {
-                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query);
-                List<Project> endProjects = projectRepository.findProjects(organization, query);
+                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query,language);
+                List<Project> endProjects = projectRepository.findProjects(organization, query,language);
                 resultList.addAll(getMergedProjectList(startProjects, endProjects));
             } else if (!startDate.isPresent() && endDate.isPresent()) {
-                List<Project> projects = projectRepository.findProjects(organization, endDate.get(), query);
+                List<Project> projects = projectRepository.findProjects(organization, endDate.get(), query, language);
                 resultList.addAll(projects);
             } else {
-                List<Project> projects = projectRepository.findProjects(organization, query);
+                List<Project> projects = projectRepository.findProjects(organization, query, language);
                 resultList.addAll(projects);
             }
         }
