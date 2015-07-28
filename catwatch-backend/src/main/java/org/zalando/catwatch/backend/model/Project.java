@@ -28,7 +28,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "serial")
+    @Column(name = "id")
     private int id;
 
     @ElementCollection
