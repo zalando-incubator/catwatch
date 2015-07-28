@@ -15,7 +15,8 @@ public class Constants {
 		API_REQUEST_PARAM_LIMIT = "limit",
 		API_REQUEST_PARAM_OFFSET = "offset",
 		API_REQUEST_PARAM_Q = "q",
-		
+	    API_REQUEST_PARAM_LANGUAGE = "language",
+
 		CONFIG_ORGANIZATION_LIST = "organization.list",
 		
 		ERR_MSG_WRONG_DATE_FORMAt = "Invalid date format";

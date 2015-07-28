@@ -1,25 +1,17 @@
 package org.zalando.catwatch.backend.service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Splitter;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.core.env.Environment;
-
 import org.springframework.stereotype.Service;
-
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.sort.ProjectSortColumn;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.service.comparator.ProjectCommitComparator;
-import org.zalando.catwatch.backend.service.comparator.ProjectContributorComparator;
-import org.zalando.catwatch.backend.service.comparator.ProjectForkComparator;
-import org.zalando.catwatch.backend.service.comparator.ProjectScoreComparator;
-import org.zalando.catwatch.backend.service.comparator.ProjectStarComparator;
+import org.zalando.catwatch.backend.service.comparator.*;
 import org.zalando.catwatch.backend.util.Constants;
 
-import com.google.common.base.Splitter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mkunz on 7/22/15.
@@ -41,24 +33,24 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Iterable<Project> findProjects(final String organizations, final Optional<Integer> limit,
-            final Optional<Integer> offset, final Optional<Date> startDate, final Optional<Date> endDate,
-            final Optional<String> sortBy, final Optional<String> query) {
+                                          final Optional<Integer> offset, final Optional<Date> startDate, final Optional<Date> endDate,
+                                          final Optional<String> sortBy, final Optional<String> query, final Optional<String> language) {
 
         List<Project> resultList = new ArrayList<>();
         for (String organization : getOrganizations(organizations)) {
             if (startDate.isPresent() && endDate.isPresent()) {
-                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query);
-                List<Project> endProjects = projectRepository.findProjects(organization, endDate.get(), query);
+                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query,language);
+                List<Project> endProjects = projectRepository.findProjects(organization, endDate.get(), query, language);
                 resultList.addAll(getMergedProjectList(startProjects, endProjects));
             } else if (startDate.isPresent() && !endDate.isPresent()) {
-                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query);
-                List<Project> endProjects = projectRepository.findProjects(organization, query);
+                List<Project> startProjects = projectRepository.findProjects(organization, startDate.get(), query,language);
+                List<Project> endProjects = projectRepository.findProjects(organization, query,language);
                 resultList.addAll(getMergedProjectList(startProjects, endProjects));
             } else if (!startDate.isPresent() && endDate.isPresent()) {
-                List<Project> projects = projectRepository.findProjects(organization, endDate.get(), query);
+                List<Project> projects = projectRepository.findProjects(organization, endDate.get(), query, language);
                 resultList.addAll(projects);
             } else {
-                List<Project> projects = projectRepository.findProjects(organization, query);
+                List<Project> projects = projectRepository.findProjects(organization, query, language);
                 resultList.addAll(projects);
             }
         }
@@ -145,8 +137,7 @@ public class ProjectServiceImpl implements ProjectService {
     /**
      * This returns sorting order.
      *
-     * @param   sortBy
-     *
+     * @param sortBy
      * @return
      */
     private boolean isSortOrderAscending(final Optional<String> sortBy) {
@@ -166,9 +157,8 @@ public class ProjectServiceImpl implements ProjectService {
     /**
      * This returns the required sorting comparator class.
      *
-     * @param   sortBy
-     * @param   sortOrderAscending
-     *
+     * @param sortBy
+     * @param sortOrderAscending
      * @return
      */
     private Comparator getProjectSortComparator(final Optional<String> sortBy, final boolean sortOrderAscending) {
@@ -189,22 +179,22 @@ public class ProjectServiceImpl implements ProjectService {
 
         switch (sortColumn) {
 
-            case ProjectSortColumn.STARS_COUNT :
+            case ProjectSortColumn.STARS_COUNT:
                 return new ProjectStarComparator();
 
-            case ProjectSortColumn.SCORE :
+            case ProjectSortColumn.SCORE:
                 return new ProjectScoreComparator();
 
-            case ProjectSortColumn.COMMITS_COUNT :
+            case ProjectSortColumn.COMMITS_COUNT:
                 return new ProjectCommitComparator();
 
-            case ProjectSortColumn.FORKS_COUNT :
+            case ProjectSortColumn.FORKS_COUNT:
                 return new ProjectForkComparator();
 
-            case ProjectSortColumn.CONTRIBUTION_COUNT :
+            case ProjectSortColumn.CONTRIBUTION_COUNT:
                 return new ProjectContributorComparator();
 
-            default :
+            default:
                 return new ProjectCommitComparator();
         }
 

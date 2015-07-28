@@ -24,7 +24,8 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<Project> findProjects(final String organization, final Optional<String> query) {
+    public List<Project> findProjects(final String organization, final Optional<String> query,
+            final Optional<String> language) {
         JPAQuery jpaQuery = new JPAQuery(entityManager);
         QProject project = QProject.project;
 
@@ -38,12 +39,16 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             booleanBuilder = booleanBuilder.and(project.name.startsWith(query.get()));
         }
 
+        if (language.isPresent()) {
+            booleanBuilder = booleanBuilder.and(project.primaryLanguage.eq(language.get()));
+        }
+
         return jpaQuery.from(project).where(booleanBuilder).list(project);
     }
 
     @Override
-    public List<Project> findProjects(final String organization, final Date snapshotDate,
-            final Optional<String> query) {
+    public List<Project> findProjects(final String organization, final Date snapshotDate, final Optional<String> query,
+            final Optional<String> language) {
         JPAQuery jpaQuery = new JPAQuery(entityManager);
         QProject project = QProject.project;
         BooleanBuilder booleanBuilder = new BooleanBuilder().and(project.organizationName.eq(organization));
@@ -52,6 +57,10 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             booleanBuilder.and(project.snapshotDate.eq(snapshotDateMatch.get()));
             if (query.isPresent()) {
                 booleanBuilder = booleanBuilder.and(project.name.startsWith(query.get()));
+            }
+
+            if (language.isPresent()) {
+                booleanBuilder = booleanBuilder.and(project.primaryLanguage.eq(language.get()));
             }
 
             return jpaQuery.from(project).where(booleanBuilder).list(project);

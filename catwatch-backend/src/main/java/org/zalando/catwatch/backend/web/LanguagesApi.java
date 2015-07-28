@@ -89,7 +89,7 @@ public class LanguagesApi {
         // get the projects
         for (String org : organizationList) {
 
-            Iterable<Project> projects = repository.findProjects(org, null);
+            Iterable<Project> projects = repository.findProjects(org, null, null);
 
             Iterator<Project> iter = projects.iterator();
             while (iter.hasNext()) {
@@ -137,7 +137,7 @@ public class LanguagesApi {
         // get the projects
         for (String org : organizationList) {
 
-            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null));
+            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null), Optional.ofNullable(null));
 
             Iterator<Project> iter = projects.iterator();
             while (iter.hasNext()) {
