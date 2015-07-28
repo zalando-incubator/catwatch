@@ -68,9 +68,9 @@ public class LanguagesApi {
         List<Language> languages = DataAggregator.getMainLanguages(organizations, new LanguagePercentComparator(), repository, Optional.ofNullable(q));
         
         Integer limitVal = Optional.ofNullable(limit).orElse(DEFAULT_LIMIT);
-        Integer offsetVal = Optional.ofNullable(limit).orElse(DEFAULT_OFFSET);
+        Integer offsetVal = Optional.ofNullable(offset).orElse(DEFAULT_OFFSET);
         
-        //List<Language> filteredLanguages = DataAggregator.filterLanguages(languages, limitVal, offsetVal);
+        List<Language> filteredLanguages = DataAggregator.filterLanguages(languages, limitVal, offsetVal);
         
 //        //apply limit and offset parameter, if any
 //        if( offset!=null || limit != null) {
@@ -90,7 +90,8 @@ public class LanguagesApi {
 //            return new ResponseEntity<Collection<Language>>(languageSubset, HttpStatus.OK); 
 //        }
         
-        return new ResponseEntity<Collection<Language>>(languages, HttpStatus.OK);
+        
+        return new ResponseEntity<Collection<Language>>(filteredLanguages, HttpStatus.OK);
     }
 
     private class LanguagePercentComparator implements Comparator<Language> {
@@ -98,7 +99,10 @@ public class LanguagesApi {
         @Override
         public int compare(final Language l1, final Language l2) {
 
-            return l1.getProjectsCount()- l2.getProjectsCount();
+        	if(l1.getProjectsCount()<l2.getProjectsCount()) return 1;
+        	
+        	return -1;
+        	
         }
 
     }
