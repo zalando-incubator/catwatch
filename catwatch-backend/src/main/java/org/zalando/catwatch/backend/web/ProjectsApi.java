@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.service.ProjectService;
 import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.web.config.DateUtil;
 
 import com.google.common.collect.Lists;
 
@@ -63,10 +64,12 @@ public class ProjectsApi {
             final Integer offset,
             @ApiParam(value = "Date from which to start fetching records from database(default = current_date)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
-            final String startDate,
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            final Date startDate,
             @ApiParam(value = "Date till which records will be fetched from database(default = current_date)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false)
-            final String endDate,
+            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            final Date endDate,
             @ApiParam(
                 value =
                     "parameter by which result should be sorted. '-' means descending order (count of star,count of commit, count of forks, count of contributors, score). Default is descending order of score."
@@ -77,10 +80,9 @@ public class ProjectsApi {
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
             final String q) throws NotFoundException {
 
-        Optional<Date> optionalStartDate = startDate != null ? Optional.ofNullable(DateUtil.iso8601(startDate))
+        Optional<Date> optionalStartDate = startDate != null ? Optional.ofNullable(startDate)
                                                              : Optional.ofNullable(null);
-        Optional<Date> optionalEndDate = endDate != null ? Optional.ofNullable(DateUtil.iso8601(endDate))
-                                                         : Optional.ofNullable(null);
+        Optional<Date> optionalEndDate = endDate != null ? Optional.ofNullable(endDate) : Optional.ofNullable(null);
 
         Iterable<Project> projects = projectService.findProjects(organizations, Optional.ofNullable(limit),
                 Optional.ofNullable(offset), optionalStartDate, optionalEndDate, Optional.ofNullable(sortBy),
