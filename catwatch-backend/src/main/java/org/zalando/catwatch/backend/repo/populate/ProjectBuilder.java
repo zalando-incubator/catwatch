@@ -1,10 +1,5 @@
 package org.zalando.catwatch.backend.repo.populate;
 
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
-
 import java.util.Date;
 import java.util.List;
 
@@ -13,21 +8,29 @@ import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 public class ProjectBuilder {
 
+    public Project getProject() {
+        return project;
+    }
+
     private Project project;
 
     private ProjectRepository projectRepository;
 
-    public ProjectBuilder(final ProjectRepository projectRepository, final Date date) {
+    public ProjectBuilder(final ProjectRepository projectRepository, final Date date, final Long gitHubProjectId,
+            final String name, final String language, final Integer forksCount, final Integer starsCount,
+            final Integer commitsCount, final Integer contributionCount, final Integer score) {
         this.projectRepository = projectRepository;
 
         project = new Project();
-        project.setGitHubProjectId(freshId());
+        project.setGitHubProjectId(gitHubProjectId);
         project.setSnapshotDate(date);
-        project.setName(randomProjectName());
-        project.setPrimaryLanguage(randomLanguage());
-        project.setForksCount(random(1, 10));
-        project.setStarsCount(random(1, 4));
-        project.setCommitsCount(random(1, 1000));
+        project.setName(name);
+        project.setPrimaryLanguage(language);
+        project.setForksCount(forksCount);
+        project.setStarsCount(starsCount);
+        project.setCommitsCount(commitsCount);
+        project.setContributorsCount(contributionCount);
+        project.setScore(score);
     }
 
     private void updateUrl() {
@@ -123,6 +126,5 @@ public class ProjectBuilder {
     public Project save() {
         return projectRepository.save(create());
     }
-
 
 }
