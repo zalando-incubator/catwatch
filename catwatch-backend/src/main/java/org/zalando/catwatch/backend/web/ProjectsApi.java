@@ -64,11 +64,11 @@ public class ProjectsApi {
             final Integer offset,
             @ApiParam(value = "Date from which to start fetching records from database(default = current_date)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
-            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             final Date startDate,
             @ApiParam(value = "Date till which records will be fetched from database(default = current_date)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false)
-            @DateTimeFormat(pattern = "yyyy-MM-dd")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             final Date endDate,
             @ApiParam(
                 value =

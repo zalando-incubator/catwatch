@@ -13,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,7 +38,6 @@ public class Project {
     private long gitHubProjectId;
 
     @Column(name = "snapshot_date")
-    @Temporal(TemporalType.DATE)
     private Date snapshotDate;
 
     @Column(name = "name")
