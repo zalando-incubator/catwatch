@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.repo.populate.DatabasePopulator;
 
 @Controller
 public class ExportImportController {
@@ -26,6 +27,16 @@ public class ExportImportController {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+    private DatabasePopulator databasePopulator;
+
+    @RequestMapping(value = "/init", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String init() {
+        databasePopulator.postConstruct();
+        return "OK";
+    }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @ResponseBody
