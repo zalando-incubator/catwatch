@@ -47,8 +47,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
         for (int i = 0; i < nrOfProjects; i++) {
             lang = BuilderUtil.randomLanguage();
-            new ProjectBuilder(repository, new Date(), null, null, null, null, null, null, null, null).primaryLanguage(
-                lang).save();
+            new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0).primaryLanguage(lang).save();
             languages.add(lang);
         }
 
