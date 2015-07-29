@@ -16,9 +16,12 @@ import static org.zalando.catwatch.backend.util.Constants.API_RESOURCE_CONTRIBUT
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
+import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +99,8 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 
         assertThat(contributors[2].getId(), equalTo(12L));
         assertThat(contributors[2].getOrganizationalCommitsCount(), equalTo(2));
+        
+        assertThat(contributors[0].toString(), Matchers.stringContainsInOrder(Arrays.asList("id: "+11)));
 
         assertThat(contributors.length, equalTo(3));
     }
