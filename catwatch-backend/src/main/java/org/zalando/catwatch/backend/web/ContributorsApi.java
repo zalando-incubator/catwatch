@@ -105,7 +105,7 @@ public class ContributorsApi {
 	@RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false) //
 	String q //
 
-	) throws NotFoundException {
+	) {
 
 		validate(organizations, offset, limit, sortBy, startDate, endDate);
 
@@ -127,7 +127,7 @@ public class ContributorsApi {
 		}
 	}
 
-	private List<Contributor> contributorsGet_noTimeSpan(String organizations, Integer limit, Integer offset,String endDate, String sortBy, String q) throws NotFoundException {
+	private List<Contributor> contributorsGet_noTimeSpan(String organizations, Integer limit, Integer offset,String endDate, String sortBy, String q) {
 
 		Date endDateDate = endDate != null ? iso8601(endDate) : new Date();
 		Date endDateInDb = repository.findPreviousSnapShotDate(endDateDate);
@@ -149,7 +149,7 @@ public class ContributorsApi {
 	}
 
 	private List<Contributor> contributorsGet_timeSpan(String organizations, Integer limit, Integer offset,
-			String startDate, String endDate, String sortBy, String q) throws NotFoundException {
+			String startDate, String endDate, String sortBy, String q) {
 
 		Date startDateInDb = repository.findPreviousSnapShotDate(iso8601(startDate));
 		Date endDateInDb = repository.findPreviousSnapShotDate(iso8601(endDate));
@@ -232,8 +232,7 @@ public class ContributorsApi {
 			organizations = env.getProperty(CONFIG_ORGANIZATION_LIST);
 		}
 		return stream(organizations.trim().split("\\s*,\\s*")).collect(toMap(identity(), orgName -> {
-			Long abc = repository.findOrganizationId(orgName);
-			return abc;
+			return repository.findOrganizationId(orgName);
 		}));
 	}
 

@@ -61,7 +61,7 @@ public class StatisticsApi {
 			@RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false) 
 			String endDate
 
-	) throws NotFoundException {
+	) {
 		
 		String organisationList = organizations;
 		
