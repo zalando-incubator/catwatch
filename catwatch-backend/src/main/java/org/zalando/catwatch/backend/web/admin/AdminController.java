@@ -98,7 +98,7 @@ public class AdminController {
         if (messages.size() > 5) {
             messages.add("score update stopped due to errors");
         }
-        return messages.size() == 0 ? singletonList(processedProjects + " project objects updated") : messages;
+        return messages.size() == 0 ? singletonList(processedProjects + " project object(s) updated") : messages;
     }
 
     @RequestMapping(value = "/init", method = GET, produces = "application/json; charset=utf-8")
