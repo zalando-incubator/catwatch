@@ -31,6 +31,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 	private Statistics s1, s2, s3, s4, s5, s6;
 
+	private static int statisticIdCounter = 0;
 	@Test
 	public void testGetLatestStatisticsFromOrganizations() throws Exception {
 
@@ -128,7 +129,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 
 	private Statistics createAndSaveStatistics(String organizationName, Date snapshotDate) {
-		Statistics s = new Statistics(new Double(Math.random() * 1000).intValue(), snapshotDate);
+		Statistics s = new Statistics(statisticIdCounter++, snapshotDate);
 		s.setOrganizationName(organizationName);
 		s.setSnapshotDate(snapshotDate);
 		return repository.save(s);
@@ -137,7 +138,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 	private void createStatistics() {
 		this.repository.deleteAll();
 
-		s1 = new Statistics(new Double(Math.random() * 10000).intValue(), new Date());
+		s1 = new Statistics(statisticIdCounter++, new Date());
 		s1.setAllContributorsCount(10);
 		s1.setAllForksCount(12);
 		s1.setAllSizeCount(100);
@@ -152,7 +153,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 		repository.save(s1);
 
-		s2 = new Statistics(new Double(Math.random() * 10000).intValue(),
+		s2 = new Statistics(statisticIdCounter++,
 				new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
 		s2.setAllContributorsCount(9);
 		s2.setAllForksCount(11);
