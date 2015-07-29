@@ -82,7 +82,7 @@ public class ProjectsApi {
             @ApiParam(value = "query paramater for filtering by primary programming language")
             @RequestParam(value = Constants.API_REQUEST_PARAM_LANGUAGE, required = false)
             final String language
-            ) throws NotFoundException {
+            ) {
 
         Optional<Date> optionalStartDate = startDate != null ? Optional.ofNullable(startDate)
                                                              : Optional.ofNullable(null);

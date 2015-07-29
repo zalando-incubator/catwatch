@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,9 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 		TestUtils.checkEquals(s3, statsResponse.get(0));
 		TestUtils.checkEquals(s5, statsResponse.get(1));
+		
+		Assert.assertThat(statsResponse.get(1).toString(), Matchers.stringContainsInOrder(Arrays.asList(s5.getId()+"")));
+		Assert.assertThat(statsResponse.get(0).toString(), Matchers.stringContainsInOrder(Arrays.asList(s3.getId()+"")));
 		
 	}
 

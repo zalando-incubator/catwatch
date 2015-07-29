@@ -25,6 +25,8 @@ import org.zalando.catwatch.backend.repo.populate.BuilderUtil;
 import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
 import org.zalando.catwatch.backend.util.TestUtils;
 
+import com.google.common.collect.Lists;
+
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 	private final String LANG_CS = "C#", LANG_JAVA = "Java", LANG_CPP = "C++", LANG_CL = "Closure", LANG_CSS = "CSS",
@@ -165,7 +167,9 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		for (int i = 0; i < langs.size(); i++) {
 			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
 					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
-					.name("p" + i).save();
+					.name("p" + i).description("Test project "+i).gitHubProjectId(1234456).score((int) Math.random()*100)
+					.languages(Arrays.asList(BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage()))
+					.lastPushed(null).save();
 
 			result.add(p.getPrimaryLanguage());
 		}
@@ -209,9 +213,11 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 		Iterator<String> iter = languageNames.iterator();
 
+		String langName;
+		
 		while (iter.hasNext()) {
 
-			String langName = iter.next();
+			langName = iter.next();
 
 			if (!languageCount.keySet().contains(langName)) {
 				languageCount.put(langName, 1);
@@ -223,10 +229,10 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 		languages = new ArrayList<>();
 
-		for (String langName : languageCount.keySet()) {
-			Language lang = new Language(langName);
+		for (String name : languageCount.keySet()) {
+			Language lang = new Language(name);
 
-			lang.setProjectsCount(languageCount.get(langName));
+			lang.setProjectsCount(languageCount.get(name));
 
 			lang.setPercentage((int) Math.round((double) lang.getProjectsCount() / languageNames.size() * 100));
 
@@ -253,13 +259,13 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 			Assert.assertThat(actual.getProjectsCount(), Matchers.lessThanOrEqualTo(tmpProjectCount));
 
-			// Assert.assertThat(actual.getName(),
-			// Matchers.equalTo(expected.getName()));
-
 			Assert.assertThat(actual.getPercentage(), Matchers.equalTo(expected.getPercentage()));
 
 			Assert.assertThat(actual.getProjectsCount(), Matchers.equalTo(expected.getProjectsCount()));
-
+			
+			Assert.assertThat(actual.toString(), Matchers.stringContainsInOrder(Arrays.asList("name: ", "projectsCount: ", "percentage: ")));
+			
+			
 			tmpPercentage = actual.getPercentage();
 			tmpProjectCount = actual.getProjectsCount();
 		}

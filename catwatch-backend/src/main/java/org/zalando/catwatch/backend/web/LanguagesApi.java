@@ -63,7 +63,7 @@ public class LanguagesApi {
             final Integer offset,
             @ApiParam(value = "query paramater for search query (this can be language name prefix)")
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
-            final String q) throws NotFoundException {
+            final String q) {
 
         List<Language> languages = DataAggregator.getMainLanguages(organizations, new LanguagePercentComparator(), repository, Optional.ofNullable(q));
         

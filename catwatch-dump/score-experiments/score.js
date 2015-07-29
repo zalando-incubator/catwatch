@@ -1,7 +1,7 @@
 
 var projects = data.projects
 .filter(function(project){
-    return project.organizationName == "zalando";
+    return project.organizationName == "zalando" || project.organizationName == "zalando-stups";
 })
 .map(function(project) {
     return {
