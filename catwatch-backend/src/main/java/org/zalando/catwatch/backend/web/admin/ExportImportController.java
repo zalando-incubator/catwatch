@@ -1,6 +1,5 @@
 package org.zalando.catwatch.backend.web.admin;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
@@ -46,22 +45,29 @@ public class ExportImportController {
     @Value("${organization.list}")
     private String organizations;
 
-    @RequestMapping(value = "/config/scoring.projects", method = POST, produces = "application/json; charset=utf-8")
+    @Value("${scoring.project}")
+    private String scoringProject;
+
+    @RequestMapping(value = "/config/scoring.project", method = POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public List<String> configScoringProjects(@RequestBody String scoringProjects, @RequestHeader(value="X-Organizations") String organizations) {
+    public List<String> configScoringProjects(@RequestBody(required=false) String scoringProject, @RequestHeader(value="X-Organizations", required=false) String organizations) {
 
-        checkNotNull(scoringProjects, "scoring function must not be null but was");
-
-        // update the score function
-        scorer.setScoringProject(scoringProjects);
-
-        // update the scores for all projects
-        List<String> messages = new ArrayList<>();
-        final AtomicInteger processedProjects = new AtomicInteger();
-        
+        // +++ initialize the parameters
         if (organizations == null) {
             organizations = this.organizations;
         }
+
+        if (scoringProject == null) {
+            scoringProject = this.scoringProject;
+        }
+
+        // +++ update the score function
+        scorer.setScoringProject(scoringProject);
+
+        // +++ update the scores for all projects of the latest snapshot
+        List<String> messages = new ArrayList<>();
+        final AtomicInteger processedProjects = new AtomicInteger();
+        
 
         stream(organizations.trim().split("\\s*,\\s*")).forEach(organization -> {
 
