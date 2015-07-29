@@ -7,6 +7,7 @@ import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -19,13 +20,23 @@ public class StatisticsBuilder {
 
 	public StatisticsBuilder(StatisticsRepository statisticsRepository) {
 		this.statisticsRepository = statisticsRepository;
+
 		statistics = new Statistics(freshId(), randomDate());
+		statistics.setPrivateProjectCount(random(20, 70));
 		statistics.setPublicProjectCount(random(50, 120));
+
+		statistics.setMembersCount(random(1, 20));
+        statistics.setTeamsCount(random(1, 4));
+
+        statistics.setAllContributorsCount(random(1, 50));
 		statistics.setAllStarsCount(random(1, 5));
 		statistics.setAllForksCount(random(1, 10));
+        statistics.setAllSizeCount(random(1, 1000000));
+
 		statistics.setProgramLanguagesCount(random(1, 20));
-		statistics.setMembersCount(random(1, 20));
-		statistics.setAllForksCount(random(1, 20));
+		statistics.setTagsCount(random(1, 20));
+
+		statistics.setOrganizationName("" + UUID.randomUUID());
 	}
 
 	public StatisticsBuilder organizationName(String organizationName) {
@@ -95,19 +106,23 @@ public class StatisticsBuilder {
 
 	public Statistics create() {
 		Statistics s = new Statistics(statistics.getId(), statistics.getSnapshotDate());
+
+		s.setPrivateProjectCount(statistics.getPrivateProjectCount());
 		s.setPublicProjectCount(statistics.getPublicProjectCount());
+
+		s.setMembersCount(statistics.getMembersCount());
+		s.setTeamsCount(statistics.getTeamsCount());
+		
+		s.setAllContributorsCount(statistics.getAllContributorsCount());
 		s.setAllStarsCount(statistics.getAllStarsCount());
 		s.setAllForksCount(statistics.getAllForksCount());
-		s.setProgramLanguagesCount(statistics.getProgramLanguagesCount());
-		s.setAllContributorsCount(statistics.getAllContributorsCount());
-		s.setMembersCount(statistics.getMembersCount());
-		s.setAllForksCount(statistics.getAllForksCount());
-		s.setTeamsCount(statistics.getTeamsCount());
-		s.setTagsCount(statistics.getTagsCount());
-		s.setPrivateProjectCount(statistics.getPrivateProjectCount());
-		s.setMembersCount(statistics.getMembersCount());
 		s.setAllSizeCount(statistics.getAllSizeCount());
+
+		s.setProgramLanguagesCount(statistics.getProgramLanguagesCount());
+		s.setTagsCount(statistics.getTagsCount());
+
 		s.setOrganizationName(statistics.getOrganizationName());
+
 		return s;
 	}
 

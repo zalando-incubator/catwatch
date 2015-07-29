@@ -11,7 +11,7 @@ import org.zalando.catwatch.backend.model.Project;
  */
 interface ProjectRepositoryCustom {
 
-    List<Project> findProjects(String organization, Optional<String> query);
+    List<Project> findProjects(String organization, Optional<String> query, Optional<String> language);
 
-    List<Project> findProjects(String organization, Date snapshotDate, Optional<String> query);
+    List<Project> findProjects(String organization, Date snapshotDate, Optional<String> query, Optional<String> language);
 }

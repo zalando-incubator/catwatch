@@ -1,10 +1,15 @@
 package org.zalando.catwatch.backend.repo.populate;
 
 import static org.zalando.catwatch.backend.repo.DatabasePing.isDatabaseAvailable;
+import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.freshId;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
 import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
+import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
+import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -14,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Component;
 
+import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -37,8 +43,12 @@ public class DatabasePopulator {
         return new StatisticsBuilder(statisticsRepository);
     }
 
-    public ProjectBuilder newProject(final Date date) {
-        return new ProjectBuilder(projectRepository, date);
+    public ProjectBuilder newProject(final Date date, final Long gitHubProjectId, final String name,
+            final String language, final Integer forksCount, final Integer starsCount, final Integer commitsCount,
+            final Integer contributionCount, final Integer score) {
+
+        return new ProjectBuilder(projectRepository, date, gitHubProjectId, name, language, forksCount, starsCount,
+                commitsCount, contributionCount, score);
     }
 
     public ContributorBuilder newContributor() {
@@ -67,17 +77,50 @@ public class DatabasePopulator {
                     .days(1).save();
 
         // create projects for galanto
-        int numProjects = random(50, 150);
-        for (int i = 0; i < numProjects; i++) {
-            Date date = randomDate();
-            for (int i2 = 0; i2 < 10; i2++) {
-                newProject(date).organizationName("galanto").save();
+
+        int amountSnapshots = 100;
+        int projectsCount = 10;
+        List<Date> snapshotList = getSnapshotDateList(amountSnapshots);
+
+        for (int i = 0; i < projectsCount; i++) {
+
+            Long gitHubProjectId = freshId();
+            String name = randomProjectName();
+            String language = randomLanguage();
+            Integer forksCount = random(1, 4);
+            Integer starsCount = random(1, 10);
+            Integer commitsCount = random(1, 1000);
+            Integer contributionCount = random(1, 1000);
+            Integer score = random(1, 100);
+
+            for (Date snapshot : snapshotList) {
+                Project project = getProject(snapshot, gitHubProjectId, name, language, forksCount, starsCount,
+                        commitsCount, contributionCount, score);
+                projectRepository.save(project);
             }
         }
 
         // create contributors for galanto
         newContributor().organizationName("galanto").save();
         newContributor().organizationName("galanto").save();
+    }
+
+    private List<Date> getSnapshotDateList(final int amountSnapshots) {
+        List<Date> snapshotList = new ArrayList<>();
+        for (int i = 0; i < amountSnapshots; i++) {
+            snapshotList.add(randomDate());
+        }
+
+        return snapshotList;
+    }
+
+    private Project getProject(final Date date, final Long gitHubProjectId, final String name, final String language,
+            final Integer forksCount, final Integer starsCount, final Integer commitsCount,
+            final Integer contributionCount, final Integer score) {
+
+        return newProject(date, gitHubProjectId, name, language, forksCount, starsCount, commitsCount,
+                contributionCount, score).organizationName("galanto").getProject();
+
     }
 
 }

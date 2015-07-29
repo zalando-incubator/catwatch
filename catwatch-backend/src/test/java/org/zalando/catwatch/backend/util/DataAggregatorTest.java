@@ -55,6 +55,7 @@ public class DataAggregatorTest {
 				.allContributersCount(32)
 				.allSize(16)
 				.membersCount(42)
+                .privateProjectCount(0)
 				.tagsCount(27)
 				.teamsCount(2)
 				.create();

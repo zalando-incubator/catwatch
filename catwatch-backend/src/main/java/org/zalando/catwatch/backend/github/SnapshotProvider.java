@@ -27,6 +27,9 @@ import java.util.concurrent.Future;
 public class SnapshotProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotProvider.class);
+    
+    @Autowired
+    private Scorer scorer;
 
     @Value("${cache.path}")
     private String cachePath;
@@ -69,9 +72,9 @@ public class SnapshotProvider {
                 .withPassword(login, password)
                 .withConnector(new OkHttpConnector(new OkUrlFactory(httpClient)))
                 .build();
-        return pool.submit(new TakeSnapshotTask(gitHub, organizationName));
+        return pool.submit(new TakeSnapshotTask(gitHub, organizationName, scorer));
     }
-
+    
     private Optional<File> getCacheDirectory() {
         Path path = Paths.get(cachePath);
 

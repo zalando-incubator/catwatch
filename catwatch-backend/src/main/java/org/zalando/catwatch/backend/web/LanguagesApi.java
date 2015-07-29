@@ -2,32 +2,22 @@ package org.zalando.catwatch.backend.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Controller;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.util.StringParser;
+import org.zalando.catwatch.backend.util.DataAggregator;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +30,11 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = Constants.API_RESOURCE_LANGUAGES, description = "the languages API")
 public class LanguagesApi {
 
+	
+	private static final Integer DEFAULT_LIMIT = 5;
+
+    private static final Integer DEFAULT_OFFSET = 0;
+    
     @Autowired
     ProjectRepository repository;
 
@@ -70,111 +65,33 @@ public class LanguagesApi {
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
             final String q) throws NotFoundException {
 
-        List<Language> languages = getMainLanguages(organizations, new LanguagePercentComparator());
-
-        // TODO apply limit
-
-        // TOOD apply q
-
-        // TODO apply offset
-
-        return new ResponseEntity<Collection<Language>>(languages, HttpStatus.OK);
-    }
-
-    private List<Language> getLanguages(final String organizations, final Comparator<Language> c) {
-
-        Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
-        List<Project> projectList = new ArrayList<>();
-
-        // get the projects
-        for (String org : organizationList) {
-
-            Iterable<Project> projects = repository.findProjects(org, null);
-
-            Iterator<Project> iter = projects.iterator();
-            while (iter.hasNext()) {
-                projectList.add(iter.next());
-            }
-        }
-
-        // count the languages
-
-        List<String> languageList = new ArrayList<>();
-
-        for (Project p : projectList) {
-            languageList.addAll(p.getLanguageList());
-        }
-
-        List<Language> languages = new ArrayList<>();
-
-        Set<String> languageSet = new HashSet<>(languageList);
-
-        int frequency = 0;
-
-        for (String language : languageSet) {
-            Language l = new Language(language);
-            frequency = Collections.frequency(languageList, language);
-
-            l.setPercentage((int) Math.round(((double) frequency) / languageList.size() * 100));
-            l.setProjectsCount(frequency);
-
-            languages.add(l);
-        }
-
-        // sort
-        if (languages.size() > 1) {
-            Collections.sort(languages, c);
-        }
-
-        return languages;
-    }
-
-    private List<Language> getMainLanguages(final String organizations, final Comparator<Language> c) {
-
-        Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
-        List<Project> projectList = new ArrayList<>();
-
-        // get the projects
-        for (String org : organizationList) {
-
-            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null));
-
-            Iterator<Project> iter = projects.iterator();
-            while (iter.hasNext()) {
-                projectList.add(iter.next());
-            }
-        }
-
-        // count the languages
-
-        List<String> languageList = new ArrayList<>();
-
-        for (Project p : projectList) {
-            languageList.add(p.getPrimaryLanguage());
-        }
-
-        List<Language> languages = new ArrayList<>();
-
-        Set<String> languageSet = new HashSet<>(languageList);
-
-        int frequency = 0;
-
-        for (String language : languageSet) {
-            Language l = new Language(language);
-            frequency = Collections.frequency(languageList, language);
-
-            l.setPercentage((int) Math.round(((double) frequency) / languageList.size() * 100));
-            l.setProjectsCount(frequency);
-
-            languages.add(l);
-        }
-
-        // sort
-        if (languages.size() > 1) {
-            Collections.sort(languages, c);
-        }
-
-        return languages;
+        List<Language> languages = DataAggregator.getMainLanguages(organizations, new LanguagePercentComparator(), repository, Optional.ofNullable(q));
+        
+        Integer limitVal = Optional.ofNullable(limit).orElse(DEFAULT_LIMIT);
+        Integer offsetVal = Optional.ofNullable(offset).orElse(DEFAULT_OFFSET);
+        
+        List<Language> filteredLanguages = DataAggregator.filterLanguages(languages, limitVal, offsetVal);
+        
+//        //apply limit and offset parameter, if any
+//        if( offset!=null || limit != null) {
+//        	
+//        	List<Language> languageSubset = new ArrayList<>();
+//        	
+//        	int start = offset == null ? 0 : offset;
+//        	
+//        	if(start<languages.size()){
+//        		int end = limit == null ? languages.size()-1 : start+limit;
+//            	
+//            	if(end>=languages.size()) end = languages.size()-1;
+//            	
+//            	languageSubset = languages.subList(start, end);
+//        	}
+//        	
+//            return new ResponseEntity<Collection<Language>>(languageSubset, HttpStatus.OK); 
+//        }
+        
+        
+        return new ResponseEntity<Collection<Language>>(filteredLanguages, HttpStatus.OK);
     }
 
     private class LanguagePercentComparator implements Comparator<Language> {
@@ -182,11 +99,10 @@ public class LanguagesApi {
         @Override
         public int compare(final Language l1, final Language l2) {
 
-            if (l1.getPercentage() >= l2.getPercentage()) {
-                return 1;
-            } else {
-                return -1;
-            }
+        	if(l1.getProjectsCount()<l2.getProjectsCount()) return 1;
+        	
+        	return -1;
+        	
         }
 
     }

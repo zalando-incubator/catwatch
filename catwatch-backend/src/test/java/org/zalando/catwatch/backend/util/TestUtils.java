@@ -3,6 +3,7 @@ package org.zalando.catwatch.backend.util;
 import java.util.ArrayList;
 
 import org.junit.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.catwatch.backend.model.Statistics;
 
 public class TestUtils {
@@ -128,6 +129,23 @@ public class TestUtils {
 		
 		return url;
 	}
+	
+	public static String createAbsoluteLanguagesUrl (String base, String organizations, Integer limit, Integer offset, String query){
+		String url = base + Constants.API_RESOURCE_LANGUAGES;
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if(organizations!=null) builder.queryParam(Constants.API_REQUEST_PARAM_ORGANIZATIONS, organizations);
+		
+		if(limit!=null) builder.queryParam(Constants.API_REQUEST_PARAM_LIMIT, limit);
+		
+		if(offset!=null) builder.queryParam(Constants.API_REQUEST_PARAM_OFFSET, offset);
+		
+		if(query!=null) builder.queryParam(Constants.API_REQUEST_PARAM_Q, query);
+		
+		return builder.toUriString();
+	}
+	
 	
 	public static String createRelativeStatisticsUrl (String organizations, String startDate, String endDate){
 		return createAbsoluteStatisticsUrl("", organizations, startDate, endDate);

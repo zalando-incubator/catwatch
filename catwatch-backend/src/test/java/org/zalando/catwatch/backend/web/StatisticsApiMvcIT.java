@@ -30,7 +30,7 @@ import org.zalando.catwatch.backend.util.StringParser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-public class StatisticsApiTest {
+public class StatisticsApiMvcIT {
 
     @Autowired
     private StatisticsApi statisticsApi;
