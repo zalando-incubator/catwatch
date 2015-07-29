@@ -139,14 +139,14 @@ public class StatisticsApi {
 		try {
 			start = StringParser.parseIso8601Date(startDate);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for stardDate");
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAT+" for stardDate");
 		}
 		
 		
 		try {
 			end = endDate == null ? new Date() : StringParser.parseIso8601Date(endDate);
 		} catch (ParseException e) {
-			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAt+" for endDate");
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAT+" for endDate");
 		}
 		
 		if(start.after(end)){

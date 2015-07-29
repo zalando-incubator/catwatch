@@ -19,7 +19,7 @@ public class Constants {
 
 		CONFIG_ORGANIZATION_LIST = "organization.list",
 		
-		ERR_MSG_WRONG_DATE_FORMAt = "Invalid date format";
+		ERR_MSG_WRONG_DATE_FORMAT = "Invalid date format";
 		
 		
 		
