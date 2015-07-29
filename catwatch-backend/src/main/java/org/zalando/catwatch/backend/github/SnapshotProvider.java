@@ -9,6 +9,7 @@ import org.kohsuke.github.GitHubBuilder;
 import org.kohsuke.github.extras.OkHttpConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,9 @@ import java.util.concurrent.Future;
 public class SnapshotProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotProvider.class);
+    
+    @Autowired
+    private Scorer scorer;
 
     @Value("${cache.path}")
     private String cachePath;
@@ -72,7 +76,7 @@ public class SnapshotProvider {
                 .fromProperties(properties())
                 .withConnector(new OkHttpConnector(new OkUrlFactory(httpClient)))
                 .build();
-        return pool.submit(new TakeSnapshotTask(gitHub, organizationName));
+        return pool.submit(new TakeSnapshotTask(gitHub, organizationName, scorer));
     }
     
     private Properties properties() {

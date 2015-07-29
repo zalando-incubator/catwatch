@@ -12,6 +12,10 @@ public class ProjectBuilder {
 
     private ProjectRepository projectRepository;
 
+    public ProjectBuilder() {
+        this(null);
+    }
+
     public ProjectBuilder(final ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
         this.project = new Project();

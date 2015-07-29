@@ -8,13 +8,11 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
-
 import java.net.URISyntaxException;
-
 import java.time.ZonedDateTime;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.IntSummaryStatistics;
@@ -31,10 +29,8 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.PagedIterable;
 import org.kohsuke.github.RateLimitHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
@@ -43,12 +39,13 @@ import org.zalando.catwatch.backend.model.Statistics;
 /**
  * A task to get organisation snapshot from GitHub using API V3.
  *
- * <p>The code of this class is not optimised in terms of number of API requests in favour of code simplicity and
+ * <p>
+ * The code of this class is not optimised in terms of number of API requests in favour of code simplicity and
  * readability. However, this should not affect API rate limit if http cache is used. If Api limit is reached the task
  * is blocked until the limit is reset.
  *
- * @see  RateLimitHandler
- * @see  <a href="https://developer.github.com/v3/#rate-limiting">API documentation from GitHub</a>
+ * @see RateLimitHandler
+ * @see <a href="https://developer.github.com/v3/#rate-limiting">API documentation from GitHub</a>
  */
 public class TakeSnapshotTask implements Callable<Snapshot> {
 
@@ -59,9 +56,12 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
     private final String organisationName;
     private final Date snapshotDate;
 
-    public TakeSnapshotTask(final GitHub gitHub, final String organisationName) {
+    private Scorer scorer;
+
+    public TakeSnapshotTask(final GitHub gitHub, final String organisationName, Scorer scorer) {
         this.gitHub = gitHub;
         this.organisationName = organisationName;
+        this.scorer = scorer;
         this.snapshotDate = Date.from(ZonedDateTime.now().toInstant());
     }
 
@@ -71,15 +71,15 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         final GHOrganization organization = gitHub.getOrganization(organisationName);
         final List<GHRepository> publicRepositories = organization.listRepositories(MAX_PAGE_SIZE).asList().stream()
-                                                                  .filter(r -> !r.isPrivate()).collect(toList());
+                .filter(r -> !r.isPrivate()).collect(toList());
 
-        return new Snapshot(collectStatistics(organization, publicRepositories),
-                collectProjects(organization, publicRepositories),
-                collectContributors(organization, publicRepositories), collectLanguages(publicRepositories));
+        return new Snapshot(collectStatistics(organization, publicRepositories), collectProjects(organization,
+                publicRepositories), collectContributors(organization, publicRepositories),
+                collectLanguages(publicRepositories));
     }
 
     private Statistics collectStatistics(final GHOrganization organization, final Collection<GHRepository> repositories)
-        throws IOException {
+            throws IOException {
         logger.info("Started collecting statistics for organization '{}'", organisationName);
 
         Statistics statistics = new Statistics(organization.getId(), snapshotDate);
@@ -89,39 +89,35 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         try {
             statistics.setTeamsCount(organization.listTeams().asList().size());
         } catch (Exception e) {
-            logger.warn("Failed to set teams count for organization '{}': user has no rights to see teams.", organisationName);
+            logger.warn("Failed to set teams count for organization '{}': user has no rights to see teams.",
+                    organisationName);
             statistics.setTeamsCount(0);
         }
-        statistics.setAllContributorsCount((int) repositories.stream()
+        statistics.setAllContributorsCount((int) repositories
+                .stream()
                 .map(repository -> {
                     try {
                         return repository.listContributors();
                     } catch (IOException e) {
-                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(),
+                                organisationName);
                         throw new RuntimeException(e);
                     }
-                })
-                .map(PagedIterable::asList)
-                .flatMap(List::stream)
-                .map(GHRepository.Contributor::getId)
-                .distinct()
+                }).map(PagedIterable::asList).flatMap(List::stream).map(GHRepository.Contributor::getId).distinct()
                 .count());
         statistics.setAllStarsCount(repositories.stream().map(GHRepository::getWatchers).reduce(0, Integer::sum));
         statistics.setAllForksCount(repositories.stream().map(GHRepository::getForks).reduce(0, Integer::sum));
         statistics.setAllSizeCount(repositories.stream().map(GHRepository::getSize).reduce(0, Integer::sum));
         statistics.setProgramLanguagesCount((int) repositories.stream().map(GHRepository::getLanguage).distinct()
                 .count());
-        statistics.setTagsCount((int) repositories.stream()
-                .map(repository -> {
-                    try {
-                        return repository.listTags();
-                    } catch (IOException e) {
-                        logger.error("Failed to list tags for project '{}' of '{}'", repository.getName(), organisationName);
-                        throw new RuntimeException(e);
-                    }
-                })
-                .map(PagedIterable::asList)
-                .count());
+        statistics.setTagsCount((int) repositories.stream().map(repository -> {
+            try {
+                return repository.listTags();
+            } catch (IOException e) {
+                logger.error("Failed to list tags for project '{}' of '{}'", repository.getName(), organisationName);
+                throw new RuntimeException(e);
+            }
+        }).map(PagedIterable::asList).count());
         statistics.setOrganizationName(organization.getName());
 
         logger.info("Finished collecting statistics for organization '{}'", organisationName);
@@ -151,8 +147,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setPrimaryLanguage(repository.getLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
             project.setOrganizationName(organization.getLogin());
-            project.setScore(getProjectScore(repository));
-
+            project.setScore(scorer.score(project));
             projects.add(project);
         }
 
@@ -168,22 +163,26 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         Collection<Contributor> contributors = new ArrayList<>();
 
         // Get a list of all contributors of all repositories
-        Collection<GHRepository.Contributor> ghContributors = repositories.stream().map(repository -> {
+        Collection<GHRepository.Contributor> ghContributors = repositories
+                .stream()
+                .map(repository -> {
                     try {
                         return repository.listContributors();
                     } catch (IOException e) {
-                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(), organisationName);
+                        logger.error("Failed to list contributors for project '{}' of '{}'", repository.getName(),
+                                organisationName);
                         throw new RuntimeException(e);
                     }
                 }).map(PagedIterable::asList).flatMap(List::stream).collect(toList());
 
         // Get a map of <Contributor ID> - <Contributions statistics>
-        Map<Integer, IntSummaryStatistics> idStatisticsMap = ghContributors.stream().collect(groupingBy(GHObject::getId,
-                    summarizingInt(GHRepository.Contributor::getContributions)));
+        Map<Integer, IntSummaryStatistics> idStatisticsMap = ghContributors.stream().collect(
+                groupingBy(GHObject::getId, summarizingInt(GHRepository.Contributor::getContributions)));
 
         // Eliminate duplicates in contributors list
-        ghContributors = ghContributors.stream().collect(collectingAndThen(toCollection(() ->
-                            new TreeSet<>(Comparator.comparingInt(GHObject::getId))), ArrayList::new));
+        ghContributors = ghContributors.stream().collect(
+                collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparingInt(GHObject::getId))),
+                        ArrayList::new));
 
         // Build a list of contributors
         for (GHRepository.Contributor ghContributor : ghContributors) {
@@ -212,17 +211,17 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         Collection<Language> languages = new ArrayList<>();
 
         Map<String, LongSummaryStatistics> stat = repositories.stream().map(repository -> {
-                    try {
-                        return repository.listLanguages();
-                    } catch (IOException e) {
-                        logger.error("Failed to list languages for project '{}' of '{}'", repository.getName(), organisationName);
-                        throw new RuntimeException(e);
-                    }
-                }).map(Map::entrySet).flatMap(Set::stream).collect(groupingBy(Map.Entry::getKey,
-                        summarizingLong(Map.Entry::getValue)));
+            try {
+                return repository.listLanguages();
+            } catch (IOException e) {
+                logger.error("Failed to list languages for project '{}' of '{}'", repository.getName(), organisationName);
+                throw new RuntimeException(e);
+            }
+        }).map(Map::entrySet).flatMap(Set::stream).collect(groupingBy(Map.Entry::getKey,
+                summarizingLong(Map.Entry::getValue)));
 
-        final long allLanguageSize = stat.entrySet().stream().map(entry -> entry.getValue().getSum()).reduce(0L,
-                Long::sum);
+        final long allLanguageSize = stat.entrySet().stream().map(entry -> entry.getValue().getSum())
+                .reduce(0L, Long::sum);
 
         for (Map.Entry<String, LongSummaryStatistics> entry : stat.entrySet()) {
             Language language = new Language();
@@ -237,11 +236,6 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         logger.info("Finished collecting languages for organization '{}'", organisationName);
 
         return languages;
-    }
-
-    // TODO implement me
-    private int getProjectScore(GHRepository repository) {
-        return 1;
     }
 
     // TODO implement me

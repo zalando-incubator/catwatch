@@ -1,13 +1,25 @@
 package org.zalando.catwatch.backend.web.admin;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.zalando.catwatch.backend.github.Scorer;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -16,26 +28,81 @@ import org.zalando.catwatch.backend.repo.populate.DatabasePopulator;
 @Controller
 public class ExportImportController {
 
-	@Autowired
-	private ContributorRepository contributorRepository;
+    @Autowired
+    private ContributorRepository contributorRepository;
 
-	@Autowired
-	private StatisticsRepository statisticsRepository;
+    @Autowired
+    private StatisticsRepository statisticsRepository;
 
-	@Autowired
-	private ProjectRepository projectRepository;
-	
-	@Autowired
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
     private DatabasePopulator databasePopulator;
 
-    @RequestMapping(value = "/init", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @Autowired
+    private Scorer scorer;
+
+    @Value("${organization.list}")
+    private String organizations;
+
+    @RequestMapping(value = "/config/scoring.projects", method = POST, produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public List<String> configScoringProjects(@RequestBody String scoringProjects, @RequestHeader(value="X-Organizations") String organizations) {
+
+        checkNotNull(scoringProjects, "scoring function must not be null but was");
+
+        // update the score function
+        scorer.setScoringProject(scoringProjects);
+
+        // update the scores for all projects
+        List<String> messages = new ArrayList<>();
+        final AtomicInteger processedProjects = new AtomicInteger();
+        
+        if (organizations == null) {
+            organizations = this.organizations;
+        }
+
+        stream(organizations.trim().split("\\s*,\\s*")).forEach(organization -> {
+
+            projectRepository.findProjects(organization, empty(), empty()).forEach(project -> {
+
+                if (messages.size() > 5) {
+                    return;
+                }
+
+                try {
+
+                    project.setScore(scorer.score(project));
+                    projectRepository.save(project);
+                    processedProjects.incrementAndGet();
+
+                } catch (Exception e) {
+
+                    if (messages.size() == 0) {
+                        e.printStackTrace();
+                    }
+                    messages.add("project " + project.getName() + ": " + e.getMessage());
+
+                }
+            });
+
+        });
+
+        if (messages.size() > 5) {
+            messages.add("score update stopped due to errors");
+        }
+        return messages.size() == 0 ? singletonList(processedProjects + " project objects updated") : messages;
+    }
+
+    @RequestMapping(value = "/init", method = GET, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String init() {
         databasePopulator.postConstruct();
         return "OK";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/delete", method = GET, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String deleteAll() {
         contributorRepository.deleteAll();
@@ -44,22 +111,22 @@ public class ExportImportController {
         return "OK";
     }
 
-    @RequestMapping(value = "/import", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/import", method = POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String importJson(@RequestBody DatabaseDto dto) {
-		contributorRepository.save(dto.contributors);
-		projectRepository.save(dto.projects); // erroneous as the ID of projects is generated by the database
-		statisticsRepository.save(dto.statistics);
+        contributorRepository.save(dto.contributors);
+        projectRepository.save(dto.projects); // erroneous as the ID of projects is generated by the database
+        statisticsRepository.save(dto.statistics);
         return "OK";
     }
 
-    @RequestMapping(value = "/export", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/export", method = GET, produces = "application/json; charset=utf-8")
     @ResponseBody
     public DatabaseDto exportJson() {
-		DatabaseDto dto = new DatabaseDto();
-		dto.contributors.addAll(newArrayList(contributorRepository.findAll()));
-		dto.projects.addAll(newArrayList(projectRepository.findAll()));
-		dto.statistics.addAll(newArrayList(statisticsRepository.findAll()));
-		return dto;
+        DatabaseDto dto = new DatabaseDto();
+        dto.contributors.addAll(newArrayList(contributorRepository.findAll()));
+        dto.projects.addAll(newArrayList(projectRepository.findAll()));
+        dto.statistics.addAll(newArrayList(statisticsRepository.findAll()));
+        return dto;
     }
 }
