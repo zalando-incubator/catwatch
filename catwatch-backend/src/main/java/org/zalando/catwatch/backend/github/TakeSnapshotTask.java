@@ -15,7 +15,6 @@ import java.time.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.IntSummaryStatistics;
@@ -41,7 +40,7 @@ import org.zalando.catwatch.backend.model.Statistics;
 
 /**
  * A task to get organisation snapshot from GitHub using API V3.
- *
+ * <p>
  * <p>
  * The code of this class is not optimised in terms of number of API requests in favour of code simplicity and
  * readability. However, this should not affect API rate limit if http cache is used. If Api limit is reached the task
@@ -126,7 +125,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                 })
                 .map(PagedIterable::asList)
                 .count());
-        statistics.setOrganizationName(organization.getName());
+        statistics.setOrganizationName(organization.getLogin());
 
         logger.info("Finished collecting statistics for organization '{}'", organisationName);
 
@@ -134,7 +133,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
     }
 
     private Collection<Project> collectProjects(final GHOrganization organization,
-            final Collection<GHRepository> repositories) throws IOException, URISyntaxException {
+                                                final Collection<GHRepository> repositories) throws IOException, URISyntaxException {
         logger.info("Started collecting projects for organization '{}'", organisationName);
 
         List<Project> projects = new ArrayList<>();
@@ -165,7 +164,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
     }
 
     private Collection<Contributor> collectContributors(final GHOrganization organization,
-            final Collection<GHRepository> repositories) throws IOException, URISyntaxException {
+                                                        final Collection<GHRepository> repositories) throws IOException, URISyntaxException {
         logger.info("Started collecting contributors for organization '{}'", organisationName);
 
         Collection<Contributor> contributors = new ArrayList<>();
@@ -217,7 +216,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         Collection<Language> languages = new ArrayList<>();
 
-        Map<String, LongSummaryStatistics> stat = repositories.stream().map(repository -> {
+        Map<String, LongSummaryStatistics> stat = repositories.stream()
+                .map(repository -> {
                     try {
                         return repository.listLanguages();
                     } catch (IOException e) {
@@ -227,7 +227,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                 }).map(Map::entrySet).flatMap(Set::stream).collect(groupingBy(Map.Entry::getKey,
                         summarizingLong(Map.Entry::getValue)));
 
-        final long allLanguageSize = stat.entrySet().stream().map(entry -> entry.getValue().getSum())
+        final long allLanguageSize = stat.entrySet().stream()
+                .map(entry -> entry.getValue().getSum())
                 .reduce(0L, Long::sum);
 
         for (Map.Entry<String, LongSummaryStatistics> entry : stat.entrySet()) {
