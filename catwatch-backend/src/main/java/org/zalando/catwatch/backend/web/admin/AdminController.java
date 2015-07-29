@@ -25,7 +25,7 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.populate.DatabasePopulator;
 
 @Controller
-public class ExportImportController {
+public class AdminController {
 
     @Autowired
     private ContributorRepository contributorRepository;

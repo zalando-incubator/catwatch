@@ -16,7 +16,7 @@ import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
 import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
 
-public class ExportImportControllerIT extends AbstractCatwatchIT {
+public class AdminControllerIT extends AbstractCatwatchIT {
 
     @Autowired
     private ContributorRepository contributorRepository;
