@@ -3,20 +3,12 @@ package org.zalando.catwatch.backend.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
-import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 public class StatisticsService {
 	

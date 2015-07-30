@@ -5,9 +5,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Date.from;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ENDDATE;
@@ -16,13 +14,9 @@ import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_STAR
 import static org.zalando.catwatch.backend.util.Constants.API_RESOURCE_CONTRIBUTORS;
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

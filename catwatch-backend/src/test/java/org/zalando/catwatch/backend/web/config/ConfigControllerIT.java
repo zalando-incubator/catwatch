@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.web;
+package org.zalando.catwatch.backend.web.config;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.util.Map;
 
 import org.junit.Test;
+import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
 
 public class ConfigControllerIT extends AbstractCatwatchIT {
 
