@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
+import org.zalando.catwatch.backend.service.StatisticsService;
 
 public class DataAggregatorTest {
 
@@ -20,12 +21,12 @@ public class DataAggregatorTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAggregateNullStatistics() {
-		DataAggregator.aggregateStatistics(null);
+		StatisticsService.aggregateStatistics(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testAggregateEmptyStatistics() {
-		DataAggregator.aggregateStatistics(new ArrayList<>());
+		StatisticsService.aggregateStatistics(new ArrayList<>());
 	}
 
 	@Test
@@ -78,14 +79,14 @@ public class DataAggregatorTest {
 		actual.add(s1);
 
 		// when
-		Statistics result = DataAggregator.aggregateStatistics(actual);
+		Statistics result = StatisticsService.aggregateStatistics(actual);
 
 		// then
 		TestUtils.checkEquals(s1, result);
 
 		// when
 		actual.add(s2);
-		result = DataAggregator.aggregateStatistics(actual);
+		result = StatisticsService.aggregateStatistics(actual);
 
 		// then
 		Assert.assertEquals(33 + 32, result.getAllContributorsCount().intValue());
@@ -105,7 +106,7 @@ public class DataAggregatorTest {
 
 		// when
 		actual.add(s3);
-		result = DataAggregator.aggregateStatistics(actual);
+		result = StatisticsService.aggregateStatistics(actual);
 
 		// then
 		Assert.assertEquals(33 + 32 + 31, result.getAllContributorsCount().intValue());
@@ -132,7 +133,7 @@ public class DataAggregatorTest {
 		List<List<Statistics>> history = generateStatisticHistory();
 		
 		//when
-		Collection<Statistics> aggregatedHistory = DataAggregator.aggregateHistoricalStatistics(history);
+		Collection<Statistics> aggregatedHistory = StatisticsService.aggregateHistoricalStatistics(history);
 		
 		//then
 		Assert.assertNotNull(aggregatedHistory);
@@ -162,7 +163,7 @@ public class DataAggregatorTest {
 			organizationsStats.add(stats.get(recordNr));
 		}
 		
-		TestUtils.checkEquals(DataAggregator.aggregateStatistics(organizationsStats), actual, false);
+		TestUtils.checkEquals(StatisticsService.aggregateStatistics(organizationsStats), actual, false);
 	}
 	
 	

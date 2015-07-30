@@ -1,6 +1,6 @@
 package org.zalando.catwatch.backend.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -47,7 +47,7 @@ public class TestUtils {
 		Assert.assertEquals("Number of teams is different", expected.getTeamsCount(), actual.getTeamsCount());
 	}
 	
-	public static void checkAggregatedStatistics(Statistics actual, ArrayList<Statistics> arrayList) {
+	public static void checkAggregatedStatistics(Statistics actual, List<Statistics> expectedstatisticsToBeAggregated) {
 		Integer 
 			contributers = 0, 
 			forks = 0, 
@@ -62,7 +62,7 @@ public class TestUtils {
 
 		String organizations = null;
 
-		for (Statistics s : arrayList) {
+		for (Statistics s : expectedstatisticsToBeAggregated) {
 			contributers += s.getAllContributorsCount();
 			forks += s.getAllForksCount();
 			size += s.getAllSizeCount();
@@ -91,7 +91,7 @@ public class TestUtils {
 		Assert.assertEquals(tags, actual.getTagsCount());
 		Assert.assertEquals(teams, actual.getTeamsCount());
 
-		for (Statistics s : arrayList) {
+		for (Statistics s : expectedstatisticsToBeAggregated) {
 			if (s.getOrganizationName() == null)
 				continue;
 
