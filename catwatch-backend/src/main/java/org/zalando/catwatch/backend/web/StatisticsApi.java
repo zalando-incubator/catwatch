@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.service.StatisticsService;
 import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.util.DataAggregator;
 import org.zalando.catwatch.backend.util.StringParser;
 
 import io.swagger.annotations.Api;
@@ -86,7 +86,7 @@ public class StatisticsApi {
 			}
 			
 			if(unaggregatedStatistics!=null && unaggregatedStatistics.size()>0){
-				Statistics aggregatedStatistics = DataAggregator.aggregateStatistics(unaggregatedStatistics);
+				Statistics aggregatedStatistics = StatisticsService.aggregateStatistics(unaggregatedStatistics);
 				
 				statistics.add(aggregatedStatistics);
 			}
@@ -162,7 +162,7 @@ public class StatisticsApi {
 			statisticsLists.add(s);
 		}
 		
-		return DataAggregator.aggregateHistoricalStatistics(statisticsLists);
+		return StatisticsService.aggregateHistoricalStatistics(statisticsLists);
 	}
 
 }

@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.util;
+package org.zalando.catwatch.backend.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,13 +12,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 
-public class DataAggregator {
-
+public class StatisticsService {
 	
 	/**
 	 * Aggregates a collection of {@link Statistics} objects by adding up their field values
