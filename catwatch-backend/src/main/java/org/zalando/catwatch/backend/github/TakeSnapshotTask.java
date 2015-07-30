@@ -57,10 +57,10 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return new Snapshot(collectStatistics(organization),
                 collectProjects(organization),
                 collectContributors(organization),
-                collectLanguages(organization));
+                collectLanguages( organization.listRepositories() ));
     }
 
-    private Statistics collectStatistics(final OrganizationWrapper organization)
+    Statistics collectStatistics(final OrganizationWrapper organization)
             throws IOException {
         logger.info("Started collecting statistics for organization '{}'", organisationName);
 
@@ -99,7 +99,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return statistics;
     }
 
-    private Collection<Project> collectProjects(final OrganizationWrapper organization) throws IOException, URISyntaxException {
+    Collection<Project> collectProjects(final OrganizationWrapper organization) throws IOException, URISyntaxException {
         logger.info("Started collecting projects for organization '{}'", organisationName);
 
         List<Project> projects = new ArrayList<>();
@@ -130,7 +130,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return projects;
     }
 
-    private Collection<Contributor> collectContributors(final OrganizationWrapper organization) throws IOException, URISyntaxException {
+    Collection<Contributor> collectContributors(final OrganizationWrapper organization) throws IOException, URISyntaxException {
         logger.info("Started collecting contributors for organization '{}'", organisationName);
 
         Collection<Contributor> contributors = new ArrayList<>();
@@ -172,12 +172,12 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return contributors;
     }
 
-    private Collection<Language> collectLanguages(final OrganizationWrapper organization) {
+    Collection<Language> collectLanguages(final List<RepositoryWrapper> repos) {
         logger.info("Started collecting languages for organization '{}'", organisationName);
 
         Collection<Language> languages = new ArrayList<>();
 
-        Map<String, LongSummaryStatistics> stat = organization.listRepositories().stream()
+        Map<String, LongSummaryStatistics> stat = repos.stream()
                 .map(RepositoryWrapper::listLanguages)
                 .map(Map::entrySet)
                 .flatMap(Set::stream)
@@ -203,8 +203,4 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return languages;
     }
 
-    // TODO implement me
-    private int getContributorScore(GHRepository.Contributor contributor) {
-        return 1;
-    }
 }
