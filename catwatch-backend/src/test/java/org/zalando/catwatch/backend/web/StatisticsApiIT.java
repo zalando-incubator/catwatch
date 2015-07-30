@@ -62,12 +62,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 		Assert.assertEquals(1, statsResponse.length);
 
-		TestUtils.checkAggregatedStatistics(statsResponse[0], new ArrayList<Statistics>() {
-			{
-				add(s1);
-				add(s2);
-			}
-		});
+		TestUtils.checkAggregatedStatistics(statsResponse[0], Arrays.asList(s1, s2));
 	}
 
 	@Test
@@ -101,7 +96,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 				repository.findByOrganizationName(s2.getOrganizationName()));
 
 		// initialize url parameter
-		String start = StringParser.getISO8601StringForDate(fourDaysAgo);
+		String start = StringParser.getISO8601StringForDate(new Date(fourDaysAgo.getTime()+60000));
 		String end = StringParser.getISO8601StringForDate(twoDaysAgo);
 
 		// create url
@@ -112,7 +107,6 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 		List<Statistics> statsResponse = Arrays.asList(response.getBody());
 		
-		System.out.println(statsResponse);
 		
 		// then
 		Assert.assertNotNull(statsResponse);
@@ -122,8 +116,8 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 		TestUtils.checkEquals(s3, statsResponse.get(0));
 		TestUtils.checkEquals(s5, statsResponse.get(1));
 		
-		Assert.assertThat(statsResponse.get(1).toString(), Matchers.stringContainsInOrder(Arrays.asList(s5.getId()+"")));
 		Assert.assertThat(statsResponse.get(0).toString(), Matchers.stringContainsInOrder(Arrays.asList(s3.getId()+"")));
+		Assert.assertThat(statsResponse.get(1).toString(), Matchers.stringContainsInOrder(Arrays.asList(s5.getId()+"")));
 		
 	}
 

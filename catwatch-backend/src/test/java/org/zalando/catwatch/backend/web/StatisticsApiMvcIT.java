@@ -92,7 +92,8 @@ public class StatisticsApiMvcIT {
 		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, to)))
 						
 		//then
-		.andExpect(status().is(400));
+		.andExpect(status().is(200))
+		.andExpect(jsonPath("$", hasSize(1)));
 		
 		
 		//do request with no endDate time
@@ -114,7 +115,8 @@ public class StatisticsApiMvcIT {
 		mockMvc.perform(get(createRelativeStatisticsUrl(null, to, from)))
 												
 		//then
-		.andExpect(status().is(400));
+		.andExpect(status().is(200))
+		.andExpect(jsonPath("$", hasSize(0)));
 	}
 
 

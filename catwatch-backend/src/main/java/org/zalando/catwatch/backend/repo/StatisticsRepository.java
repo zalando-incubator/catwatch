@@ -9,13 +9,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.model.StatisticsKey;
 
-public interface StatisticsRepository extends CrudRepository<Statistics, StatisticsKey>{
+public interface StatisticsRepository extends CrudRepository<Statistics, StatisticsKey>, StatisticsRepositoryCustom{
 	
 	List<Statistics> findByOrganizationName(String name);
 	
 	/**get the most recent statistics of a particular organization
 	 * 
-	 * @param name name of the organzation
+	 * @param name name of the organization
 	 * @param pageable 
 	 * @return List of statistics
 	 */
