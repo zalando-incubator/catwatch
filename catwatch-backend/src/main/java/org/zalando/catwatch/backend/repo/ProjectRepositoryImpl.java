@@ -52,7 +52,7 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         JPAQuery jpaQuery = new JPAQuery(entityManager);
         QProject project = QProject.project;
         BooleanBuilder booleanBuilder = new BooleanBuilder().and(project.organizationName.eq(organization));
-        Optional<Date> snapshotDateMatch = getSnapshotDateMatch(snapshotDate);
+        Optional<Date> snapshotDateMatch = getSnapshotDateMatch(snapshotDate, organization);
         if (snapshotDateMatch.isPresent()) {
             booleanBuilder.and(project.snapshotDate.eq(snapshotDateMatch.get()));
             if (query.isPresent()) {
@@ -74,11 +74,12 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
      *
      * @return  date that is closest in the past. If there is no earlier date in the past, nothing is returned
      */
-    private Optional<Date> getSnapshotDateMatch(final Date snapshot) {
+    private Optional<Date> getSnapshotDateMatch(final Date snapshot, final String organization) {
         QProject project = QProject.project;
         List<Project> projectList = new JPAQuery(entityManager).from(project)
-                                                               .where(project.snapshotDate.eq(snapshot).or(
-                                                                       project.snapshotDate.before(snapshot)))
+                                                               .where(project.organizationName.eq(organization).and(
+                                                                       project.snapshotDate.eq(snapshot).or(
+                                                                           project.snapshotDate.before(snapshot))))
                                                                .orderBy(project.snapshotDate.desc()).limit(1).list(
                                                                    project);
         return projectList.isEmpty() ? Optional.ofNullable(null)
