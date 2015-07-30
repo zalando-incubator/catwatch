@@ -173,7 +173,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
         } else {
-            sortColumn = ProjectSortColumn.COMMITS_COUNT;
+            sortColumn = ProjectSortColumn.SCORE;
         }
 
         switch (sortColumn) {
@@ -194,7 +194,7 @@ public class ProjectServiceImpl implements ProjectService {
                 return new ProjectContributorComparator();
 
             default:
-                return new ProjectCommitComparator();
+                return new ProjectScoreComparator();
         }
 
     }
