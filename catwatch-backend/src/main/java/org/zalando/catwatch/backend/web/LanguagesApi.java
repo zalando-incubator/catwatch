@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.service.LanguagesService;
 import org.zalando.catwatch.backend.service.LanguageService;
 import org.zalando.catwatch.backend.util.Constants;
 
@@ -39,6 +38,9 @@ public class LanguagesApi {
     
     @Autowired
     LanguageService languageService;
+    
+    @Autowired
+    Environment env;
 
     @ApiOperation(
         value = "Project programming language",
@@ -69,7 +71,11 @@ public class LanguagesApi {
 
         List<Language> languages = languageService.getMainLanguages(organizations, new LanguagePercentComparator(), ofNullable(q));
         
-        Integer limitVal = Optional.ofNullable(limit).orElse(DEFAULT_LIMIT);
+        int defaultLimit = env.containsProperty(Constants.CONFIG_DEFAULT_LIMIT) ? 
+        		Integer.valueOf(env.getProperty(Constants.CONFIG_DEFAULT_LIMIT)) : 
+        		DEFAULT_LIMIT;
+        
+        Integer limitVal = Optional.ofNullable(limit).orElse(defaultLimit);
         Integer offsetVal = Optional.ofNullable(offset).orElse(DEFAULT_OFFSET);
         
         List<Language> filteredLanguages = languageService.filterLanguages(languages, limitVal, offsetVal);

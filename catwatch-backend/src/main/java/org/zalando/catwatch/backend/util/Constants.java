@@ -18,6 +18,7 @@ public class Constants {
 	    API_REQUEST_PARAM_LANGUAGE = "language",
 
 		CONFIG_ORGANIZATION_LIST = "organization.list",
+		CONFIG_DEFAULT_LIMIT = "default.item.limit",
 		
 		ERR_MSG_WRONG_DATE_FORMAT = "Invalid date format";
 		
