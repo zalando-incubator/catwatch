@@ -1,9 +1,9 @@
 # this is the CatWatch API specification (Swagger YAML)
 swagger: '2.0'
 info:
-  title: CatWatch API
-  description: Get your GitHub statistics with the CatWatch API
-  version: "0.1.0"
+  title: Catwatch API
+  description: Get your github statitics with the Catwatch API
+  version: 1.0.0
 # the domain of the service
 host: catwatch-web.hackweek.zalan.do
 # array of all schemes that your API supports
@@ -17,25 +17,22 @@ paths:
   /statistics:
     get:
       summary: General Statistics of list of Github.com Organizations
-      description: |
-        The Statistics endpoint returns snapshot of statistics over a given period of time of the organization 
-        GitHub account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub.com              Organizations.
-        
+      description: "The Statistics endpoint returns snapshot of statistics over a given period of time of the organization Github account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations. If start date and date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned."
       parameters:
         - name: organizations
           in: query
-          description:  List of github.com organizations to scan(comma seperated)
+          description: List of github.com organizations to scan(comma seperated)
           required: true
           type: string
         - name: start_date
           in: query
-          description: Date from which to start fetching statistics records from database(default = current date)  
+          description: Date from which to start fetching statistics records from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which statistics records will be fetched from database(default = current date) 
+          description: Date till which statistics records will be fetched from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
@@ -45,9 +42,9 @@ paths:
         200:
           description: An array of Statistics over selected period of time.
           schema:
-           type: array
-           items:
-            $ref: '#/definitions/Statistics'
+            type: array
+            items:
+              $ref: '#/definitions/Statistics'
         default:
           description: Unexpected error
           schema:
@@ -55,13 +52,11 @@ paths:
   /contributors:
     get:
       summary: Contributor
-      description: |
-        The Contributors endpoint returns all information like name, url, commits count, 
-        projects count of all the Contributors for the selected filter. 
+      description: "The Contributors endpoint returns all information like name, url, commits count, \nprojects count of all the Contributors for the selected filter. \n"
       parameters:
         - name: organizations
           in: query
-          description:  List of github.com organizations to scan(comma seperated)
+          description: List of github.com organizations to scan(comma seperated)
           required: true
           type: string
         - name: limit
@@ -78,19 +73,19 @@ paths:
           format: int32
         - name: start_date
           in: query
-          description: Date from which to start fetching records from database(default = current_date) 
+          description: Date from which to start fetching records from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which records will be fetched from database(default = current_date) 
+          description: Date till which records will be fetched from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
         - name: sort_by
           in: query
-          description: parameter by which result should be sorted. '-' means descending order (default is count of commit)
+          description: "parameter by which result should be sorted. '-' means descending order (default is count of commit)"
           required: false
           type: string
         - name: q
@@ -102,7 +97,7 @@ paths:
         - Contributor
       responses:
         200:
-          description: An array of Contributors of selected GitHub organization
+          description: An array of Contributors of selected Github organization
           schema:
             type: array
             items:
@@ -114,12 +109,12 @@ paths:
   /projects:
     get:
       summary: Project
-      description: The Projects endpoint returns all information like name,description, url, stars count, commits count, forks count, contributors count, score, languages used, last pushed of all the projects for the selected filter.
+      description: 'The Projects endpoint returns all information like name,description, url, stars count, commits count, forks count, contributors count, score, languages used, last pushed of all the projects for the selected filter. If start date and end date is not present, all projects from most recent snapshot is returned. If start date and end is present, project performance data between start date and end date is returned. If only start date is present, project performance data of project list between start date and  most recent snapshot is returned. If only end date is present, project statistics of end date is returned'
       parameters:
         - name: organizations
           in: query
-          description:  List of github.com organizations to scan(comma seperated)
-          required: true
+          description: List of github.com organizations to scan(comma seperated). By default it fetches organization list from config file.
+          required: false
           type: string
         - name: limit
           in: query
@@ -135,31 +130,49 @@ paths:
           format: int32
         - name: start_date
           in: query
-          description: Date from which to start fetching records from database(default = current_date) 
+          description: Date from which to start fetching records from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which records will be fetched from database(default = current_date) 
+          description: Date till which records will be fetched from database(default = most recent snapshot date)
           required: false
           type: string
           format: date-time
         - name: sort_by
           in: query
-          description: parameter by which result should be sorted. '-' means descending order (count of star,count of commit, count of forks, count of contributors, score). Default is descending order of score.
+          description: "parameter by which result should be sorted. '-' means descending order (count of star,count of commit, count of forks, count of contributors, score). Default is descending order of score. Accepted"
           required: false
-          type: string
+          type: array
+          items:
+            type: string
+            enum:
+              - 'commitsCount'
+              - '-commitsCount'
+              - 'forksCount'
+              - '-forksCount'
+              - 'contributorsCount'
+              - '-contributorsCount'
+              - 'score'
+              - '-score'
+            default: '-score'
+          collectionFormat: csv
         - name: q
           in: query
-          description: query paramater for search query (this will be project names prefix)
+          description: query paramater for filtering result by project names
           required: false
-          type: string 
+          type: string
+        - name: language
+          in: query
+          description: query paramater for filtering result by programming language
+          required: false
+          type: string
       tags:
         - Project
       responses:
         200:
-          description: An array of Projects of selected GitHub organization
+          description: An array of Projects of selected Github organization
           schema:
             type: array
             items:
@@ -171,11 +184,11 @@ paths:
   /languages:
     get:
       summary: Project programming language
-      description: The languages endpoint returns information about the languages used for projects by selected GitHub Organizations order by the number of projects using the programming language.
+      description: The languages endpoint returns information about the languages used for projects by selected Github Organizations order by the number of projects using the programming language.
       parameters:
         - name: organizations
           in: query
-          description:  List of github.com organizations to scan(comma seperated)
+          description: List of github.com organizations to scan(comma seperated)
           required: true
           type: string
         - name: limit
@@ -194,24 +207,20 @@ paths:
           in: query
           description: query paramater for search query (this can be language name prefix)
           required: false
-          type: string 
+          type: string
       tags:
         - Project
       responses:
         200:
           description: An array of programming language used and count of projects using it.
           schema:
-           type: array
-           items:
-             $ref: '#/definitions/Language'
+            type: array
+            items:
+              $ref: '#/definitions/Language'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  
-
- 
-   
 definitions:
   Statistics:
     properties:
@@ -282,6 +291,7 @@ definitions:
         type: string
         format: date-time
         description: Contributor snapshot date.
+
   Project:
     properties:
       name:
@@ -326,6 +336,7 @@ definitions:
         type: string
         format: date-time
         description: Project snapshot date.
+
   Language:
     properties:
       name:
@@ -337,7 +348,6 @@ definitions:
       percentage:
         type: number
         description: Usage percentage of programming language.
-
   Error:
     properties:
       code:

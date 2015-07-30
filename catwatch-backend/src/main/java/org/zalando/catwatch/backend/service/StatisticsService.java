@@ -1,24 +1,113 @@
-package org.zalando.catwatch.backend.util;
+package org.zalando.catwatch.backend.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.model.Project;
+import org.springframework.data.domain.PageRequest;
 import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
+import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.util.StringParser;
 
-public class DataAggregator {
+public class StatisticsService {
 
+	
+	public static Collection<Statistics> getStatistics(StatisticsRepository repository, Collection<String> organizations, String startDate, String endDate){
+		
+		Collection<Statistics> statistics = new ArrayList<>(organizations.size());
+
+		List<Statistics> unaggregatedStatistics = new ArrayList<>();
+
+		if (startDate == null && endDate == null) {
+			for (String orgName : organizations) {
+
+				List<Statistics> s = repository.findByOrganizationNameOrderByKeySnapshotDateDesc(orgName,
+						new PageRequest(0, 1));
+
+				unaggregatedStatistics.addAll(s);
+			}
+
+			if (unaggregatedStatistics != null && unaggregatedStatistics.size() > 0) {
+				Statistics aggregatedStatistics = aggregateStatistics(unaggregatedStatistics);
+
+				statistics.add(aggregatedStatistics);
+			}
+
+		} else {
+			// filter by start and end date
+			statistics = getStatisticsByDate(repository, organizations, startDate, endDate);
+		}
+		
+		return statistics;
+	}
+	
+	
+	private static Collection<Statistics> getStatisticsByDate(StatisticsRepository repository, Collection<String> orgs, String startDate, String endDate) {
+
+		Date start = null, end = null;
+		try {
+			if (startDate != null) {
+				start = StringParser.parseIso8601Date(startDate);
+			}
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAT + " for stardDate");
+		}
+
+		try {
+			end = endDate == null ? new Date() : StringParser.parseIso8601Date(endDate);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(Constants.ERR_MSG_WRONG_DATE_FORMAT + " for endDate");
+		}
+
+		List<List<Statistics>> statisticsLists = collectStatistics(repository, orgs, start, end);
+
+		return aggregateHistoricalStatistics(statisticsLists);
+	}
+
+	
+	private static List<List<Statistics>> collectStatistics(StatisticsRepository repository, Collection<String> organizations, Date start, Date end) {
+		
+		List<List<Statistics>> statisticsLists = new ArrayList<>();
+		
+		// get statistics for each organization
+		for (String orgName : organizations) {
+
+			if (start == null) {
+				Optional<Date> earliestSnapshot = repository.getEarliestSnaphotDate(orgName);
+				if (earliestSnapshot.isPresent()) {
+					start = earliestSnapshot.get();
+				} else {
+					continue;
+				}
+			} else {
+				Optional<Date> earlierSnapshot = repository.getLatestSnaphotDateBefore(orgName, start);
+
+				if (earlierSnapshot.isPresent()) {
+					start = earlierSnapshot.get();
+				} 
+			}
+
+			if (start.after(end)) {
+				continue;
+				// throw new IllegalArgumentException("Start date is after end
+				// date");
+			}
+
+			List<Statistics> s = repository.findStatisticsByOrganizationAndDate(orgName, start, end);
+			statisticsLists.add(s);
+		}
+		
+		return statisticsLists;
+	}
+	
+	
 	
 	/**
 	 * Aggregates a collection of {@link Statistics} objects by adding up their field values
@@ -128,6 +217,7 @@ public class DataAggregator {
 		return aggregatedStatistics;
 	}
 	
+	
 	private static Integer add(Integer sum, Integer value){
 		
 		int tempSum = sum == null ? 0 : sum.intValue();
@@ -136,62 +226,4 @@ public class DataAggregator {
 		
 		return tempSum;
 	}
-	
-	
-    public static List<Language> filterLanguages(List<Language> languages, int limit,  int offset){
-    	
-
-         return  languages.stream().skip(offset).limit(limit).collect(Collectors.toList());
-
-    }
-    
-    
-    public static List<Language> getMainLanguages(final String organizations, final Comparator<Language> c, ProjectRepository repository, Optional<String> filterLanguage) {
-
-        Collection<String> organizationList = StringParser.parseStringList(organizations, ",");
-        List<Project> projectList = new ArrayList<>();
-
-        // get the projects
-        for (String org : organizationList) {
-
-            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null), filterLanguage);
-
-            Iterator<Project> iter = projects.iterator();
-            while (iter.hasNext()) {
-                projectList.add(iter.next());
-            }
-        }
-
-        // count the languages
-
-        List<String> languageList = new ArrayList<>();
-
-        for (Project p : projectList) {
-            languageList.add(p.getPrimaryLanguage());
-        }
-
-        List<Language> languages = new ArrayList<>();
-
-        Set<String> languageSet = new HashSet<>(languageList);
-
-        int frequency = 0;
-
-        for (String language : languageSet) {
-            Language l = new Language(language);
-            frequency = Collections.frequency(languageList, language);
-
-            l.setPercentage((int) Math.round(((double) frequency) / languageList.size() * 100));
-            l.setProjectsCount(frequency);
-
-            languages.add(l);
-        }
-
-        // sort
-        if (languages.size() > 1) {
-            Collections.sort(languages, c);
-        }
-
-        return languages;
-    }
-	
 }

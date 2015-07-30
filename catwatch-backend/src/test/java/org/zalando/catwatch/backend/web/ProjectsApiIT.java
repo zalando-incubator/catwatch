@@ -32,12 +32,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 
 /**
  * Created by mkunz on 7/29/15.
  */
-public class ProjectApiIT extends AbstractCatwatchIT {
+public class ProjectsApiIT extends AbstractCatwatchIT {
 
     @Autowired
     private ProjectRepository projectRepository;

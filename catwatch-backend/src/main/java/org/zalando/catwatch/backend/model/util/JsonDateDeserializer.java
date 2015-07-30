@@ -1,14 +1,9 @@
 package org.zalando.catwatch.backend.model.util;
 
 import java.io.IOException;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,16 +15,13 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
  */
 public class JsonDateDeserializer extends JsonDeserializer<Date> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonDateDeserializer.class);
-
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
     @Override
     public Date deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException,
         JsonProcessingException {
         String dateString = jp.getText();
         try {
-            return SIMPLE_DATE_FORMAT.parse(dateString);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            return format.parse(dateString);
         } catch (ParseException e) {
             throw new IllegalStateException(
                 "parse exception occured when trying to deserialize date, date string was: ", e);

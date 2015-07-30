@@ -6,9 +6,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -134,11 +136,11 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 
 		// add a newer statistics entry
 		this.s2.setOrganizationName(ORGANIZATION1);
-		this.s2.setSnapshotDate(new Date(System.currentTimeMillis()));
+		this.s2.setSnapshotDate(new Date());
 
 		this.repository.save(s2);
 
-		statistics = findLatestStatistics(s1.getOrganizationName());
+		statistics = findLatestStatistics(ORGANIZATION1);
 
 		Assert.assertThat("Number of statistics for " + ORGANIZATION1 + " should be equal to one", statistics.size(),
 				Matchers.equalTo(1));
@@ -210,31 +212,47 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		assertThat(stats.get(0).getSnapshotDate().getTime(), equalTo(s3.getSnapshotDate().getTime()));
 		assertThat(stats.get(1).getSnapshotDate().getTime(), equalTo(s2.getSnapshotDate().getTime()));
 
-		// when
-		// stats = findInPeriod(null, endDate);
-		//
-		// // then
-		// assertThat(stats, hasSize(4));
-		// assertThat(stats.get(0).getSnapshotDate(),
-		// equalTo(s4.getSnapshotDate()));
-		// assertThat(stats.get(1).getSnapshotDate(),
-		// equalTo(s3.getSnapshotDate()));
-		// assertThat(stats.get(2).getSnapshotDate(),
-		// equalTo(s2.getSnapshotDate()));
-		// assertThat(stats.get(3).getSnapshotDate(),
-		// equalTo(s1.getSnapshotDate()));
-
-		// when
-		// stats = findInPeriod(startDate, null);
-		//
-		// // then
-		// assertThat(stats, hasSize(3));
-		// assertThat(stats.get(0).getSnapshotDate(),
-		// equalTo(s6.getSnapshotDate()));
-		// assertThat(stats.get(1).getSnapshotDate(),
-		// equalTo(s4.getSnapshotDate()));
-		// assertThat(stats.get(2).getSnapshotDate(),
-		// equalTo(s3.getSnapshotDate()));
+		
+		//given
+		Date lessThanThreeDaysAgo = new Date(threeDaysAgo.getTime() + 1000 * 60);
+		
+		//when
+		Optional<Date> actualDate = repository.getLatestSnaphotDateBefore(ORGANIZATION1, lessThanThreeDaysAgo);
+	
+		//then
+		assertTrue(actualDate.isPresent());
+		assertThat(actualDate.get().getTime(), equalTo(threeDaysAgo.getTime()));
+		
+				
+		//when
+		actualDate = repository.getLatestSnaphotDateBefore(ORGANIZATION2, lessThanThreeDaysAgo);
+			
+		//then
+		assertTrue(!actualDate.isPresent());
+		
+		
+		//when
+		actualDate = repository.getEarliestSnaphotDate(ORGANIZATION1);
+		
+		//then
+		assertTrue(actualDate.isPresent());
+		assertThat(actualDate.get().getTime(), equalTo(foursDaysAgo.getTime()));
+		
+		
+		//when
+		actualDate = repository.getEarliestSnaphotDate(ORGANIZATION2);
+				
+		//then
+		assertTrue(actualDate.isPresent());
+		assertThat(actualDate.get().getTime(), equalTo(twoDaysAgo.getTime()));
+		
+		
+		//when
+		actualDate = repository.getEarliestSnaphotDate("NotExistingOrganization");
+				
+		//then
+		assertTrue(!actualDate.isPresent());
+		
 	}
 
 	private List<Statistics> findLatestStatistics(String organization) {

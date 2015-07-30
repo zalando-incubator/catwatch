@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.StringParser;
 
@@ -92,7 +92,8 @@ public class StatisticsApiMvcIT {
 		mockMvc.perform(get(createRelativeStatisticsUrl(null, null, to)))
 						
 		//then
-		.andExpect(status().is(400));
+		.andExpect(status().is(200))
+		.andExpect(jsonPath("$", hasSize(1)));
 		
 		
 		//do request with no endDate time
@@ -114,7 +115,8 @@ public class StatisticsApiMvcIT {
 		mockMvc.perform(get(createRelativeStatisticsUrl(null, to, from)))
 												
 		//then
-		.andExpect(status().is(400));
+		.andExpect(status().is(200))
+		.andExpect(jsonPath("$", hasSize(0)));
 	}
 
 

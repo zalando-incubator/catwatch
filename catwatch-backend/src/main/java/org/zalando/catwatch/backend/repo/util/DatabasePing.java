@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.repo;
+package org.zalando.catwatch.backend.repo.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
