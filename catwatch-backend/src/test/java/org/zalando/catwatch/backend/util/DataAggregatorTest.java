@@ -12,7 +12,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 
 public class DataAggregatorTest {
 

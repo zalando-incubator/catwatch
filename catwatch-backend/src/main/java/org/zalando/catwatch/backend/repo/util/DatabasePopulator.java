@@ -1,11 +1,11 @@
-package org.zalando.catwatch.backend.repo.populate;
+package org.zalando.catwatch.backend.repo.util;
 
-import static org.zalando.catwatch.backend.repo.DatabasePing.isDatabaseAvailable;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomLanguage;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomProjectName;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomDate;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomLanguage;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomProjectName;
+import static org.zalando.catwatch.backend.repo.util.DatabasePing.isDatabaseAvailable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +23,9 @@ import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 
 @Component
 public class DatabasePopulator {

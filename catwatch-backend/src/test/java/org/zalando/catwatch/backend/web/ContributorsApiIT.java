@@ -29,7 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
-import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
+import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
 
 public class ContributorsApiIT extends AbstractCatwatchIT {
 

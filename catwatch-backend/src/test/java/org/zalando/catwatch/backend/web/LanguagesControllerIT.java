@@ -21,8 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.repo.populate.BuilderUtil;
-import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
+import org.zalando.catwatch.backend.repo.builder.BuilderUtil;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 import org.zalando.catwatch.backend.util.TestUtils;
 
 import com.google.common.collect.Lists;

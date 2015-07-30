@@ -22,7 +22,7 @@ import org.zalando.catwatch.backend.github.Scorer;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.populate.DatabasePopulator;
+import org.zalando.catwatch.backend.repo.util.DatabasePopulator;
 
 @Controller
 public class AdminController {

@@ -20,9 +20,9 @@ import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
-import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
-import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
+import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
 
 public class AdminControllerIT extends AbstractCatwatchIT {

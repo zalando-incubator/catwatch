@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.repo.populate.ContributorBuilder;
+import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
 
 public class ContributorRepositoryIT extends AbstractRepositoryIT {
 

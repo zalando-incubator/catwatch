@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.repo.populate;
+package org.zalando.catwatch.backend.repo.builder;
 
 import java.util.Date;
 import java.util.List;

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.populate.StatisticsBuilder;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.StringParser;
 import org.zalando.catwatch.backend.util.TestUtils;
 
