@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.repo.populate;
+package org.zalando.catwatch.backend.repo.builder;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 

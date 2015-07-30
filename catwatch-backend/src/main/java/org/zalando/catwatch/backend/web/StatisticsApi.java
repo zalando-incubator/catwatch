@@ -25,7 +25,6 @@ import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.service.StatisticsService;
 import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.util.DataAggregator;
 import org.zalando.catwatch.backend.util.StringParser;
 
 import io.swagger.annotations.Api;

@@ -9,6 +9,7 @@ import org.zalando.catwatch.backend.repo.ContributorRepositoryIT;
 import org.zalando.catwatch.backend.repo.ProjectRepositoryIT;
 import org.zalando.catwatch.backend.repo.StatisticsRepositoryIT;
 import org.zalando.catwatch.backend.web.ContributorsApiIT;
+import org.zalando.catwatch.backend.web.ProjectsApiIT;
 import org.zalando.catwatch.backend.web.StatisticsApiIT;
 
 /**
@@ -26,6 +27,7 @@ import org.zalando.catwatch.backend.web.StatisticsApiIT;
 		ProjectRepositoryIT.class, //
 		StatisticsRepositoryIT.class, //
 		ContributorsApiIT.class, //
+		ProjectsApiIT.class, //
 		StatisticsApiIT.class })
 public class PostgresTestSuiteIT {
 

@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.model;
 
-import static org.hamcrest.Matchers.equalTo;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
@@ -8,19 +9,21 @@ import java.util.Date;
 import org.junit.Test;
 
 public class ContributorTest {
-    
+
 	@Test
-	public void dummytest() throws Exception {
-		
-        // given
-		Contributor contributor = new Contributor(70,23,new Date());
-		contributor.setName("Jack");
-		
+	public void testToString_containsKey() throws Exception {
+
+		// given
+		Date date = new Date();
+		Contributor contributor = new Contributor(123456789, 987654321, date);
+
 		// when
-		contributor.setName("David");
-		
+		String str = contributor.toString();
+
 		// then
-		assertThat(contributor.getName(), equalTo("David"));
-    }
+		assertThat(str, stringContainsInOrder(asList("id", ":", "123456789")));
+		assertThat(str, stringContainsInOrder(asList("organizationId", ":", "987654321")));
+		assertThat(str, stringContainsInOrder(asList("snapshotDate", ":", "" + date)));
+	}
 
 }

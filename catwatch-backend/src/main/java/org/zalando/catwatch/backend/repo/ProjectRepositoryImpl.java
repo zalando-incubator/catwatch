@@ -77,7 +77,8 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     private Optional<Date> getSnapshotDateMatch(final Date snapshot) {
         QProject project = QProject.project;
         List<Project> projectList = new JPAQuery(entityManager).from(project)
-                                                               .where(project.snapshotDate.before(snapshot))
+                                                               .where(project.snapshotDate.eq(snapshot).or(
+                                                                       project.snapshotDate.before(snapshot)))
                                                                .orderBy(project.snapshotDate.desc()).limit(1).list(
                                                                    project);
         return projectList.isEmpty() ? Optional.ofNullable(null)

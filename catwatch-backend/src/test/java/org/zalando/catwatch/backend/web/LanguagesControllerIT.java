@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -21,11 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.repo.populate.BuilderUtil;
-import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
+import org.zalando.catwatch.backend.repo.builder.BuilderUtil;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 import org.zalando.catwatch.backend.util.TestUtils;
-
-import com.google.common.collect.Lists;
 
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 

@@ -1,5 +1,9 @@
-package org.zalando.catwatch.backend.repo.populate;
+package org.zalando.catwatch.backend.repo.builder;
 
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +11,8 @@ import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 public class ProjectBuilder {
+
+    private static Instant now = now();
 
     private Project project;
 
@@ -48,6 +54,11 @@ public class ProjectBuilder {
 
     public ProjectBuilder name(final String name) {
         project.setName(name);
+        return this;
+    }
+
+    public ProjectBuilder days(int numDaysBeforeNow) {
+        project.setSnapshotDate(Date.from(now.minus(numDaysBeforeNow, DAYS)));
         return this;
     }
 

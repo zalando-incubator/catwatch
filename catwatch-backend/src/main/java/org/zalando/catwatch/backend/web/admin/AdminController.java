@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.zalando.catwatch.backend.github.Scorer;
+import org.zalando.catwatch.backend.model.util.Scorer;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.populate.DatabasePopulator;
+import org.zalando.catwatch.backend.repo.util.DatabasePopulator;
 
 @Controller
 public class AdminController {
@@ -98,7 +98,7 @@ public class AdminController {
         if (messages.size() > 5) {
             messages.add("score update stopped due to errors");
         }
-        return messages.size() == 0 ? singletonList(processedProjects + " project objects updated") : messages;
+        return messages.size() == 0 ? singletonList(processedProjects + " project object(s) updated") : messages;
     }
 
     @RequestMapping(value = "/init", method = GET, produces = "application/json; charset=utf-8")

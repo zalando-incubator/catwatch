@@ -1,10 +1,10 @@
-package org.zalando.catwatch.backend.repo.populate;
+package org.zalando.catwatch.backend.repo.builder;
 
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.populate.BuilderUtil.randomDate;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomDate;
 
 import java.util.Date;
 import java.util.UUID;

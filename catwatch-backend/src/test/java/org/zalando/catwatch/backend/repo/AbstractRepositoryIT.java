@@ -1,7 +1,7 @@
 package org.zalando.catwatch.backend.repo;
 
 import static org.junit.Assume.assumeTrue;
-import static org.zalando.catwatch.backend.repo.DatabasePing.isDatabaseAvailable;
+import static org.zalando.catwatch.backend.repo.util.DatabasePing.isDatabaseAvailable;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
