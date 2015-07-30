@@ -55,7 +55,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         final OrganizationWrapper organization = new OrganizationWrapper(gitHub.getOrganization(organisationName));
 
         return new Snapshot(collectStatistics(organization),
-                collectProjects(organization),
+                collectProjects(organization.listRepositories(), organization.getLogin()),
                 collectContributors(organization),
                 collectLanguages( organization.listRepositories() ));
     }
@@ -99,12 +99,12 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return statistics;
     }
 
-    Collection<Project> collectProjects(final OrganizationWrapper organization) throws IOException, URISyntaxException {
+    Collection<Project> collectProjects(final List<RepositoryWrapper> repos, String orgLogin) throws IOException, URISyntaxException {
         logger.info("Started collecting projects for organization '{}'", organisationName);
 
         List<Project> projects = new ArrayList<>();
 
-        for (RepositoryWrapper repository : organization.listRepositories()) {
+        for (RepositoryWrapper repository : repos) {
             Project project = new Project();
 
             project.setGitHubProjectId(repository.getId());
@@ -117,7 +117,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setLastPushed(repository.getLastPushed().toString());
             project.setPrimaryLanguage(repository.getPrimaryLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
-            project.setOrganizationName(organization.getLogin());
+            project.setOrganizationName(orgLogin);
             project.setCommitsCount(repository.listCommits().size());
             project.setContributorsCount(repository.listContributors().size());
             project.setScore(scorer.score(project));
@@ -203,4 +203,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return languages;
     }
 
+	Date getSnapshotDate() {
+		return snapshotDate;
+	}
 }
