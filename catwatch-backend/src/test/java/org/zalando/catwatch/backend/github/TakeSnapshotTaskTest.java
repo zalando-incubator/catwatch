@@ -206,7 +206,13 @@ public class TakeSnapshotTaskTest {
 	}
 
 	private <T> List<T> mockList(Class<? extends T> clazz, int size) {
-		return IntStream.generate(() -> 1).limit(size).mapToObj(i -> mock(clazz)).collect(toList());
+		// does not work on Travis CI (compile error)
+		// return IntStream.generate(() -> 1).limit(size).mapToObj(i -> mock(clazz)).collect(toList());
+		List<T> result = new ArrayList<>();
+		for (int index = 0; index < size; index++) {
+			result.add(mock(clazz));
+		}
+		return result;
 	}
 
 }
