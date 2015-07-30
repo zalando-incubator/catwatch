@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("-test")
+@Profile("!test")
 public class TaskScheduler {
 
 	@Autowired
@@ -19,4 +19,5 @@ public class TaskScheduler {
 	public void fetchData() {
 		fetcher.fetchData();
 	}
+
 }
