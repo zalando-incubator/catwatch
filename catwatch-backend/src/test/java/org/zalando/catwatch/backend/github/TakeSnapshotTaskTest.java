@@ -56,8 +56,8 @@ public class TakeSnapshotTaskTest {
 		when(repo.getLastPushed()).thenReturn(date);
 		when(repo.getPrimaryLanguage()).thenReturn("Go");
 		when(repo.listLanguages()).thenReturn(toMap("C", 30, "Go", 15, "Java", 4));
-		when(repo.listCommits()).thenReturn(Arrays.asList(mock(GHCommit.class), mock(GHCommit.class)));
-		when(repo.listContributors()).thenReturn(Arrays.asList(mock(Contributor.class), mock(Contributor.class)));
+		when(repo.listCommits()).thenReturn(asList(mock(GHCommit.class), mock(GHCommit.class)));
+		when(repo.listContributors()).thenReturn(asList(mock(Contributor.class), mock(Contributor.class)));
 		when(scorer.score(any(Project.class))).thenReturn(55);
 		
 		// when
