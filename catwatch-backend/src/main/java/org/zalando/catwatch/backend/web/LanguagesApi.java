@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
+import org.zalando.catwatch.backend.service.LanguagesService;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.DataAggregator;
 
@@ -65,31 +66,12 @@ public class LanguagesApi {
             @RequestParam(value = Constants.API_REQUEST_PARAM_Q, required = false)
             final String q) {
 
-        List<Language> languages = DataAggregator.getMainLanguages(organizations, new LanguagePercentComparator(), repository, Optional.ofNullable(q));
+        List<Language> languages = LanguagesService.getMainLanguages(organizations, new LanguagePercentComparator(), repository, Optional.ofNullable(q));
         
         Integer limitVal = Optional.ofNullable(limit).orElse(DEFAULT_LIMIT);
         Integer offsetVal = Optional.ofNullable(offset).orElse(DEFAULT_OFFSET);
         
-        List<Language> filteredLanguages = DataAggregator.filterLanguages(languages, limitVal, offsetVal);
-        
-//        //apply limit and offset parameter, if any
-//        if( offset!=null || limit != null) {
-//        	
-//        	List<Language> languageSubset = new ArrayList<>();
-//        	
-//        	int start = offset == null ? 0 : offset;
-//        	
-//        	if(start<languages.size()){
-//        		int end = limit == null ? languages.size()-1 : start+limit;
-//            	
-//            	if(end>=languages.size()) end = languages.size()-1;
-//            	
-//            	languageSubset = languages.subList(start, end);
-//        	}
-//        	
-//            return new ResponseEntity<Collection<Language>>(languageSubset, HttpStatus.OK); 
-//        }
-        
+        List<Language> filteredLanguages = LanguagesService.filterLanguages(languages, limitVal, offsetVal);
         
         return new ResponseEntity<Collection<Language>>(filteredLanguages, HttpStatus.OK);
     }
@@ -104,7 +86,5 @@ public class LanguagesApi {
         	return -1;
         	
         }
-
     }
-
 }
