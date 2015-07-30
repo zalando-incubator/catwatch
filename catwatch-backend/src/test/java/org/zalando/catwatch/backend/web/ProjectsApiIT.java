@@ -37,7 +37,7 @@ import org.zalando.catwatch.backend.repo.populate.ProjectBuilder;
 /**
  * Created by mkunz on 7/29/15.
  */
-public class ProjectApiIT extends AbstractCatwatchIT {
+public class ProjectsApiIT extends AbstractCatwatchIT {
 
     @Autowired
     private ProjectRepository projectRepository;
