@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.model.sort;
+package org.zalando.catwatch.backend.service;
 
 /**
  * Created by mkunz on 7/25/15.

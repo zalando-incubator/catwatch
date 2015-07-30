@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.sort.ProjectSortColumn;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.service.comparator.*;
 import org.zalando.catwatch.backend.util.Constants;

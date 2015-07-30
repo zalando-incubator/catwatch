@@ -11,9 +11,6 @@ public class ProjectContributorComparator implements Comparator<Project> {
 
     @Override
     public int compare(Project  p1, Project p2) {
-
-
         return p1.getContributorsCount()-p2.getContributorsCount();
-
     }
 }
