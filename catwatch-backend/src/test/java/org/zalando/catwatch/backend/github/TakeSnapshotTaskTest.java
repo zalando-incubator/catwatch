@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -52,8 +53,49 @@ public class TakeSnapshotTaskTest {
 	Date date = new Date();
 
 	@Test
-	public void testCollectStatistics() throws Exception {
+	public void testCollectContributors() throws Exception {
 		
+		// given
+		RepositoryWrapper repo1 = mock(RepositoryWrapper.class);
+		Contributor c1 = newContributor(11, 22, "http://a.com", 33);
+		when(repo1.listContributors()).thenReturn(asList(c1));
+		
+		RepositoryWrapper repo2 = mock(RepositoryWrapper.class);
+		Contributor c2 = newContributor(44, 55, "http://b.com", 66);
+		when(repo2.listContributors()).thenReturn(asList(c2));
+
+		// when
+		List<org.zalando.catwatch.backend.model.Contributor> contributors = //
+				new ArrayList<org.zalando.catwatch.backend.model.Contributor>( //
+						task.collectContributors(asList(repo1, repo2), 77));
+
+		// then
+		assertThat(contributors, hasSize(2));
+
+		org.zalando.catwatch.backend.model.Contributor c1_ = contributors.get(0);
+		assertThat(c1_.getId(), equalTo(11L));
+		assertThat(c1_.getOrganizationalCommitsCount(), equalTo(22));
+		assertThat(c1_.getUrl(), equalTo("http://a.com"));
+
+		org.zalando.catwatch.backend.model.Contributor c2_ = contributors.get(1);
+		assertThat(c2_.getId(), equalTo(44L));
+		assertThat(c2_.getOrganizationalCommitsCount(), equalTo(55));
+		assertThat(c2_.getUrl(), equalTo("http://b.com"));
+	}
+
+	private Contributor newContributor(int id, int contributions, String htmlUrl, int publicRepoCount)
+			throws Exception {
+		Contributor c = mock(Contributor.class);
+		when(c.getId()).thenReturn(id);
+		when(c.getContributions()).thenReturn(contributions);
+		when(c.getHtmlUrl()).thenReturn(new URL(htmlUrl));
+		when(c.getPublicRepoCount()).thenReturn(publicRepoCount);
+		return c;
+	}
+
+	@Test
+	public void testCollectStatistics() throws Exception {
+
 		// given
 		OrganizationWrapper org = mock(OrganizationWrapper.class);
 		when(org.getPublicRepoCount()).thenReturn(44);
@@ -65,7 +107,7 @@ public class TakeSnapshotTaskTest {
 
 		// when
 		Statistics statistics = task.collectStatistics(org);
-		
+
 		// then
 		assertThat(statistics.getPublicProjectCount(), equalTo(44));
 		assertThat(statistics.getMembersCount(), equalTo(5));

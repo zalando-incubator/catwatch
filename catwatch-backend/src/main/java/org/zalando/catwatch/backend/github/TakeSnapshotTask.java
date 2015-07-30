@@ -56,7 +56,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         return new Snapshot(collectStatistics(organization),
                 collectProjects(organization.listRepositories(), organization.getLogin()),
-                collectContributors(organization),
+                collectContributors(organization.listRepositories(), organization.getId()),
                 collectLanguages( organization.listRepositories() ));
     }
 
@@ -99,7 +99,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return statistics;
     }
 
-    Collection<Project> collectProjects(final List<RepositoryWrapper> repos, String orgLogin) throws IOException, URISyntaxException {
+    Collection<Project> collectProjects(final List<RepositoryWrapper> repos, final String orgLogin) throws IOException, URISyntaxException {
         logger.info("Started collecting projects for organization '{}'", organisationName);
 
         List<Project> projects = new ArrayList<>();
@@ -130,13 +130,13 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return projects;
     }
 
-    Collection<Contributor> collectContributors(final OrganizationWrapper organization) throws IOException, URISyntaxException {
+    Collection<Contributor> collectContributors(final List<RepositoryWrapper> repos, long orgId) throws IOException, URISyntaxException {
         logger.info("Started collecting contributors for organization '{}'", organisationName);
 
         Collection<Contributor> contributors = new ArrayList<>();
 
         // Get a list of all contributors of all repositories
-        Collection<GHRepository.Contributor> ghContributors = organization.listRepositories()
+        Collection<GHRepository.Contributor> ghContributors = repos
                 .stream()
                 .map(RepositoryWrapper::listContributors)
                 .flatMap(List::stream)
@@ -153,7 +153,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         // Build a list of contributors
         for (GHRepository.Contributor ghContributor : ghContributors) {
-            Contributor contributor = new Contributor(ghContributor.getId(), organization.getId(), snapshotDate);
+            Contributor contributor = new Contributor(ghContributor.getId(), orgId, snapshotDate);
 
             contributor.setName(ghContributor.getName());
             contributor.setUrl(ghContributor.getHtmlUrl().toURI().toString());
