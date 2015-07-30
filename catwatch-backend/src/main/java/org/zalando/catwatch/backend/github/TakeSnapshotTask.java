@@ -16,6 +16,7 @@ import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.model.util.Scorer;
 
 import static java.util.stream.Collectors.*;
 

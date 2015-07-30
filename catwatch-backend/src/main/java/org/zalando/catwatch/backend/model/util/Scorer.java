@@ -1,4 +1,4 @@
-package org.zalando.catwatch.backend.github;
+package org.zalando.catwatch.backend.model.util;
 
 
 import static org.zalando.catwatch.backend.util.JavaScriptExecutor.newExecutor;
