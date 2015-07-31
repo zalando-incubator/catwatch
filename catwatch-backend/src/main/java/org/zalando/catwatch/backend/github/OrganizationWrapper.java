@@ -22,6 +22,7 @@ public class OrganizationWrapper {
         try {
             repositories = organization.listRepositories().asList().stream()
                     .filter(r -> !r.isPrivate())
+                    .filter(r -> !r.isFork())
                     .map(repository -> new RepositoryWrapper(repository, organization))
                     .collect(Collectors.toList());
         } catch (Throwable t) {
@@ -40,9 +41,9 @@ public class OrganizationWrapper {
         }
     }
 
-    public List<GHUser> listPublicMembers() {
+    public List<GHUser> listMembers() {
         try {
-            return organization.listPublicMembers().asList();
+            return organization.listMembers().asList();
         } catch (Throwable t) {
             logger.warn("Exception occurred while fetching public members of organization '{}'.", organization.getLogin());
             return Collections.<GHUser>emptyList();

@@ -66,8 +66,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         Statistics statistics = new Statistics(organization.getId(), snapshotDate);
 
-        statistics.setPublicProjectCount(organization.getPublicRepoCount());
-        statistics.setMembersCount(organization.listPublicMembers().size());
+        statistics.setPublicProjectCount(organization.listRepositories().size());
+        statistics.setMembersCount(organization.listMembers().size());
         statistics.setTeamsCount(organization.listTeams().size());
         statistics.setAllContributorsCount((int) organization.listRepositories().stream()
                 .map(RepositoryWrapper::listContributors)

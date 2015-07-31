@@ -99,7 +99,7 @@ public class TakeSnapshotTaskTest {
 		// given
 		OrganizationWrapper org = mock(OrganizationWrapper.class);
 		when(org.getPublicRepoCount()).thenReturn(44);
-		when(org.listPublicMembers()).thenReturn(mockList(GHUser.class, 5));
+		when(org.listMembers()).thenReturn(mockList(GHUser.class, 5));
 		when(org.listTeams()).thenReturn(mockList(GHTeam.class, 4));
 		when(org.listRepositories()).thenReturn(emptyList());
 		// TODO add more behavior and more assertions
