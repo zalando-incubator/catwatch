@@ -3,7 +3,7 @@ info:
   title: CatWatch API
   description: Get your GitHub statistics with the CatWatch API
   version: 1.0.0
-host: catwatch-web.hackweek.zalan.do
+host: http://ec2-52-28-130-84.eu-central-1.compute.amazonaws.com
 schemes:
   - https
 produces:
