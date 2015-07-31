@@ -8,8 +8,8 @@ public class Constants {
 		API_RESOURCE_PROJECTS = "/projects",
 		API_RESOURCE_LANGUAGES = "/languages",		
 		
-		API_REQUEST_PARAM_ENDDATE = "endDate",
-		API_REQUEST_PARAM_STARTDATE = "startDate",
+		API_REQUEST_PARAM_ENDDATE = "end_date",
+		API_REQUEST_PARAM_STARTDATE = "start_date",
 		API_REQUEST_PARAM_SORTBY = "sortBy",
 		API_REQUEST_PARAM_ORGANIZATIONS = "organizations",
 		API_REQUEST_PARAM_LIMIT = "limit",
