@@ -127,7 +127,8 @@ public class ContributorsApi {
 		}
 	}
 
-	private List<Contributor> contributorsGet_noTimeSpan(String organizations, Integer limit, Integer offset,String endDate, String sortBy, String q) {
+	private List<Contributor> contributorsGet_noTimeSpan(String organizations, Integer limit, Integer offset,
+			String endDate, String sortBy, String q) {
 
 		Date endDateDate = endDate != null ? iso8601(endDate) : new Date();
 		Date endDateInDb = repository.findPreviousSnapShotDate(endDateDate);
@@ -143,7 +144,7 @@ public class ContributorsApi {
 		});
 
 		List<Contributor> sorted = multiMap.asMap().values().stream().map(list -> add(list)).collect(toList());
-		Collections.sort(sorted, comparator(sortBy(sortBy)));
+		Collections.sort(sorted, sortBy(sortBy));
 
 		return sublist(limit, offset, sorted);
 	}
@@ -179,8 +180,7 @@ public class ContributorsApi {
 		});
 
 		List<Contributor> sorted = multiMap.asMap().values().stream().map(list -> add(list)).collect(toList());
-		Collections.sort(sorted, comparator(sortBy(sortBy))); // or
-																// stream.sorted(comparator)
+		Collections.sort(sorted, sortBy(sortBy));
 
 		return sublist(limit, offset, sorted);
 	}
@@ -248,12 +248,24 @@ public class ContributorsApi {
 		}
 	}
 
-	private String sortBy(String sortBy) {
+	private Comparator<Contributor> sortBy(String sortBy) {
 		if (Strings.isNullOrEmpty(sortBy)) {
-			return SORT_BY_LIST.get(0);
+			return comparator(SORT_BY_LIST.get(0), true);
 		} else {
-			return SORT_BY_LIST.stream().collect(toMap(String::toLowerCase, identity()))
-					.get(sortBy.trim().toLowerCase());
+			// (this should be re-written or/and unit tested)
+			sortBy = sortBy.trim();
+			boolean reverse = false;
+			if (sortBy.startsWith("-")) {
+				reverse = true;
+				sortBy = sortBy.substring(1);
+			}
+			String cleanedSortBy = SORT_BY_LIST.stream().collect(toMap(String::toLowerCase, identity()))
+					.get(sortBy.toLowerCase());
+			if (cleanedSortBy != null) {
+				return comparator(cleanedSortBy, reverse);
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -307,9 +319,9 @@ public class ContributorsApi {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Comparator<Contributor> comparator(String sortBy) {
+	private Comparator<Contributor> comparator(String sortBy, boolean reverse) {
 		ComparatorChain comparator = new ComparatorChain();
-		comparator.addComparator(new BeanComparator<Contributor>(sortBy), true);
+		comparator.addComparator(new BeanComparator<Contributor>(sortBy), reverse);
 		comparator.addComparator(new BeanComparator<Contributor>("id"));
 		return comparator;
 	}

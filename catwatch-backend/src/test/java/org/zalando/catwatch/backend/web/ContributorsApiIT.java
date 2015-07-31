@@ -3,7 +3,6 @@ package org.zalando.catwatch.backend.web;
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
-import static java.util.Arrays.asList;
 import static java.util.Date.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -113,7 +112,25 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 				.save();
 
 		// when
-		Contributor[] contributors = exchange(GET, builder().queryParam("sortBy", "name").toUriString(),
+		Contributor[] contributors = exchange(GET, builder().queryParam("sortBy", "-name").toUriString(),
+				Contributor[].class).getBody();
+
+		// then
+		assertThat(contributors.length, equalTo(2));
+		assertThat(contributors[0].getName(), equalTo("Ben"));
+		assertThat(contributors[1].getName(), equalTo("Alf"));
+
+		// when
+		contributors = exchange(GET, builder().queryParam("sortBy", "name").toUriString(),
+				Contributor[].class).getBody();
+
+		// then
+		assertThat(contributors.length, equalTo(2));
+		assertThat(contributors[0].getName(), equalTo("Alf"));
+		assertThat(contributors[1].getName(), equalTo("Ben"));
+
+		// when
+		contributors = exchange(GET, builder().queryParam("sortBy", "-personalProjectsCount").toUriString(),
 				Contributor[].class).getBody();
 
 		// then
@@ -127,11 +144,11 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 
 		// then
 		assertThat(contributors.length, equalTo(2));
-		assertThat(contributors[0].getName(), equalTo("Ben"));
-		assertThat(contributors[1].getName(), equalTo("Alf"));
+		assertThat(contributors[0].getName(), equalTo("Alf"));
+		assertThat(contributors[1].getName(), equalTo("Ben"));
 
 		// when
-		contributors = exchange(GET, builder().queryParam("sortBy", "organizationalProjectsCount").toUriString(),
+		contributors = exchange(GET, builder().queryParam("sortBy", "-organizationalProjectsCount").toUriString(),
 				Contributor[].class).getBody();
 
 		// then
@@ -140,7 +157,7 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 		assertThat(contributors[1].getName(), equalTo("Ben"));
 
 		// when
-		contributors = exchange(GET, builder().queryParam("sortBy", "organizationalCommitsCount").toUriString(),
+		contributors = exchange(GET, builder().queryParam("sortBy", "-organizationalCommitsCount").toUriString(),
 				Contributor[].class).getBody();
 
 		// then
@@ -150,7 +167,7 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 
 		// TODO does not work yet!!!
 //		// when
-//		contributors = exchange(GET, builder().queryParam("sortBy", "organizationName").toUriString(),
+//		contributors = exchange(GET, builder().queryParam("sortBy", "-organizationName").toUriString(),
 //				Contributor[].class).getBody();
 //
 //		// then
