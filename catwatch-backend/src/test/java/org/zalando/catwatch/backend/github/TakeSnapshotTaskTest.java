@@ -98,7 +98,6 @@ public class TakeSnapshotTaskTest {
 
 		// given
 		OrganizationWrapper org = mock(OrganizationWrapper.class);
-		when(org.getPublicRepoCount()).thenReturn(44);
 		when(org.listMembers()).thenReturn(mockList(GHUser.class, 5));
 		when(org.listTeams()).thenReturn(mockList(GHTeam.class, 4));
 		when(org.listRepositories()).thenReturn(emptyList());
@@ -109,7 +108,7 @@ public class TakeSnapshotTaskTest {
 		Statistics statistics = task.collectStatistics(org);
 
 		// then
-		assertThat(statistics.getPublicProjectCount(), equalTo(44));
+		assertThat(statistics.getPublicProjectCount(), equalTo(0));
 		assertThat(statistics.getMembersCount(), equalTo(5));
 		assertThat(statistics.getTeamsCount(), equalTo(4));
 		assertThat(statistics.getOrganizationName(), equalTo("myLogin"));
