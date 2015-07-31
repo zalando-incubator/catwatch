@@ -63,6 +63,16 @@ public class ContributorBuilder {
         return this;
     }
 
+    public ContributorBuilder orgProjects(Integer organizationalProjectsCount) {
+        contributor.setOrganizationalProjectsCount(organizationalProjectsCount);
+        return this;
+    }
+
+    public ContributorBuilder persProjects(Integer personalProjectsCount) {
+        contributor.setPersonalProjectsCount(personalProjectsCount);
+        return this;
+    }
+
     public Contributor create() {
         Contributor c = new Contributor(contributor.getId(), contributor.getOrganizationId(),
                 contributor.getSnapshotDate());
