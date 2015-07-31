@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: CatWatch API
-  description: Get your GitHub statitics with the Catwatch API
+  description: Get your GitHub statistics with the CatWatch API
   version: 1.0.0
 host: catwatch-web.hackweek.zalan.do
 schemes:
@@ -11,7 +11,7 @@ produces:
 paths:
   /statistics:
     get:
-      summary: General Statistics of list of GitHub Organizations
+      summary: General statistics of list of GitHub Organizations
       description: 'The Statistics endpoint returns snapshot of statistics over a given period of time of the organization GitHub account. Statistics contains information of the count of all private projects,  public projects, members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub Organizations. If start date and date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned.'
       parameters:
         - name: organizations
@@ -99,7 +99,7 @@ paths:
           default: '-organizationalCommitsCount'
         - name: q
           in: query
-          description: query paramater for search query (this will be contributor names prefix)
+          description: query parameter for search query (this will be contributor names prefix)
           required: false
           type: string
       tags:
