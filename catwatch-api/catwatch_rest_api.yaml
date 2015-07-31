@@ -21,13 +21,13 @@ paths:
           type: string
         - name: start_date
           in: query
-          description: Date from which to start fetching statistics records from database(default = most recent snapshot date)
+          description: Date from which to start fetching statistics records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which statistics records will be fetched from database(default = most recent snapshot date)
+          description: Date till which statistics records will be fetched from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
@@ -68,13 +68,13 @@ paths:
           format: int32
         - name: start_date
           in: query
-          description: Date from which to start fetching records from database(default = most recent snapshot date)
+          description: Date from which to start fetching records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which records will be fetched from database(default = most recent snapshot date)
+          description: Date till which records will be fetched from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
@@ -139,13 +139,13 @@ paths:
           format: int32
         - name: start_date
           in: query
-          description: Date from which to start fetching records from database(default = most recent snapshot date)
+          description: Date from which to start fetching records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
         - name: end_date
           in: query
-          description: Date till which records will be fetched from database(default = most recent snapshot date)
+          description: Date till which records will be fetched from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
           required: false
           type: string
           format: date-time
