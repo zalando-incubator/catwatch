@@ -7,6 +7,7 @@ import static java.util.Date.from;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ENDDATE;
 import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ORGANIZATIONS;
@@ -14,11 +15,14 @@ import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_STAR
 import static org.zalando.catwatch.backend.util.Constants.API_RESOURCE_CONTRIBUTORS;
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.catwatch.backend.model.Contributor;
@@ -44,7 +48,7 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 
         // when
         String url = contributorUrl().queryParam("organizations", "IBM").toUriString();
-        Map<String, Object>[] contributors = template.getForEntity(url, Map[].class).getBody();
+        Map<String, Object>[] contributors = exchange(GET, url, Map[].class).getBody();
 
         // then
         assertEquals(contributors.length, 1);
@@ -72,15 +76,14 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
         Date startDate = from(now().minus(3, DAYS).minus(12, HOURS));
 
         // when
-        // (TODO does not work with " a, b " yet -> "%20a,b")
         String url = contributorUrl()
                 //
-                .queryParam(API_REQUEST_PARAM_ORGANIZATIONS, "IBM,Sun")
+                .queryParam(API_REQUEST_PARAM_ORGANIZATIONS, " IBM,Sun")
                 .queryParam(API_REQUEST_PARAM_STARTDATE, iso8601(startDate)) //
                 .queryParam(API_REQUEST_PARAM_ENDDATE, iso8601(endDate)) //
                 .toUriString();
 
-        ResponseEntity<Contributor[]> response = template.getForEntity(url, Contributor[].class);
+        ResponseEntity<Contributor[]> response = exchange(GET, url, Contributor[].class);
 
         // then
         Contributor[] contributors = response.getBody();
@@ -95,6 +98,11 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
         assertThat(contributors[2].getOrganizationalCommitsCount(), equalTo(2));
         
         assertThat(contributors.length, equalTo(3));
+    }
+    
+    private <T> ResponseEntity<T> exchange(HttpMethod method, String url, Class<T> clazz) throws Exception {
+        RequestEntity<String> requestEntity = new RequestEntity<String>(method, new URI(url));
+        return template.exchange(requestEntity, clazz);
     }
 
     private UriComponentsBuilder contributorUrl() {
