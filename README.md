@@ -15,7 +15,7 @@ In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggr
 
 ## Getting started
 
-Build and run the webapp either by Gradle or Maven.
+Build and run the web application either by Gradle or Maven.
 
 Gradle:
 
@@ -42,3 +42,6 @@ Maven:
 The web application is available under http://localhost:8080
 
 It provides the [CatWatch REST-API](https://zalando.github.io/catwatch/).
+
+By default the web application uses an H2 in-memory database.
+The file application-postgresql.properties demonstrates how a PostgreSQL database can be configured. 

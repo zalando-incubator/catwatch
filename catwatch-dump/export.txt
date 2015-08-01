@@ -1,0 +1,1 @@
+You can export the database content via the endpoint /export. 

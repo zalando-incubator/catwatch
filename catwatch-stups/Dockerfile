@@ -1,6 +1,6 @@
 FROM zalando/openjdk:8u45-b14-2
 
-COPY target/catwatch-backend.jar /catwatch-backend.jar
+COPY ../catwatch-backend/target/catwatch-backend.jar /catwatch-backend.jar
 
 COPY scm-source.json /scm-source.json
 
