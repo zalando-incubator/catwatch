@@ -3,6 +3,7 @@ package org.zalando.catwatch.backend.github;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 import org.kohsuke.github.extras.OkHttpConnector;
@@ -70,10 +71,14 @@ public class SnapshotProvider {
     }
 
     public Future<Snapshot> takeSnapshot(String organizationName) throws IOException {
-        GitHub gitHub = new GitHubBuilder()
-                .withPassword(login, password)
-                .withConnector(new OkHttpConnector(new OkUrlFactory(httpClient)))
-                .build();
+        GitHubBuilder builder = new GitHubBuilder();
+
+        if (StringUtils.isNotEmpty(login)) {
+            builder.withPassword(login, password);
+        }
+
+        GitHub gitHub = builder.withConnector(new OkHttpConnector(new OkUrlFactory(httpClient))).build();
+
         return pool.submit(new TakeSnapshotTask(gitHub, organizationName, scorer));
     }
     
