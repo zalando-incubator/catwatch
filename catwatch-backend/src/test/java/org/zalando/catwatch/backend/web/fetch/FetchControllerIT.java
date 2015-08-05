@@ -1,5 +1,15 @@
 package org.zalando.catwatch.backend.web.fetch;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanComparator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -12,56 +22,58 @@ import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-
-@IntegrationTest({ "github.login=", "organization.list=rwitzeltestorg", "server.port=0" })
+@IntegrationTest({ "github.login=", "organization.list=rwitzeltestorg,rwitzeltestorg2", "server.port=0" })
 public class FetchControllerIT extends AbstractCatwatchIT {
 
-	@Autowired
-	private Environment env;
+    @Autowired
+    private Environment env;
 
-	@Autowired
-	private ContributorRepository contributorRepository;
+    @Autowired
+    private ContributorRepository contributorRepository;
 
-	@Autowired
-	private StatisticsRepository statisticsRepository;
+    @Autowired
+    private StatisticsRepository statisticsRepository;
 
-	@Autowired
-	private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
-	@Test
-	public void testFetch() throws Exception {
+    @Test
+    public void testFetch() throws Exception {
 
-		// given
-		contributorRepository.deleteAll();
-		statisticsRepository.deleteAll();
-		projectRepository.deleteAll();
+        // given
+        contributorRepository.deleteAll();
+        statisticsRepository.deleteAll();
+        projectRepository.deleteAll();
 
-		// when
-		String result = template.getForEntity(fetchUrl(), String.class).getBody();
+        // when
+        String result = template.getForEntity(fetchUrl(), String.class).getBody();
 
-		// then
-		List<Statistics> statisticses = newArrayList(statisticsRepository.findAll());
-		List<Contributor> contributors = newArrayList(contributorRepository.findAll());
-		List<Project> projects = newArrayList(projectRepository.findAll());
+        // then
+        assertThat(result, equalTo("OK"));
 
-		assertThat(result, equalTo("OK"));
-		assertThat(statisticses.size(), equalTo(1));
-		assertThat(projects.size(), equalTo(1));
-		assertThat(contributors.size(), equalTo(1));
+        List<Statistics> statisticses = newArrayList(statisticsRepository.findAll());
+        List<Contributor> contributors = newArrayList(contributorRepository.findAll());
+        List<Project> projects = newArrayList(projectRepository.findAll());
 
-		assertThat(statisticses.get(0).getOrganizationName(), equalTo("rwitzeltestorg"));
-		assertThat(projects.get(0).getName(), equalTo("testrepo1"));
-		assertThat(contributors.get(0).getName(), equalTo("Rodrigo Witzel"));
-	}
+        assertThat(statisticses.size(), equalTo(2));
+        assertThat(projects.size(), equalTo(2));
+        assertThat(contributors.size(), equalTo(2));
 
-	private String fetchUrl() {
-		return fromHttpUrl(base.toString() + "fetch").toUriString();
-	}
+        Statistics statistics = sort(statisticses, "organizationName").get(0);
+        Project project = sort(projects, "organizationName").get(0);
+
+        assertThat(statistics.getOrganizationName(), equalTo("rwitzeltestorg"));
+        assertThat(project.getName(), equalTo("testrepo1"));
+        assertThat(contributors.get(0).getName(), equalTo("Rodrigo Witzel"));
+        assertThat(contributors.get(1).getName(), equalTo("Rodrigo Witzel"));
+    }
+
+    private String fetchUrl() {
+        return fromHttpUrl(base.toString() + "fetch").toUriString();
+    }
+
+    private <T> List<T> sort(Collection<T> collection, String property) {
+        return collection.stream().sorted(new BeanComparator<T>(property)).collect(toList());
+    }
 
 }

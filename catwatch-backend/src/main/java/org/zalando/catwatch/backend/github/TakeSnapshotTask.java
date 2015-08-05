@@ -1,15 +1,30 @@
 package org.zalando.catwatch.backend.github;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summarizingInt;
+import static java.util.stream.Collectors.summarizingLong;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+
 import java.io.IOException;
-
 import java.net.URISyntaxException;
-
-import java.time.ZonedDateTime;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.IntSummaryStatistics;
+import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHObject;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zalando.catwatch.backend.model.Contributor;
@@ -17,8 +32,6 @@ import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.model.util.Scorer;
-
-import static java.util.stream.Collectors.*;
 
 /**
  * A task to get organisation snapshot from GitHub using API V3.
@@ -41,11 +54,11 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
     private Scorer scorer;
 
-    public TakeSnapshotTask(final GitHub gitHub, final String organisationName, Scorer scorer) {
+    public TakeSnapshotTask(final GitHub gitHub, final String organisationName, Scorer scorer, Date snapshotDate) {
         this.gitHub = gitHub;
         this.organisationName = organisationName;
         this.scorer = scorer;
-        this.snapshotDate = Date.from(ZonedDateTime.now().toInstant());
+        this.snapshotDate = snapshotDate;
     }
 
     @Override
@@ -172,6 +185,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return contributors;
     }
 
+    @SuppressWarnings("rawtypes")
     Collection<Language> collectLanguages(final List<RepositoryWrapper> repos) {
         logger.info("Started collecting languages for organization '{}'", organisationName);
 
@@ -182,7 +196,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                 .map(Map::entrySet)
                 .flatMap(Set::stream)
                 .collect(groupingBy(Map.Entry::getKey,
-                        summarizingLong(Map.Entry::getValue)));
+                        summarizingLong(entry -> ((Number) ((Map.Entry)entry).getValue()).longValue())));
 
         final long allLanguageSize = stat.entrySet().stream()
                 .map(entry -> entry.getValue().getSum())

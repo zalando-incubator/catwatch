@@ -3,6 +3,7 @@ package org.zalando.catwatch.backend.github;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
+
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -15,12 +16,14 @@ import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.util.Scorer;
 
 import javax.annotation.PostConstruct;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,7 +73,7 @@ public class SnapshotProvider {
         }
     }
 
-    public Future<Snapshot> takeSnapshot(String organizationName) throws IOException {
+    public Future<Snapshot> takeSnapshot(String organizationName, Date snapshotDate) throws IOException {
         GitHubBuilder builder = new GitHubBuilder();
 
         if (StringUtils.isNotEmpty(login)) {
@@ -79,7 +82,7 @@ public class SnapshotProvider {
 
         GitHub gitHub = builder.withConnector(new OkHttpConnector(new OkUrlFactory(httpClient))).build();
 
-        return pool.submit(new TakeSnapshotTask(gitHub, organizationName, scorer));
+        return pool.submit(new TakeSnapshotTask(gitHub, organizationName, scorer, snapshotDate));
     }
     
     private Optional<File> getCacheDirectory() {
