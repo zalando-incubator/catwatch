@@ -153,7 +153,7 @@ public class StatisticsApiMvcIT {
                    // then
                    .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)));
 
-            Statistics s = insertStatisics(organization);
+            insertStatisics(organization);
 
             // do
             mockMvc.perform(get(createRelativeStatisticsUrl(null, null, null)))

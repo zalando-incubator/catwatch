@@ -160,7 +160,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @param sortOrderAscending
      * @return
      */
-    private Comparator getProjectSortComparator(final Optional<String> sortBy, final boolean sortOrderAscending) {
+    private Comparator<Project> getProjectSortComparator(final Optional<String> sortBy, final boolean sortOrderAscending) {
 
         String sortColumn = null;
 

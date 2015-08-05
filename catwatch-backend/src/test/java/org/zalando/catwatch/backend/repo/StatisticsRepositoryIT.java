@@ -25,7 +25,7 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 	@Autowired
 	private StatisticsRepository repository;
 
-	private Statistics s1, s2, s3, s4, s5, s6;
+	private Statistics s1, s2, s3, s4;
 
 	private final String ORGANIZATION1 = "organization1", ORGANIZATION2 = "organization2";
 
@@ -180,7 +180,6 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 			throws Exception {
 
 		// given
-		Date now = Date.from(now());
 		Date oneDayAgo = Date.from(now().minus(1, DAYS));
 		Date twoDaysAgo = Date.from(now().minus(2, DAYS));
 		Date threeDaysAgo = Date.from(now().minus(3, DAYS));
@@ -200,7 +199,7 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		// snapshot date is within requested period of time
 		s4 = createAndSaveStatistics(ORGANIZATION2, twoDaysAgo);
 		// snapshot date is after requested period of time
-		s5 = createAndSaveStatistics(ORGANIZATION1, oneDayAgo);
+		/**/ createAndSaveStatistics(ORGANIZATION1, oneDayAgo);
 
 		assertThat(repository.findAll(), iterableWithSize(5));
 
@@ -290,8 +289,8 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		s2 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 200));
 		s3 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 300));
 		s4 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 400));
-		s5 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 500));
-		s6 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 600));
+		/**/ new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 500));
+		/**/ new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 600));
 	}
 
 	// private void checkEquals(Statistics expected, Statistics actual) {

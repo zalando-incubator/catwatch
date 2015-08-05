@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.Assert.assertThat;
 import static org.zalando.catwatch.backend.util.TestUtils.createAbsoluteStatisticsUrl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +28,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 	private static final String ORGANIZATION1 = "organization1", ORGANIZATION2 = "organization2";
 
-	private Statistics s1, s2, s3, s4, s5, s6;
+	private Statistics s1, s2, s3, s5;
 
 	private static int statisticIdCounter = 0;
 	@Test
@@ -81,9 +80,9 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 		// snapshot date is at the exact start of the requested period of time
 		s2 = createAndSaveStatistics(ORGANIZATION1, twoDaysAgo);
 		s3 = createAndSaveStatistics(ORGANIZATION1, threeDaysAgo);
-		s4 = createAndSaveStatistics(ORGANIZATION2, threeDaysAgo);
+		/**/ createAndSaveStatistics(ORGANIZATION2, threeDaysAgo);
 		s5 = createAndSaveStatistics(ORGANIZATION1, fourDaysAgo);
-		s6 = createAndSaveStatistics(ORGANIZATION1, fiveDaysAgo);
+		/**/ createAndSaveStatistics(ORGANIZATION1, fiveDaysAgo);
 
 		assertThat(repository.findAll(), iterableWithSize(6));
 		// check if data has been initialized correctly
@@ -165,7 +164,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 				.organizationName("organization3")
 				.create();
 
-		s4 = new StatisticsBuilder(null)
+		/**/ new StatisticsBuilder(null)
 				.organizationName("organization4")
 				.create();
 		

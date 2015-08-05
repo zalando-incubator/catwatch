@@ -143,6 +143,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
         return projects;
     }
 
+    @SuppressWarnings("unchecked")
     Collection<Contributor> collectContributors(final List<RepositoryWrapper> repos, long orgId) throws IOException, URISyntaxException {
         logger.info("Started collecting contributors for organization '{}'", organisationName);
 

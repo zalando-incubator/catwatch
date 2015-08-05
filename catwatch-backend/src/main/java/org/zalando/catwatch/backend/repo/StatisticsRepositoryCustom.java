@@ -1,10 +1,7 @@
 package org.zalando.catwatch.backend.repo;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-
-import org.zalando.catwatch.backend.model.Statistics;
 
 public interface StatisticsRepositoryCustom {
 

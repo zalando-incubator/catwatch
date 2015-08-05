@@ -9,17 +9,11 @@ import static java.util.stream.Collectors.joining;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
-import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.github.Snapshot;
 import org.zalando.catwatch.backend.github.SnapshotProvider;
-import org.zalando.catwatch.backend.model.util.Scorer;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-
-import com.google.common.primitives.Bytes;
 
 @Component
 public class Fetcher {
@@ -51,7 +42,6 @@ public class Fetcher {
     @Autowired
     private SnapshotProvider snapshotProvider;
 
-    @SuppressWarnings("MismatchedReadAndWriteOfArray")
     @Value("#{'${organization.list}'.split(',')}")
     private String[] organizations;
 
