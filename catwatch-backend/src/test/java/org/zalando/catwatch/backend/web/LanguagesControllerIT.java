@@ -26,7 +26,7 @@ import org.zalando.catwatch.backend.util.TestUtils;
 
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 
-	private final String LANG_CS = "C#", LANG_JAVA = "Java", LANG_CPP = "C++", LANG_CL = "Closure", LANG_CSS = "CSS",
+	private final String LANG_CS = "C#", LANG_JAVA = "Java", LANG_CPP = "C++",  LANG_CSS = "CSS", //
 			LANG_HTML = "HTML5", LANG_JS = "JavaScript", LANG_PSCL = "Pascal", LANG_GO = "Go", LANG_SCALA = "Scala",
 			LANG_PY = "Python", LANG_GRV = "Groovy", LANG_VB = "VB";
 
@@ -98,7 +98,8 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 	}
 
 	
-	@Test
+	@SuppressWarnings("unused")
+    @Test
 	public void testGetLanguagesWithQueryFilter() {
 
 		// given

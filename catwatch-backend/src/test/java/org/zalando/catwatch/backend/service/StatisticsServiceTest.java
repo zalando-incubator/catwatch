@@ -75,7 +75,7 @@ public class StatisticsServiceTest {
 				.teamsCount(3)
 				.create();
 
-		List<Statistics> actual = new ArrayList();
+		List<Statistics> actual = new ArrayList<>();
 		actual.add(s1);
 
 		// when
