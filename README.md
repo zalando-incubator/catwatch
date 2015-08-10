@@ -12,10 +12,21 @@ The provided data reveal the popularity of your projects, your most active contr
 
 In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggregated over a list of GitHub accounts.
 
+## Prerequisites
+
+* maven
+* java 8
+* postresql
 
 ## Getting started
 
-Build and run the web application either by Gradle or Maven.
+First run postgresql and create the database and a role via unix shell
+    
+    postgres -D /usr/local/var/postgres
+    createdb catwatch
+    createuser cat1
+
+Build and run the web application either by Gradle or Maven. 
 
 Gradle:
 
@@ -32,11 +43,17 @@ Maven:
 
     cd catwatch-backend
 
-    # build
-    mvn install
+    # build (Note: currently postresql with database and role is needed! TODO: Tests need H2 database running)
+    mvn package
     
     # run
     mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
+    
+    # run with postgresql and auto create the database
+    mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create
+    
+    # run with H2 in memory database and auto create the database
+    mvn spring-boot:run -Dspring.profiles.active=hbm2ddl -Dspring.jpa.hibernate.ddl-auto=create
 
 
 The web application is available under http://localhost:8080
