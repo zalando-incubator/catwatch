@@ -50,10 +50,10 @@ Maven:
     mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
     
     # run with postgresql and auto create the database
-    mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create
+    mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
     
     # run with H2 in memory database and auto create the database
-    mvn spring-boot:run -Dspring.profiles.active=hbm2ddl -Dspring.jpa.hibernate.ddl-auto=create
+    mvn spring-boot:run -Dspring.profiles.active=hbm2ddl -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
 
 
 The web application is available under http://localhost:8080
@@ -85,7 +85,7 @@ Export the data
 
     GET /export
     
-Fetch the data
+Fetch the data (Please note that the properties ```github.login``` ```github.password``` must be set)
     
     GET /fetch
     
