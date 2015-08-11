@@ -61,4 +61,35 @@ The web application is available under http://localhost:8080
 It provides the [CatWatch REST-API](https://zalando.github.io/catwatch/).
 
 By default the web application uses an H2 in-memory database.
-The file application-postgresql.properties demonstrates how a PostgreSQL database can be configured. 
+The file application-postgresql.properties demonstrates how a PostgreSQL database can be configured.
+ 
+## Admin Console
+
+Currently the scheduler is being executed at 8 each morning. There are some endpoints 
+
+    GET /config/scoring.project
+    
+Initialise the database
+    
+    GET /init
+    
+Drop the database
+
+    GET /delete
+    
+Import the data
+
+    GET /import
+    
+Export the data
+
+    GET /export
+    
+Fetch the data
+    
+    GET /fetch
+    
+Get the config
+
+    GET /config
+    

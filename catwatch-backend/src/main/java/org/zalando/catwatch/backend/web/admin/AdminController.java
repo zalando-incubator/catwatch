@@ -50,7 +50,8 @@ public class AdminController {
 
     @RequestMapping(value = "/config/scoring.project", method = POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public List<String> configScoringProjects(@RequestBody(required=false) String scoringProject, @RequestHeader(value="X-Organizations", required=false) String organizations) {
+    public List<String> configScoringProjects(@RequestBody(required=false) String scoringProject,
+                                              @RequestHeader(value="X-Organizations", required=false) String organizations) {
 
         // +++ initialize the parameters
         if (organizations == null) {
