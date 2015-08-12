@@ -10,50 +10,84 @@ import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 import java.util.*;
 
 /**
+ * Class to collect Projects stats
+ *
+ * This class collects the statistics from a List of Project objects in a more compact manner
+ * so that it can then be returned from the /statistics/projects REST endpoint.
+ *
+ * Essentially, the fields which are always the same (such as "name"...) are stored only once
+ * and the counts (such as "commitCounts") are put into arrays of their own.
+ *
  * Created by mibraun on 12/08/15.
  */
 public class ProjectStats {
 
     private String name;
+    private String organizationName;
+    private String url;
+    private String description;
+    private String primaryLanguage;
     private List<Integer> commitCounts;
     private List<Integer> forkCounts;
+    private List<Integer> contributorsCounts;
+    private List<Integer> scores;
     private List<Date> snapshotDates;
 
     public ProjectStats(List<Project> projects) {
         Project first = projects.get(0);
 
         name = first.getName();
+        organizationName = first.getOrganizationName();
+        url = first.getUrl();
+        description = first.getDescription();
+        primaryLanguage = first.getPrimaryLanguage();
 
-        projects.sort(new Comparator<Project>() {
-            @Override
-            public int compare(Project o1, Project o2) {
-                return o1.getSnapshotDate().compareTo(o2.getSnapshotDate());
-            }
-        });
+        projects.sort((o1, o2) -> o1.getSnapshotDate().compareTo(o2.getSnapshotDate()));
 
         int size = projects.size();
 
         commitCounts = new ArrayList<>(size);
         forkCounts = new ArrayList<>(size);
         snapshotDates = new ArrayList<>(size);
+        contributorsCounts = new ArrayList<>(size);
+        scores = new ArrayList<>(size);
 
         int i = 0;
+
+        Date lastSnapshotDate = null;
 
         for (Project p: projects) {
             if (!p.getName().equals(name)) {
                 throw new IllegalArgumentException("All projects in the list must refer to the same project!");
             }
 
-            commitCounts.add(i, p.getCommitsCount());
-            forkCounts.add(i, p.getForksCount());
-            snapshotDates.add(i, p.getSnapshotDate());
+            if (lastSnapshotDate == null || !p.getSnapshotDate().equals(lastSnapshotDate)) {
+                commitCounts.add(i, p.getCommitsCount());
+                forkCounts.add(i, p.getForksCount());
+                contributorsCounts.add(i, p.getContributorsCount());
+                scores.add(i, p.getScore());
+                snapshotDates.add(i, p.getSnapshotDate());
+                i++;
+            }
 
-            i++;
+            lastSnapshotDate = p.getSnapshotDate();
         }
     }
 
     @JsonProperty(value="name")
     public String getName() { return name; }
+
+    @JsonProperty(value="organization_name")
+    public String getOrganizationName() { return organizationName; }
+
+    @JsonProperty(value="url")
+    public String getUrl() { return url; }
+
+    @JsonProperty(value="primary_language")
+    public String getPrimaryLanguage() { return primaryLanguage; }
+
+    @JsonProperty(value="description")
+    public String getDescription() { return description; }
 
     @JsonProperty(value="commit_counts")
     public List<Integer> getCommitCounts() { return commitCounts; }
@@ -61,7 +95,13 @@ public class ProjectStats {
     @JsonProperty(value="fork_counts")
     public List<Integer> getForkCounts() { return forkCounts; }
 
-    @JsonProperty(value="snaphost_dates")
+    @JsonProperty(value="contributors_counts")
+    public List<Integer> getContributorsCounts() { return contributorsCounts; }
+
+    @JsonProperty(value="scores")
+    public List<Integer> getScores() { return scores; }
+
+    @JsonProperty(value="snapshot_dates")
     @JsonSerialize(using = JsonDateListSerializer.class)
     public List<Date> getSnapshotDates() { return snapshotDates; }
 

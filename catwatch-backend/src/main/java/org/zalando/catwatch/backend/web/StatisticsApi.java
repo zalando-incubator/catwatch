@@ -90,6 +90,9 @@ public class StatisticsApi {
 
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	public ResponseEntity<Collection<ProjectStats>> statisticsProjectGet(
+			@ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = false)
+			@RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = false)
+			String organizations,
 			@ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)")
 			@RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
 			String startDateString,
@@ -103,11 +106,23 @@ public class StatisticsApi {
 		Date startDate = parseDate(startDateString, Date.from(now.toInstant().minus(30, ChronoUnit.DAYS)));
 		Date endDate = parseDate(endDateString, now);
 
-		List<Project> projects = projectRepository.findProjectsByDateRange(startDate, endDate);
+		List<Project> projects = null;
 
-		Collection<ProjectStats> result = ProjectStats.buildStats(projects);
+		if (organizations == null) {
+			projects = projectRepository.findProjectsByDateRange(startDate, endDate);
+		} else {
+			Collection<String> orgs = StringParser.parseStringList(organizations, ",");
+			projects = projectRepository.findProjectsByOrganizationNameAndDateRange(orgs, startDate, endDate);
+		}
+		assert (projects != null);
 
-		ResponseEntity<Collection<ProjectStats>> res = new ResponseEntity<>(result, HttpStatus.OK);
+		List<ProjectStats> result = ProjectStats.buildStats(projects);
+
+		// only top 10 by last score
+		result.sort((ps1, ps2) -> -ps1.getScores().get(ps1.getScores().size() - 1)
+			.compareTo(ps2.getScores().get(ps2.getScores().size() - 1)));
+
+		ResponseEntity<Collection<ProjectStats>> res = new ResponseEntity<>(result.subList(0, 3), HttpStatus.OK);
 
 		return res;
 	}
