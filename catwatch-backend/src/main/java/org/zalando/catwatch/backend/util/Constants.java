@@ -6,7 +6,7 @@ public class Constants {
 		API_RESOURCE_CONTRIBUTORS = "/contributors",
 		API_RESOURCE_STATISTICS = "/statistics",
 		API_RESOURCE_PROJECTS = "/projects",
-		API_RESOURCE_LANGUAGES = "/languages",		
+		API_RESOURCE_LANGUAGES = "/languages",
 		
 		API_REQUEST_PARAM_ENDDATE = "end_date",
 		API_REQUEST_PARAM_STARTDATE = "start_date",
@@ -21,9 +21,4 @@ public class Constants {
 		CONFIG_DEFAULT_LIMIT = "default.item.limit",
 		
 		ERR_MSG_WRONG_DATE_FORMAT = "Invalid date format";
-		
-		
-		
-		
-
 }
