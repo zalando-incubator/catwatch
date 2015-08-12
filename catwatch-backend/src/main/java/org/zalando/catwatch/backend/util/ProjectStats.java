@@ -1,7 +1,11 @@
 package org.zalando.catwatch.backend.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.zalando.catwatch.backend.model.Project;
+import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
+import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
 import java.util.*;
 
@@ -58,6 +62,7 @@ public class ProjectStats {
     public List<Integer> getForkCounts() { return forkCounts; }
 
     @JsonProperty(value="snaphost_dates")
+    @JsonSerialize(using = JsonDateListSerializer.class)
     public List<Date> getSnapshotDates() { return snapshotDates; }
 
     public static List<ProjectStats> buildStats(List<Project> projects) {
