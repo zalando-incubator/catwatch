@@ -43,7 +43,7 @@ Maven:
 
     cd catwatch-backend
 
-    # build (Note: currently postresql with database and role is needed! TODO: Tests need H2 database running)
+    # build
     mvn package
     
     # run

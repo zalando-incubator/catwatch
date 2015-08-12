@@ -36,7 +36,7 @@ public class PostgresTestSuiteIT {
 	@BeforeClass
 	public static void setUpClass() {
 		springProfilesActivePreviously = System.getProperty("spring.profiles.active");
-		System.setProperty("spring.profiles.active", "postgresql");
+		System.setProperty("spring.profiles.active", "hbm2ddl");
 	}
 
 	@AfterClass
