@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.util.Scorer;
 
@@ -37,7 +38,7 @@ import java.util.concurrent.Future;
 public class SnapshotProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotProvider.class);
-    
+
     @Autowired
     private Scorer scorer;
 
@@ -47,10 +48,10 @@ public class SnapshotProvider {
     @Value("${cache.size}")
     private Integer cacheSize;
 
-    @Value("${github.login}")
+    @Value("${github.login:GITHUB_LOGIN}")
     private String login;
 
-    @Value("${github.password}")
+    @Value("${github.password:GITHUB_PASSWORD}")
     private String password;
 
     private static final int MEGABYTE = 1024 * 1024;

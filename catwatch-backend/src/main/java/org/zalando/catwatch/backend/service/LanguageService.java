@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zalando.catwatch.backend.model.Language;
@@ -23,6 +26,8 @@ public class LanguageService {
 
 	@Autowired
 	ProjectRepository repository;
+
+    public static final Logger logger = LoggerFactory.getLogger(LanguageService.class);
 	
     public List<Language> filterLanguages(List<Language> languages, int limit,  int offset){
          return  languages.stream().skip(offset).limit(limit).collect(Collectors.toList());
@@ -49,6 +54,11 @@ public class LanguageService {
         List<String> languageList = new ArrayList<>();
 
         for (Project p : projectList) {
+            if (StringUtils.isEmpty(p.getPrimaryLanguage())) {
+                logger.info(String.format("No primary programming language set for project [%s].", p.getName()));
+                continue;
+            }
+
             languageList.add(p.getPrimaryLanguage());
         }
 
