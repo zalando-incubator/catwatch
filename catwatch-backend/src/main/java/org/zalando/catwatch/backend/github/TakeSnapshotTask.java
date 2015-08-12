@@ -34,14 +34,15 @@ import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.model.util.Scorer;
 
 /**
- * A task to get organisation snapshot from GitHub using API V3.
+ * Task to get organisation snapshot from GitHub using Kohsuke GitHub API.
  * <p>
- * <p>
- * The code of this class is not optimised in terms of number of API requests in favour of code simplicity and
- * readability. However, this should not affect API rate limit if http cache is used. If Api limit is reached the task
+ * The code of this class is not optimised in terms of number of API requests
+ * in favour of code simplicity and readability. However, this should not affect
+ * API rate limit if http cache is used. If rate limit is reached the task
  * is blocked until the limit is reset.
  *
  * @see RateLimitHandler
+ * @see <a href="http://github-api.kohsuke.org">Kohsuke GitHub API</a>
  * @see <a href="https://developer.github.com/v3/#rate-limiting">API documentation from GitHub</a>
  */
 public class TakeSnapshotTask implements Callable<Snapshot> {
@@ -67,15 +68,19 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         final OrganizationWrapper organization = new OrganizationWrapper(gitHub.getOrganization(organisationName));
 
-        return new Snapshot(collectStatistics(organization),
-                collectProjects(organization.listRepositories(), organization.getLogin()),
-                collectContributors(organization.listRepositories(), organization.getId()),
-                collectLanguages( organization.listRepositories() ));
+        Snapshot snapshot = new Snapshot(
+                collectStatistics(organization),
+                collectProjects(organization),
+                collectContributors(organization),
+                collectLanguages(organization));
+
+        logger.info("Successfully taken snapshot of organization '{}'.", organisationName);
+
+        return snapshot;
     }
 
-    Statistics collectStatistics(final OrganizationWrapper organization)
-            throws IOException {
-        logger.info("Started collecting statistics for organization '{}'", organisationName);
+    Statistics collectStatistics(final OrganizationWrapper organization) throws IOException {
+        logger.info("Started collecting statistics for organization '{}'.", organisationName);
 
         Statistics statistics = new Statistics(organization.getId(), snapshotDate);
 
@@ -107,17 +112,17 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                 .count());
         statistics.setOrganizationName(organization.getLogin());
 
-        logger.info("Finished collecting statistics for organization '{}'", organisationName);
+        logger.info("Finished collecting statistics for organization '{}'.", organisationName);
 
         return statistics;
     }
 
-    Collection<Project> collectProjects(final List<RepositoryWrapper> repos, final String orgLogin) throws IOException, URISyntaxException {
-        logger.info("Started collecting projects for organization '{}'", organisationName);
+    Collection<Project> collectProjects(OrganizationWrapper organization) throws IOException, URISyntaxException {
+        logger.info("Started collecting projects for organization '{}'.", organisationName);
 
         List<Project> projects = new ArrayList<>();
 
-        for (RepositoryWrapper repository : repos) {
+        for (RepositoryWrapper repository : organization.listRepositories()) {
             Project project = new Project();
 
             project.setGitHubProjectId(repository.getId());
@@ -130,7 +135,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setLastPushed(repository.getLastPushed().toString());
             project.setPrimaryLanguage(repository.getPrimaryLanguage());
             project.setLanguageList(new ArrayList<>(repository.listLanguages().keySet()));
-            project.setOrganizationName(orgLogin);
+            project.setOrganizationName(organization.getLogin());
             project.setCommitsCount(repository.listCommits().size());
             project.setContributorsCount(repository.listContributors().size());
             project.setScore(scorer.score(project));
@@ -138,20 +143,19 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             projects.add(project);
         }
 
-        logger.info("Finished collecting projects for organization '{}'", organisationName);
+        logger.info("Finished collecting projects for organization '{}'.", organisationName);
 
         return projects;
     }
 
     @SuppressWarnings("unchecked")
-    Collection<Contributor> collectContributors(final List<RepositoryWrapper> repos, long orgId) throws IOException, URISyntaxException {
-        logger.info("Started collecting contributors for organization '{}'", organisationName);
+    Collection<Contributor> collectContributors(OrganizationWrapper organization) throws IOException, URISyntaxException {
+        logger.info("Started collecting contributors for organization '{}'.", organisationName);
 
         Collection<Contributor> contributors = new ArrayList<>();
 
         // Get a list of all contributors of all repositories
-        Collection<GHRepository.Contributor> ghContributors = repos
-                .stream()
+        Collection<GHRepository.Contributor> ghContributors = organization.listRepositories().stream()
                 .map(RepositoryWrapper::listContributors)
                 .flatMap(List::stream)
                 .collect(toList());
@@ -167,7 +171,7 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         // Build a list of contributors
         for (GHRepository.Contributor ghContributor : ghContributors) {
-            Contributor contributor = new Contributor(ghContributor.getId(), orgId, snapshotDate);
+            Contributor contributor = new Contributor(ghContributor.getId(), organization.getId(), snapshotDate);
 
             contributor.setName(ghContributor.getName());
             contributor.setUrl(ghContributor.getHtmlUrl().toURI().toString());
@@ -181,23 +185,23 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
         // TODO contributor.setPersonalCommitsCount()
 
-        logger.info("Finished collecting contributors for organization '{}'", organisationName);
+        logger.info("Finished collecting contributors for organization '{}'.", organisationName);
 
         return contributors;
     }
 
     @SuppressWarnings("rawtypes")
-    Collection<Language> collectLanguages(final List<RepositoryWrapper> repos) {
-        logger.info("Started collecting languages for organization '{}'", organisationName);
+    Collection<Language> collectLanguages(OrganizationWrapper organization) {
+        logger.info("Started collecting languages for organization '{}'.", organisationName);
 
         Collection<Language> languages = new ArrayList<>();
 
-        Map<String, LongSummaryStatistics> stat = repos.stream()
+        Map<String, LongSummaryStatistics> stat = organization.listRepositories().stream()
                 .map(RepositoryWrapper::listLanguages)
                 .map(Map::entrySet)
                 .flatMap(Set::stream)
                 .collect(groupingBy(Map.Entry::getKey,
-                        summarizingLong(entry -> ((Number) ((Map.Entry)entry).getValue()).longValue())));
+                        summarizingLong(entry -> ((Number) ((Map.Entry) entry).getValue()).longValue())));
 
         final long allLanguageSize = stat.entrySet().stream()
                 .map(entry -> entry.getValue().getSum())
@@ -213,12 +217,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             languages.add(language);
         }
 
-        logger.info("Finished collecting languages for organization '{}'", organisationName);
+        logger.info("Finished collecting languages for organization '{}'.", organisationName);
 
         return languages;
     }
-
-	Date getSnapshotDate() {
-		return snapshotDate;
-	}
 }

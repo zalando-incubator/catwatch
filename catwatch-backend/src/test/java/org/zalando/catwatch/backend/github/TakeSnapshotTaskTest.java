@@ -30,6 +30,7 @@ import org.kohsuke.github.GHUser;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
@@ -47,6 +48,9 @@ public class TakeSnapshotTaskTest {
     @Mock
     Date date = new Date();
 
+    static final String ORGANIZATION_LOGIN = "myLogin";
+    static final int ORGANIZATION_ID = 77;
+
     @Test
     public void testCollectContributors() throws Exception {
 
@@ -62,7 +66,7 @@ public class TakeSnapshotTaskTest {
         // when
         List<org.zalando.catwatch.backend.model.Contributor> contributors = //
         new ArrayList<org.zalando.catwatch.backend.model.Contributor>( //
-                task.collectContributors(asList(repo1, repo2), 77));
+                task.collectContributors(org(asList(repo1, repo2))));
 
         // then
         assertThat(contributors, hasSize(2));
@@ -127,14 +131,15 @@ public class TakeSnapshotTaskTest {
         when(scorer.score(any(Project.class))).thenReturn(55);
 
         // when
-        List<Project> projects = new ArrayList<>(task.collectProjects(singletonList(repo), "mylogin"));
+        List<Project> projects = new ArrayList<>(task.collectProjects(org(singletonList(repo))));
 
         // then
         assertThat(projects, hasSize(1));
         Project project = projects.get(0);
 
         assertThat(project.getGitHubProjectId(), equalTo(123L));
-        assertThat(project.getSnapshotDate().getTime(), equalTo(task.getSnapshotDate().getTime()));
+
+        assertThat(project.getSnapshotDate().getTime(), equalTo(((Date)ReflectionTestUtils.getField(task, "snapshotDate")).getTime()));
         assertThat(project.getName(), equalTo("awesome"));
         assertThat(project.getUrl(), equalTo("http://a.com/b.html"));
         assertThat(project.getDescription(), equalTo("cool"));
@@ -156,9 +161,8 @@ public class TakeSnapshotTaskTest {
                 repo("C", 30, "Go", 15, "Java", 4), //
                 repo("C", 30, "Go", 15, "Java", 4), //
                 repo("Java", 2));
-
         // when
-        List<Language> langs = new ArrayList<>(task.collectLanguages(repos));
+        List<Language> langs = new ArrayList<>(task.collectLanguages(org(repos)));
 
         // then
         assertThat(langs, hasSize(3));
@@ -175,6 +179,14 @@ public class TakeSnapshotTaskTest {
         assertThat(langs.get(2).getName(), equalTo("Java"));
         assertThat(langs.get(2).getProjectsCount(), equalTo(3));
         assertThat(langs.get(2).getPercentage(), equalTo(10));
+    }
+
+    private OrganizationWrapper org(List<RepositoryWrapper> repos) {
+        OrganizationWrapper org = mock(OrganizationWrapper.class);
+        when(org.listRepositories()).thenReturn(repos);
+        when(org.getLogin()).thenReturn(ORGANIZATION_LOGIN);
+        when(org.getId()).thenReturn(ORGANIZATION_ID);
+        return org;
     }
 
     private RepositoryWrapper repo(Object... keyAndValuePairs) {
@@ -207,5 +219,4 @@ public class TakeSnapshotTaskTest {
         }
         return result;
     }
-
 }

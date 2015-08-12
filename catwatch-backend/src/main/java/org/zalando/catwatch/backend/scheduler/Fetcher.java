@@ -25,6 +25,9 @@ import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 
+/**
+ * Fetches organizations data from GitHub and saves it to the database.
+ */
 @Component
 public class Fetcher {
 
@@ -51,18 +54,18 @@ public class Fetcher {
     public void fetchData() {
         Date snapshotDate = from(now());
 
-        logger.info("Starting fetching data (snapshot date: " + snapshotDate + " " + snapshotDate.getTime()
-                + ", ipAndMacAddress: " + ipAndMacAddress() + ")");
+        logger.info("Starting fetching data. Snapshot date: {} {}, IP and MAC Address: {}.",
+                snapshotDate, snapshotDate.getTime(), getIpAndMacAddress());
 
         List<Future<Snapshot>> futures = new ArrayList<>();
 
         try {
             for (String organizationName : organizations) {
                 futures.add(snapshotProvider.takeSnapshot(organizationName, snapshotDate));
-                logger.info("Enqueued task TakeSnapshotTask for organization '{}'", organizationName);
+                logger.info("Enqueued task TakeSnapshotTask for organization '{}'.", organizationName);
             }
         } catch (IOException e) {
-            logger.error("Unable to fetch data from GitHub API. Missing GitHub API credentials?", e);
+            logger.error("Unable to fetch data from GitHub API. Missing GitHub API credentials?.", e);
             return;
         }
         logger.info("Submitted {} TakeSnapshotTasks.", futures.size());
@@ -70,15 +73,13 @@ public class Fetcher {
         for (Future<Snapshot> future : futures) {
             try {
                 Snapshot snapshot = future.get();
-                logger.info("Successfully fetched data for organization '{}'", snapshot.getStatistics()
-                        .getOrganizationName());
 
                 statisticsRepository.save(snapshot.getStatistics());
                 projectRepository.save(snapshot.getProjects());
                 contributorRepository.save(snapshot.getContributors());
                 // TODO languagesRepository.save(snapshot.getLanguages());
 
-                logger.info("Successfully saved data for organization '{}'", snapshot.getStatistics()
+                logger.info("Successfully saved data for organization '{}'.", snapshot.getStatistics()
                         .getOrganizationName());
             } catch (Exception e) {
                 logger.error("Error occurred while processing organization.", e);
@@ -88,13 +89,13 @@ public class Fetcher {
         logger.info("Finished fetching data.");
     }
 
-    public String ipAndMacAddress() {
-
+    private String getIpAndMacAddress() {
         try {
             InetAddress ip = InetAddress.getLocalHost();
 
-            String mac = asList(getByInetAddress(ip).getHardwareAddress()).stream() //
-                    .map(b -> format("%02X", b)).collect(joining("-"));
+            String mac = asList(getByInetAddress(ip).getHardwareAddress()).stream()
+                    .map(b -> format("%02X", b))
+                    .collect(joining("-"));
 
             return ip.getHostAddress() + "#" + mac;
 

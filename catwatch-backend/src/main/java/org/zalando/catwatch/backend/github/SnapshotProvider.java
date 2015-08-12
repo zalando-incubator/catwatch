@@ -29,6 +29,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * Initializes http cache directory and http client. Submits TakeSnapshotTasks
+ * and returns futures of Snapshots with organization data.
+ */
 @Component
 public class SnapshotProvider {
 
@@ -60,6 +64,9 @@ public class SnapshotProvider {
      */
     private OkHttpClient httpClient;
 
+    /**
+     * Initializes cache after the bean is created
+     */
     @PostConstruct
     public void init() {
         Optional<File> cacheDirectoryOptional = getCacheDirectory();
@@ -90,7 +97,7 @@ public class SnapshotProvider {
 
         if (Files.isDirectory(path)) {
             if (Files.isWritable(path)) {
-                logger.info("Cache directory found.");
+                logger.info("Cache directory found: {}", path.toAbsolutePath().toString());
                 return Optional.of(path.toFile());
             }
             logger.warn("Unable to write to cache directory '{}'.", cachePath);
