@@ -104,7 +104,6 @@ public class LanguageServiceTest {
         projectsZalando.add(p4);
 
         // given
-        Project p = new ProjectBuilder().create();
         when(projectRepository.findProjects("zalando", empty(), empty())).thenReturn(projectsZalando);
         when(projectRepository.findProjects("zalando-stups", empty(), empty())).thenReturn(projectsZalandoStups);
 
