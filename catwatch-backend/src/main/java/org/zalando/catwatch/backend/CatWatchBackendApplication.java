@@ -18,8 +18,8 @@ public class CatWatchBackendApplication {
 		// https://github.com/spring-projects/spring-boot/issues/1219
 		// System.setProperty("spring.profiles.default", "postgresql");
 
-		// System.setProperty("spring.profiles.active", "postgresql");
-		// System.setProperty("spring.profiles.active", "hbm2ddl");
+		//System.setProperty("spring.profiles.active", "postgresql");
+		//System.setProperty("spring.profiles.active", "hbm2ddl");
 
 		SpringApplication.run(CatWatchBackendApplication.class);
 	}

@@ -7,7 +7,12 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.time.temporal.TemporalUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -20,10 +25,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.service.StatisticsService;
 import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.util.ProjectStats;
 import org.zalando.catwatch.backend.util.StringParser;
 
 @Controller
@@ -33,6 +41,9 @@ public class StatisticsApi {
 
 	@Autowired
 	private StatisticsRepository repository;
+
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	@Autowired
 	private Environment env;
@@ -61,6 +72,42 @@ public class StatisticsApi {
 		Collection<Statistics> statistics = StatisticsService.getStatistics(repository, orgs, startDate, endDate);
 
 		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
+
+		return res;
+	}
+
+	private Date parseDate(String dateString, Date defaultValue) {
+		if (dateString == null)
+			return defaultValue;
+		else {
+			try {
+				return StringParser.parseIso8601Date(dateString);
+			} catch(java.text.ParseException e) {
+				throw new IllegalArgumentException("Couldn't parse date string " + dateString + ".");
+			}
+		}
+	}
+
+	@RequestMapping(value = "/projects", method = RequestMethod.GET)
+	public ResponseEntity<Collection<ProjectStats>> statisticsProjectGet(
+			@ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)")
+			@RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
+			String startDateString,
+			@ApiParam(value = "Date till which statistics records will be fetched from database(default = current date)")
+			@RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false)
+			String endDateString
+	) throws java.text.ParseException {
+
+		Date now = new Date();
+
+		Date startDate = parseDate(startDateString, Date.from(now.toInstant().minus(30, ChronoUnit.DAYS)));
+		Date endDate = parseDate(endDateString, now);
+
+		List<Project> projects = projectRepository.findProjectsByDateRange(startDate, endDate);
+
+		Collection<ProjectStats> result = ProjectStats.buildStats(projects);
+
+		ResponseEntity<Collection<ProjectStats>> res = new ResponseEntity<>(result, HttpStatus.OK);
 
 		return res;
 	}
