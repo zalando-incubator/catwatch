@@ -12,7 +12,7 @@ paths:
   /statistics:
     get:
       summary: General statistics of list of GitHub Organizations
-      description: 'The Statistics endpoint returns snapshot of statistics over a given period of time of the organization GitHub account. Statistics contains information of the count of all private projects,  public projects, members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub Organizations. If start date and date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned.'
+      description: 'The Statistics endpoint returns snapshot of statistics over a given period of time of the organization GitHub account. Statistics contains information of the count of all private projects,  public projects, members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub Organizations. If start date and end date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned.'
       parameters:
         - name: organizations
           in: query
@@ -40,6 +40,36 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Statistics'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /statistics/projects:
+    get:
+      summary: General statistics of list of different projects
+      description: 'The statistics/projects endpoint returns snapshot of statistics over a given period of time of different projects. Statistics contains information of the project name, the count of all the commits, forks, and the snapshot date.'
+      parameters:
+        - name: start_date
+          in: query
+          description: Date from which to start fetching statistics records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
+          required: false
+          type: string
+          format: date-time
+        - name: end_date
+          in: query
+          description: Date till which statistics records will be fetched from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
+          required: false
+          type: string
+          format: date-time
+      tags:
+        - Statistics
+      responses:
+        '200':
+          description: An array of Statistics over selected period of time for the project.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProjectStatistics'
         default:
           description: Unexpected error
           schema:
@@ -363,3 +393,22 @@ definitions:
         type: string
       fields:
         type: string
+  ProjectStatistics:
+    properties:
+      name:
+        type: string
+        description: The name of the project
+      commit_counts:
+        type: array
+        items: 
+          type: integer
+        description: Count of commits in a time span.
+      fork_counts:
+        type: array
+        items: 
+          type: integer
+        description: Count of forks in a time span.
+      snapshot_date:
+        type: string
+        format: date-time
+        description: Snapshot date.
