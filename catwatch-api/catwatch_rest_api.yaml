@@ -49,6 +49,46 @@ paths:
       summary: General statistics of list of different projects
       description: 'The statistics/projects endpoint returns snapshot of statistics over a given period of time of different projects. Statistics contains information of the project name, the count of all the commits, forks, and the snapshot date.'
       parameters:
+        - name: organizations
+          in: query
+          description: List of GitHub organizations to scan(comma separated)
+          required: false
+          type: string
+        - name: start_date
+          in: query
+          description: Date from which to start fetching statistics records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
+          required: false
+          type: string
+          format: date-time
+        - name: end_date
+          in: query
+          description: Date till which statistics records will be fetched from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)
+          required: false
+          type: string
+          format: date-time
+      tags:
+        - Statistics
+      responses:
+        '200':
+          description: An array of Statistics over selected period of time for the project.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProjectStatistics'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /statistics/contributors:
+    get:
+      summary: General statistics of list of different projects
+      description: 'The statistics/projects endpoint returns snapshot of statistics over a given period of time of different projects. Statistics contains information of the project name, the count of all the commits, forks, and the snapshot date.'
+      parameters:
+        - name: organizations
+          in: query
+          description: List of GitHub organizations to scan(comma separated)
+          required: false
+          type: string
         - name: start_date
           in: query
           description: Date from which to start fetching statistics records from database(default = most recent snapshot date, format = yyyy-MM-ddThh:mm:ssZ)

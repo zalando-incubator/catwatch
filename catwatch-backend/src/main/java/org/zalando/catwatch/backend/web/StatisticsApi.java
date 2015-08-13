@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -8,11 +9,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.time.temporal.TemporalUnit;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -25,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.service.StatisticsService;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.ProjectStats;
+import org.zalando.catwatch.backend.util.ContributorStats;
 import org.zalando.catwatch.backend.util.StringParser;
 
 @Controller
@@ -44,6 +44,9 @@ public class StatisticsApi {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+
+    @Autowired
+    private ContributorRepository contributorRepository;
 
 	@Autowired
 	private Environment env;
@@ -127,6 +130,37 @@ public class StatisticsApi {
 		return res;
 	}
 
+    @RequestMapping(value = "/contributors", method = RequestMethod.GET)
+	public ResponseEntity<Collection<ContributorStats>> statisticsContributorGet(
+            @ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = false)
+            @RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = false)
+			String organizations,
+            @ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)")
+            @RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
+			String startDateString,
+            @ApiParam(value = "Date till which statistics records will be fetched from database(default = current date)")
+            @RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false)
+			String endDateString
+	) throws java.text.ParseException {
+		Date now = new Date();
+        Date startDate = parseDate(startDateString, Date.from(now.toInstant().minus(30, ChronoUnit.DAYS)));
+        Date endDate = parseDate(endDateString, now);
+        List<Contributor> contributors = null;
+        if (organizations == null) {
+            contributors = contributorRepository.findContributorsTimeSeries(null, startDate, endDate, null);
+        } else {
+            contributors = contributorRepository.findContributorsTimeSeries(
+                contributorRepository.findOrganizationId(organizations), startDate, endDate, null);
+        }
+        assert (contributors != null);
+        List<ContributorStats> result = ContributorStats.buildStats(contributors);
+
+        result.sort((cs1, cs2) -> -cs1.getOrganizationalCommitsCounts().get(cs1.getOrganizationalCommitsCounts().size()-1)
+                .compareTo(cs2.getOrganizationalCommitsCounts().get(cs2.getOrganizationalCommitsCounts().size()-1)));
+
+        return new ResponseEntity<Collection<ContributorStats>>(result.subList(0, 3), HttpStatus.OK);
+	}
+
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -144,8 +178,4 @@ public class StatisticsApi {
 
 		return env.getProperty(Constants.CONFIG_ORGANIZATION_LIST);
 	}
-
-	
-
-
 }
