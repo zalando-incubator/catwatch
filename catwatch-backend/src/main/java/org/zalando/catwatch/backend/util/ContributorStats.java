@@ -9,6 +9,11 @@ import java.util.*;
 /**
  * Class to collect the statistics of the contributors
  *
+ * This class collect the statistics from a List of Contributor objects and
+ * put them in a more compact way.
+ * Specifically, the fields which have always the same value are storaged for
+ * only once. The counts and dates are put into an array of their own.
+ *
  * Created by nwang on 13/08/15.
  */
 public class ContributorStats {
@@ -76,6 +81,14 @@ public class ContributorStats {
     @JsonSerialize(using = JsonDateListSerializer.class)
     public List<Date> getSnapshotDates() { return snapshotDates; }
 
+    /**
+     * Take a list of contributors and return a list their statistics that are seperated
+     * by different contributors.
+     *
+     * @param contributors  a list consisting of contributors.
+     * @return a list, each entry of which consists of statistics of the same contributors
+     * at different date.
+     */
     public static List<ContributorStats> buildStats(List<Contributor> contributors) {
         Map<String, List<Contributor>> contributorByID = getDistinctContributors(contributors);
         List<ContributorStats> result = new LinkedList<>();
@@ -85,6 +98,13 @@ public class ContributorStats {
         return result;
     }
 
+    /**
+     * Take a list of contributors and return a map of lists where contributors have been partitioned
+     * by id.
+     *
+     * @param contributors a list consisting of potentially different contributors.
+     * @return a map which contains the list separated by contributors, using the id as index.
+     */
     public static Map<String, List<Contributor>> getDistinctContributors(List<Contributor> contributors) {
         Map<String, List<Contributor>> result = new HashMap<>();
         for (Contributor contributor : contributors) {
