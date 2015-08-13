@@ -12,12 +12,15 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.github.Snapshot;
 import org.zalando.catwatch.backend.github.SnapshotProvider;
@@ -51,6 +54,7 @@ public class Fetcher {
     /**
      * This is used to fetch data from GitHub.
      */
+    @Retryable(maxAttempts = 16, backoff = @Backoff(delay = 2000, multiplier = 2))
     public void fetchData() {
         Date snapshotDate = from(now());
 
@@ -66,7 +70,7 @@ public class Fetcher {
             }
         } catch (IOException e) {
             logger.error("Unable to fetch data from GitHub API. Missing GitHub API credentials?.", e);
-            return;
+            throw new RuntimeException(e);
         }
         logger.info("Submitted {} TakeSnapshotTasks.", futures.size());
 
@@ -81,11 +85,11 @@ public class Fetcher {
 
                 logger.info("Successfully saved data for organization '{}'.", snapshot.getStatistics()
                         .getOrganizationName());
-            } catch (Exception e) {
+            } catch (InterruptedException | ExecutionException e) {
                 logger.error("Error occurred while processing organization.", e);
+                throw new RuntimeException(e);
             }
         }
-
         logger.info("Finished fetching data.");
     }
 
