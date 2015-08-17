@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class ContributorStats {
     private String name;
-    private String organizationName;
+    private List<String> organizationName;
     private String url;
     private List<Integer> organizationalCommitsCounts;
     private List<Integer> personalCommitsCounts;
@@ -29,7 +29,7 @@ public class ContributorStats {
     public ContributorStats(List<Contributor> contributions) {
         Contributor first = contributions.get(0);
         name = first.getName();
-        organizationName = first.getOrganizationName();
+        organizationName = new ArrayList<>();
         url = first.getUrl();
         contributions.sort((o1, o2) -> o1.getSnapshotDate().compareTo(o2.getSnapshotDate()));
         int size = contributions.size();
@@ -40,6 +40,7 @@ public class ContributorStats {
         snapshotDates = new ArrayList<>(size);
         int i = 0;
         Date lastSnapshotDate = null;
+        String lastOrganizationName = null;
         for (Contributor c : contributions) {
             if (c.getId() != first.getId()) {
                 throw new IllegalArgumentException("All the contributors in the list must have the same name.");
@@ -50,9 +51,27 @@ public class ContributorStats {
                 organizationalProjectsCounts.add(i, c.getOrganizationalProjectsCount());
                 personalProjectsCounts.add(i, c.getPersonalProjectsCount());
                 snapshotDates.add(i, c.getSnapshotDate());
+                if (lastOrganizationName == null || !c.getOrganizationName().equals(lastOrganizationName)) {
+                    organizationName.add(c.getOrganizationName());
+                }
                 i++;
             }
+            // sum up the statistics if they are on the same day but for different organizations.
+            // the prerequisite condition is to have all entries ordered by the name, date,
+            if (lastSnapshotDate != null && c.getSnapshotDate().equals(lastSnapshotDate)) {
+                if (!c.getOrganizationName().equals(lastOrganizationName)) {
+                    organizationalCommitsCounts.set(
+                        i-1, organizationalCommitsCounts.get(i-1)+c.getOrganizationalCommitsCount());
+                    //personalCommitsCounts.set(
+                    //    i-1, personalCommitsCounts.get(i-1)+c.getPersonalCommitsCount());
+                    organizationalProjectsCounts.set(
+                            i-1, organizationalProjectsCounts.get(i-1)+c.getOrganizationalProjectsCount());
+                    personalProjectsCounts.set(
+                            i-1, personalProjectsCounts.get(i-1)+c.getPersonalProjectsCount());
+                }
+            }
             lastSnapshotDate = c.getSnapshotDate();
+            lastOrganizationName = c.getOrganizationName();
         }
     }
 
@@ -60,7 +79,7 @@ public class ContributorStats {
     public String getName() {return name;}
 
     @JsonProperty(value="organization_name")
-    public String getOrganizationName() {return organizationName;}
+    public List<String> getOrganizationName() {return organizationName;}
 
     @JsonProperty(value="url")
     public String getUrl() {return url;}

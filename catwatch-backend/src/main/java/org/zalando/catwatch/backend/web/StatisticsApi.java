@@ -149,8 +149,8 @@ public class StatisticsApi {
         if (organizations == null) {
             contributors = contributorRepository.findContributorsTimeSeries(null, startDate, endDate, null);
         } else {
-            contributors = contributorRepository.findContributorsTimeSeries(
-                contributorRepository.findOrganizationId(organizations), startDate, endDate, null);
+			Collection<String> orgs = StringParser.parseStringList(organizations, ",");
+			contributors = contributorRepository.findContributorsByOrganizationAndDate(orgs, startDate, endDate);
         }
         assert (contributors != null);
         List<ContributorStats> result = ContributorStats.buildStats(contributors);
@@ -158,7 +158,7 @@ public class StatisticsApi {
         result.sort((cs1, cs2) -> -cs1.getOrganizationalCommitsCounts().get(cs1.getOrganizationalCommitsCounts().size()-1)
                 .compareTo(cs2.getOrganizationalCommitsCounts().get(cs2.getOrganizationalCommitsCounts().size()-1)));
 
-        return new ResponseEntity<Collection<ContributorStats>>(result.subList(0, 3), HttpStatus.OK);
+        return new ResponseEntity<>(result.subList(0, 3), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

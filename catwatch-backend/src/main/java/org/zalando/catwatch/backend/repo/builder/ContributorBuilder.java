@@ -42,6 +42,11 @@ public class ContributorBuilder {
         return this;
     }
 
+    public ContributorBuilder url(String url) {
+        contributor.setUrl(url);
+        return this;
+    }
+
     public ContributorBuilder name(String name) {
         contributor.setName(name);
         return this;
