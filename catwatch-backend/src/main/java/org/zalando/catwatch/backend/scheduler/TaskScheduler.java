@@ -9,15 +9,16 @@ import org.springframework.stereotype.Component;
 @Profile("!test")
 public class TaskScheduler {
 
-	@Autowired
-	private Fetcher fetcher;
+    @Autowired
+    private RetryableFetcher fetcher;
 
-	/**
-	 * This is used to fetch every Organization statistics from GitHub.
-	 */
-	@Scheduled(cron = "${schedule}")
-	public void fetchData() {
-		fetcher.fetchData();
-	}
+
+    /**
+     * This is used to fetch every Organization statistics from GitHub.
+     */
+    @Scheduled(cron = "${schedule}")
+    public void fetchData() {
+        fetcher.tryFetchData();
+    }
 
 }
