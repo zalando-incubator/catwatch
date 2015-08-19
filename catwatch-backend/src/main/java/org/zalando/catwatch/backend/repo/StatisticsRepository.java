@@ -24,5 +24,5 @@ public interface StatisticsRepository extends CrudRepository<Statistics, Statist
 	
 	@Query("select s from Statistics s where s.organizationName = ?1 and s.key.snapshotDate between ?2 and ?3 order by s.key.snapshotDate desc")
 	List<Statistics> findStatisticsByOrganizationAndDate(String name, Date startDate, Date endDate);
-	
+
 }

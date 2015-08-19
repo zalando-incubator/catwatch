@@ -21,6 +21,10 @@ public class ContributorBuilder {
 
     private ContributorRepository contributorRepository;
 
+    public ContributorBuilder() {
+        this(null);
+    }
+
     public ContributorBuilder(ContributorRepository contributorRepository) {
         this.contributorRepository = contributorRepository;
         contributor = new Contributor(freshId(), freshId(), randomDate());
@@ -35,6 +39,11 @@ public class ContributorBuilder {
 
     public ContributorBuilder id(long id) {
         contributor.getKey().setId(id);
+        return this;
+    }
+
+    public ContributorBuilder url(String url) {
+        contributor.setUrl(url);
         return this;
     }
 
@@ -70,6 +79,16 @@ public class ContributorBuilder {
 
     public ContributorBuilder persProjects(Integer personalProjectsCount) {
         contributor.setPersonalProjectsCount(personalProjectsCount);
+        return this;
+    }
+
+    public ContributorBuilder persCommits(Integer personalCommitsCount) {
+        contributor.setPersonalCommitsCount(personalCommitsCount);
+        return this;
+    }
+
+    public ContributorBuilder snapshotDate(final Date snapshotDate) {
+        contributor.getKey().setSnapshotDate(snapshotDate);
         return this;
     }
 

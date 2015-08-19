@@ -132,5 +132,4 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 				.where(andPredicates.toArray(new Predicate[andPredicates.size()])) //
 				.orderBy(cb.desc(key.get("snapshotDate")), cb.desc(key.get("id")))).getResultList();
 	}
-
 }
