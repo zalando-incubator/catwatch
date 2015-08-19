@@ -37,7 +37,7 @@ public class ContributorRepositoryIT extends AbstractRepositoryIT {
 		Long id = repository.findOrganizationId("here");
 
 		// then
-		assertThat(0L, equalTo(id));
+		assertThat(-1L, equalTo(id));
 
 		// given
 		Contributor c = newContributor().organizationName("here").save();
@@ -52,7 +52,7 @@ public class ContributorRepositoryIT extends AbstractRepositoryIT {
 		id = repository.findOrganizationId("something different");
 
 		// then
-		assertThat(0L, equalTo(id));
+		assertThat(-1L, equalTo(id));
 
 		// when
 		try {
