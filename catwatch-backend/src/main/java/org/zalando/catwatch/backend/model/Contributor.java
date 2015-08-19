@@ -154,6 +154,14 @@ public class Contributor {
 		return key == null ? null : key.getSnapshotDate();
 	}
 
+	public String getLoginId() {
+		String regex = "https://github.com/";
+		String loginId = "";
+		if (url != null && url.startsWith(regex)) {
+			loginId = url.split(regex)[1];
+		}
+		return loginId;
+	}
 
 	@Override
 	public String toString() {
