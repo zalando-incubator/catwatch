@@ -5,18 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.zalando.catwatch.backend.scheduler.Fetcher;
+import org.zalando.catwatch.backend.scheduler.RetryableFetcher;
 
 @Controller
 public class FetchController {
 
 	@Autowired
-	private Fetcher fetcher;
+	private RetryableFetcher fetcher;
 
 	@RequestMapping(value = "/fetch", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public String fetch() throws Exception {
-		fetcher.fetchData();
+		fetcher.tryFetchData();
 		return "OK";
 	}
 

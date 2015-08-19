@@ -1,11 +1,15 @@
 package org.zalando.catwatch.backend.scheduler;
 
-import static com.google.common.primitives.Bytes.asList;
-import static java.lang.String.format;
-import static java.net.NetworkInterface.getByInetAddress;
-import static java.time.Instant.now;
-import static java.util.Date.from;
-import static java.util.stream.Collectors.joining;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.zalando.catwatch.backend.github.Snapshot;
+import org.zalando.catwatch.backend.github.SnapshotProvider;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
+import org.zalando.catwatch.backend.repo.ProjectRepository;
+import org.zalando.catwatch.backend.repo.StatisticsRepository;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -15,18 +19,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.Component;
-import org.zalando.catwatch.backend.github.Snapshot;
-import org.zalando.catwatch.backend.github.SnapshotProvider;
-import org.zalando.catwatch.backend.repo.ContributorRepository;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import static com.google.common.primitives.Bytes.asList;
+import static java.lang.String.format;
+import static java.net.NetworkInterface.getByInetAddress;
+import static java.time.Instant.now;
+import static java.util.Date.from;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Fetches organizations data from GitHub and saves it to the database.
@@ -54,8 +52,7 @@ public class Fetcher {
     /**
      * This is used to fetch data from GitHub.
      */
-    @Retryable(maxAttempts = 16, backoff = @Backoff(delay = 2000, multiplier = 2))
-    public void fetchData() {
+    public boolean fetchData() {
         Date snapshotDate = from(now());
 
         logger.info("Starting fetching data. Snapshot date: {} {}, IP and MAC Address: {}.",
@@ -70,7 +67,7 @@ public class Fetcher {
             }
         } catch (IOException e) {
             logger.error("Unable to fetch data from GitHub API. Missing GitHub API credentials?.", e);
-            throw new RuntimeException(e);
+            throw new CrawlerRetryException(e);
         }
         logger.info("Submitted {} TakeSnapshotTasks.", futures.size());
 
@@ -87,10 +84,11 @@ public class Fetcher {
                         .getOrganizationName());
             } catch (InterruptedException | ExecutionException e) {
                 logger.error("Error occurred while processing organization.", e);
-                throw new RuntimeException(e);
+                throw new CrawlerRetryException(e);
             }
         }
         logger.info("Finished fetching data.");
+        return true;
     }
 
     private String getIpAndMacAddress() {
