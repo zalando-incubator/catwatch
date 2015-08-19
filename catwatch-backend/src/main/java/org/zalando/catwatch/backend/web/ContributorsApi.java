@@ -235,10 +235,9 @@ public class ContributorsApi {
         if (isNullOrEmpty(organizations)) {
             organizations = env.getProperty(CONFIG_ORGANIZATION_LIST);
         }
-        return stream(organizations.trim().split("\\s*,\\s*"))
-                .map(orgName -> new OrganizationPair(orgName, repository.findOrganizationId(orgName)))
-                .filter(orgPair -> orgPair.getOrganizationId() != null)
-                .collect(toMap(orgPair -> orgPair.getOrganizationName(), orgPair -> orgPair.getOrganizationId()));
+        return stream(organizations.trim().split("\\s*,\\s*")).collect(toMap(identity(), orgName -> {
+            return repository.findOrganizationId(orgName);
+        }));
     }
 
     private int offset(Integer offset) {
@@ -329,23 +328,5 @@ public class ContributorsApi {
         comparator.addComparator(new BeanComparator<Contributor>(sortBy), reverse);
         comparator.addComparator(new BeanComparator<Contributor>("id"));
         return comparator;
-    }
-
-    private class OrganizationPair{
-        private String organizationName;
-        private Long organizationId;
-
-        public OrganizationPair(String organizationName, Long organizationId) {
-            this.organizationName = organizationName;
-            this.organizationId = organizationId;
-        }
-
-        public String getOrganizationName() {
-            return organizationName;
-        }
-
-        public Long getOrganizationId() {
-            return organizationId;
-        }
     }
 }

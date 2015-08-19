@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zalando.catwatch.backend.model.Contributor;
@@ -36,7 +37,7 @@ public class ContributorRepositoryIT extends AbstractRepositoryIT {
 		Long id = repository.findOrganizationId("here");
 
 		// then
-		assertNull(id);
+		assertThat(0L, equalTo(id));
 
 		// given
 		Contributor c = newContributor().organizationName("here").save();
@@ -51,7 +52,7 @@ public class ContributorRepositoryIT extends AbstractRepositoryIT {
 		id = repository.findOrganizationId("something different");
 
 		// then
-		assertNull(id);
+		assertThat(0L, equalTo(id));
 
 		// when
 		try {
