@@ -39,7 +39,7 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 						+ " where c.organizationName = :organizationName") //
 				.setParameter("organizationName", organizationName).setMaxResults(1) //
 				.getResultList();
-		return results.size() > 0 ? results.get(0) : 0L;
+		return results.size() > 0 ? results.get(0) : -1L;
 	}
 
 	@Override
