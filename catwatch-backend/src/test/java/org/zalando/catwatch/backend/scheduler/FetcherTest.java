@@ -33,8 +33,9 @@ public class FetcherTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
+
     @Test
-    public void send() throws Exception {
+    public void shouldRetryThreeTimes() throws Exception {
         when(fetcher.fetchData())
                 .thenThrow(CrawlerRetryException.class)
                 .thenThrow(CrawlerRetryException.class)
@@ -44,6 +45,5 @@ public class FetcherTest {
 
         verify(fetcher, times(3)).fetchData();
     }
-
 
 }
