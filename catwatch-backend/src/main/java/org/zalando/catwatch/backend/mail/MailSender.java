@@ -32,7 +32,7 @@ public class MailSender {
         mailMessage.setTo(destinationAddress);
         mailMessage.setFrom(sourceAddress);
         mailMessage.setSubject("GitHub crawler failed to fetch data");
-        mailMessage.setText(format("%s\n%s", e.getLocalizedMessage(), stream(e.getStackTrace()).map(StackTraceElement::toString).collect(joining("\n"))));
+        mailMessage.setText(format("%s\n%s", e.getMessage(), stream(e.getStackTrace()).map(StackTraceElement::toString).collect(joining("\n"))));
         return mailMessage;
     }
 
