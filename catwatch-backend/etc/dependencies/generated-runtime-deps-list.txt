@@ -26,6 +26,8 @@ The following files have been resolved:
    commons-logging:commons-logging:jar:1.1.1:compile
    dom4j:dom4j:jar:1.6.1:compile
    io.swagger:swagger-annotations:jar:1.5.0:compile
+   javax.activation:activation:jar:1.1:compile
+   javax.mail:mail:jar:1.4.7:compile
    javax.transaction:javax.transaction-api:jar:1.2:compile
    javax.validation:validation-api:jar:1.1.0.Final:compile
    org.apache.tomcat.embed:tomcat-embed-core:jar:8.0.23:compile
@@ -64,9 +66,11 @@ The following files have been resolved:
    org.springframework.boot:spring-boot:jar:1.2.5.RELEASE:compile
    org.springframework.data:spring-data-commons:jar:1.9.3.RELEASE:compile
    org.springframework.data:spring-data-jpa:jar:1.7.3.RELEASE:compile
+   org.springframework.retry:spring-retry:jar:1.1.2.RELEASE:compile
    org.springframework:spring-aop:jar:4.1.7.RELEASE:compile
    org.springframework:spring-aspects:jar:4.1.7.RELEASE:compile
    org.springframework:spring-beans:jar:4.1.7.RELEASE:compile
+   org.springframework:spring-context-support:jar:4.1.7.RELEASE:compile
    org.springframework:spring-context:jar:4.1.7.RELEASE:compile
    org.springframework:spring-core:jar:4.1.7.RELEASE:compile
    org.springframework:spring-expression:jar:4.1.7.RELEASE:compile
