@@ -13,37 +13,33 @@ import org.zalando.catwatch.backend.web.ProjectsApiIT;
 import org.zalando.catwatch.backend.web.StatisticsApiIT;
 
 /**
- * Runs the integrations tests using the PostgreSQL database.
- * <p>
- * Alternatively, one could remove this class and add another build instead.
- * Then the additional build should be called with
- * -Dspring.profiles.active=postgresql.
- * 
+ * Runs some integrations tests using the PostgreSQL database.
+ *
  * @author rwitzel
  */
 @RunWith(Suite.class)
 @SuiteClasses({ //
-		ContributorRepositoryIT.class, //
-		ProjectRepositoryIT.class, //
-		StatisticsRepositoryIT.class, //
-		ContributorsApiIT.class, //
-		ProjectsApiIT.class, //
-		StatisticsApiIT.class })
+        ContributorRepositoryIT.class, //
+        ProjectRepositoryIT.class, //
+        StatisticsRepositoryIT.class, //
+        ContributorsApiIT.class, //
+        ProjectsApiIT.class, //
+        StatisticsApiIT.class})
 public class PostgresTestSuiteIT {
 
-	private static String springProfilesActivePreviously;
+    private static String springProfilesActivePreviously;
 
-	@BeforeClass
-	public static void setUpClass() {
-		springProfilesActivePreviously = System.getProperty("spring.profiles.active");
-		System.setProperty("spring.profiles.active", "hbm2ddl");
-	}
+    @BeforeClass
+    public static void setUpClass() {
+        springProfilesActivePreviously = System.getProperty("spring.profiles.active");
+        System.setProperty("spring.profiles.active", "postgresql,integrationtest");
+    }
 
-	@AfterClass
-	public static void tearDownClass() {
-		if (springProfilesActivePreviously != null) {
-			System.setProperty("spring.profiles.active", springProfilesActivePreviously);
-		}
-	}
+    @AfterClass
+    public static void tearDownClass() {
+        if (springProfilesActivePreviously != null) {
+            System.setProperty("spring.profiles.active", springProfilesActivePreviously);
+        }
+    }
 
 }

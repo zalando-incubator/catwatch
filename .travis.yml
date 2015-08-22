@@ -10,7 +10,8 @@ env:
   - BUILD_TOOL=gradle
 
 before_script:
-  - psql -c 'create database catwatch;' -U postgres -h localhost
+  - psql -c "create database catwatch;" -U postgres -h localhost
+  - psql -c "create database catwatch_test;" -U postgres -h localhost
   - psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
 script:

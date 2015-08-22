@@ -22,7 +22,8 @@ In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggr
 
 First run postgresql and create the database and a role via unix shell
     
-    psql -c 'create database catwatch;' -U postgres -h localhost
+    psql -c "create database catwatch;" -U postgres -h localhost
+    psql -c "create database catwatch_test;" -U postgres -h localhost
     psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
 Build and run the web application either by Gradle or Maven. 
@@ -75,11 +76,9 @@ After the application is started, some test data are added to the database.
 
 ### Admin Console
 
-Currently the scheduler is being executed at 8 each morning. There are some endpoints 
+Currently the scheduler is being executed at 8 each morning. There are some endpoints.
 
-    POST /config/scoring.project
-    
-Initialise the database
+Initialise the database with test data (for the virtual organization 'galanto'')
     
     GET /init
     
@@ -87,7 +86,7 @@ Drop the database
 
     GET /delete
     
-Import the data
+Import the data (see catwatch-dump/export.txt)
 
     POST /import
     
@@ -102,4 +101,8 @@ Fetch the data (Please note that the properties ```github.login``` ```github.pas
 Get the config
 
     GET /config
-    
+
+Update temporarily the scoring function for projects (see catwatch-score/scoring.project.sh)
+
+    POST /config/scoring.project
+
