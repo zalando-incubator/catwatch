@@ -7,10 +7,11 @@ addons:
 
 env:
   - BUILD_TOOL=maven
+  - BUILD_TOOL=gradle
 
 before_script:
-  - psql -c 'create database catwatch;' -U postgres
-  - psql -c "create user cat1 with password 'cat1';" -U postgres
+  - psql -c 'create database catwatch;' -U postgres -h localhost
+  - psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
 script:
   - ./build.sh
