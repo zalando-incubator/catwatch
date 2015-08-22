@@ -14,9 +14,9 @@ In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggr
 
 ## Prerequisites
 
-* maven
-* java 8
-* postresql
+* Maven 3.0.5
+* Java 8
+* PostgreSQL 9.4
 
 ## Getting started
 
@@ -67,7 +67,7 @@ The file application-postgresql.properties demonstrates how a PostgreSQL databas
 
 Currently the scheduler is being executed at 8 each morning. There are some endpoints 
 
-    GET /config/scoring.project
+    POST /config/scoring.project
     
 Initialise the database
     
@@ -79,7 +79,7 @@ Drop the database
     
 Import the data
 
-    GET /import
+    POST /import
     
 Export the data
 
