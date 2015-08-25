@@ -29,10 +29,7 @@ import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.service.StatisticsService;
-import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.util.ProjectStats;
-import org.zalando.catwatch.backend.util.ContributorStats;
-import org.zalando.catwatch.backend.util.StringParser;
+import org.zalando.catwatch.backend.util.*;
 
 @Controller
 @RequestMapping(value = Constants.API_RESOURCE_STATISTICS, produces = { APPLICATION_JSON_VALUE })
@@ -125,7 +122,7 @@ public class StatisticsApi {
 		result.sort((ps1, ps2) -> -ps1.getScores().get(ps1.getScores().size() - 1)
 			.compareTo(ps2.getScores().get(ps2.getScores().size() - 1)));
 
-		ResponseEntity<Collection<ProjectStats>> res = new ResponseEntity<>(result.subList(0, 3), HttpStatus.OK);
+		ResponseEntity<Collection<ProjectStats>> res = new ResponseEntity<>(result.subList(0, 10), HttpStatus.OK);
 
 		return res;
 	}
@@ -158,7 +155,7 @@ public class StatisticsApi {
         result.sort((cs1, cs2) -> -cs1.getOrganizationalCommitsCounts().get(cs1.getOrganizationalCommitsCounts().size()-1)
                 .compareTo(cs2.getOrganizationalCommitsCounts().get(cs2.getOrganizationalCommitsCounts().size()-1)));
 
-        return new ResponseEntity<>(result.subList(0, 3), HttpStatus.OK);
+        return new ResponseEntity<>(result.subList(0, 10), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
@@ -178,4 +175,34 @@ public class StatisticsApi {
 
 		return env.getProperty(Constants.CONFIG_ORGANIZATION_LIST);
 	}
+
+    @RequestMapping(value = "/languages", method = RequestMethod.GET)
+    public ResponseEntity<Collection<LanguageStats>> statisticsLanguagesGet(
+            @ApiParam(value = "List of github.com organizations to scan(comma seperated)", required = false)
+            @RequestParam(value = Constants.API_REQUEST_PARAM_ORGANIZATIONS, required = false)
+            String organizations,
+            @ApiParam(value = "Date from which to start fetching statistics records from database(default = current date)")
+            @RequestParam(value = Constants.API_REQUEST_PARAM_STARTDATE, required = false)
+            String startDateString,
+            @ApiParam(value = "Date till which statistics records will be fetched from database(default = current date)")
+            @RequestParam(value = Constants.API_REQUEST_PARAM_ENDDATE, required = false)
+            String endDateString
+    ) {
+        Date now = new Date();
+
+        Date startDate = parseDate(startDateString, Date.from(now.toInstant().minus(30, ChronoUnit.DAYS)));
+        Date endDate = parseDate(endDateString, now);
+
+        if (organizations == null) {
+            organizations = getOrganizationConfig();
+        }
+
+        Collection<String> orgs = StringParser.parseStringList(organizations, ",");
+        List<Project> projects = projectRepository.findProjectsByOrganizationNameAndDateRange(orgs, startDate, endDate);
+        assert (projects != null);
+
+        List<LanguageStats> languageStats = LanguageStats.buildStats(projects);
+
+        return new ResponseEntity<>(languageStats, HttpStatus.OK);
+    }
 }
