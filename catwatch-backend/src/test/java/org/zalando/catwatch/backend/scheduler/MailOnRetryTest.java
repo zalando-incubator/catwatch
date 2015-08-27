@@ -11,6 +11,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
+import org.zalando.catwatch.backend.mail.MailSender;
 
 import static org.mockito.Mockito.*;
 
@@ -18,9 +19,9 @@ import static org.mockito.Mockito.*;
  * Created by jgolebiowski on 8/18/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestPropertySource(properties = {"fetcher.initialInterval=100", "fetcher.multiplier=2", "fetcher.maxAttempts=5"})
+@TestPropertySource(properties = {"fetcher.initialInterval=100", "fetcher.multiplier=2", "fetcher.maxAttempts=1"})
 @SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
-public class FetcherTest {
+public class MailOnRetryTest {
 
     @InjectMocks
     @Autowired
@@ -29,21 +30,24 @@ public class FetcherTest {
     @Mock
     private Fetcher fetcher;
 
+    @Mock
+    private MailSender mailSender;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void shouldRetryThreeTimes() throws Exception {
+    public void shouldSendMailOnCrawlerFailure() throws Exception {
+        CrawlerRetryException crawlerRetryException = new CrawlerRetryException(new RuntimeException());
         when(fetcher.fetchData())
-                .thenThrow(CrawlerRetryException.class)
-                .thenThrow(CrawlerRetryException.class)
-                .thenReturn(true);
+                .thenThrow(crawlerRetryException);
+        when(mailSender.send(crawlerRetryException)).thenReturn(true);
 
         retryableFetcher.tryFetchData();
 
-        verify(fetcher, times(3)).fetchData();
+        verify(mailSender, times(1)).send(crawlerRetryException);
     }
 
 }

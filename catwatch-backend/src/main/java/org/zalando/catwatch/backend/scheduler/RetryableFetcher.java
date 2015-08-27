@@ -2,11 +2,13 @@ package org.zalando.catwatch.backend.scheduler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.retry.RetryContext;
+import org.springframework.retry.RecoveryCallback;
+import org.springframework.retry.RetryCallback;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
+import org.zalando.catwatch.backend.mail.MailSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +30,17 @@ public class RetryableFetcher {
     @Value("${fetcher.multiplier}")
     private double multiplier;
 
+    @Autowired
+    private MailSender mailSender;
+
     public void tryFetchData() {
-        retryTemplate().execute((RetryContext context) -> fetcher.fetchData());
+        RetryCallback<Boolean, RuntimeException> retryCallback = context -> {
+            return fetcher.fetchData();
+        };
+        RecoveryCallback<Boolean> recoveryCallback = retryContext -> {
+            return mailSender.send(retryContext.getLastThrowable());
+        };
+        retryTemplate().execute(retryCallback, recoveryCallback);
     }
 
     private RetryTemplate retryTemplate() {

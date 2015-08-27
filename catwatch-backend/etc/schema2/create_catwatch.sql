@@ -47,7 +47,7 @@ CREATE TABLE contributor (
 );
 
 
-ALTER TABLE public.contributor OWNER TO cat1;
+ALTER TABLE contributor OWNER TO cat1;
 
 --
 -- Name: language_list; Type: TABLE; Schema: public; Owner: cat1; Tablespace: 
@@ -59,7 +59,7 @@ CREATE TABLE language_list (
 );
 
 
-ALTER TABLE public.language_list OWNER TO cat1;
+ALTER TABLE language_list OWNER TO cat1;
 
 --
 -- Name: project; Type: TABLE; Schema: public; Owner: cat1; Tablespace: 
@@ -82,10 +82,8 @@ CREATE TABLE project (
     url character varying(255)
 );
 
-CREATE INDEX project_snapshot_idx ON project(snapshot_date);
 
-
-ALTER TABLE public.project OWNER TO cat1;
+ALTER TABLE project OWNER TO cat1;
 
 --
 -- Name: project_id_seq; Type: SEQUENCE; Schema: public; Owner: cat1
@@ -99,7 +97,7 @@ CREATE SEQUENCE project_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.project_id_seq OWNER TO cat1;
+ALTER TABLE project_id_seq OWNER TO cat1;
 
 --
 -- Name: project_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cat1
@@ -129,7 +127,7 @@ CREATE TABLE statistics (
 );
 
 
-ALTER TABLE public.statistics OWNER TO cat1;
+ALTER TABLE statistics OWNER TO cat1;
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: cat1

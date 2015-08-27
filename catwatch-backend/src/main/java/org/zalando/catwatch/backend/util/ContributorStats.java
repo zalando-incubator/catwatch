@@ -42,9 +42,15 @@ public class ContributorStats {
         Date lastSnapshotDate = null;
         String lastOrganizationName = null;
         for (Contributor c : contributions) {
-            if (c.getId() != first.getId()) {
-                throw new IllegalArgumentException("All the contributors in the list must have the same name.");
+            String loginId = c.getLoginId();
+            if (loginId.isEmpty()) {
+                throw new IllegalArgumentException("Contributor loginId could not be determinated.");
             }
+
+            if (!loginId.equals(first.getLoginId())) {
+                throw new IllegalArgumentException("All the contributors in the list must have the same loginId.");
+            }
+
             if (lastSnapshotDate == null || !c.getSnapshotDate().equals(lastSnapshotDate)) {
                 organizationalCommitsCounts.add(i, c.getOrganizationalCommitsCount());
                 personalCommitsCounts.add(i, c.getPersonalCommitsCount());
@@ -109,9 +115,9 @@ public class ContributorStats {
      * at different date.
      */
     public static List<ContributorStats> buildStats(List<Contributor> contributors) {
-        Map<String, List<Contributor>> contributorByID = getDistinctContributors(contributors);
+        Map<String, List<Contributor>> contributorByLoginId = getDistinctContributors(contributors);
         List<ContributorStats> result = new LinkedList<>();
-        for (List<Contributor> contributions : contributorByID.values()) {
+        for (List<Contributor> contributions : contributorByLoginId.values()) {
             result.add(new ContributorStats(contributions));
         }
         return result;
@@ -119,19 +125,23 @@ public class ContributorStats {
 
     /**
      * Take a list of contributors and return a map of lists where contributors have been partitioned
-     * by id.
+     * by loginId.
      *
      * @param contributors a list consisting of potentially different contributors.
-     * @return a map which contains the list separated by contributors, using the id as index.
+     * @return a map which contains the list separated by contributors, using the loginId as index.
      */
     public static Map<String, List<Contributor>> getDistinctContributors(List<Contributor> contributors) {
         Map<String, List<Contributor>> result = new HashMap<>();
         for (Contributor contributor : contributors) {
-            String id = String.valueOf(contributor.getId());
-            List<Contributor> list = result.get(id);
+            String loginId = contributor.getLoginId();
+            if (loginId.isEmpty()) {
+                throw new IllegalArgumentException("Could not determinate loginId.");
+            }
+
+            List<Contributor> list = result.get(loginId);
             if (list == null) {
                 list = new LinkedList<>();
-                result.put(id, list);
+                result.put(loginId, list);
             }
             list.add(contributor);
         }

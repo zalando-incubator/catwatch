@@ -13,7 +13,7 @@
     </modules>
 
     <prerequisites>
-        <maven>3.0.0</maven>
+        <maven>3.0.5</maven>
     </prerequisites>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -51,14 +51,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <id>rwitzel</id>
-            <name>Rodrigo Witzel</name>
-            <email>rodrigo.witzel@zalando,de</email>
-        </developer>
-        <!-- add more later -->
-    </developers>
     <dependencyManagement>
         <dependencies>
             <dependency>

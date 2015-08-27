@@ -14,17 +14,17 @@ In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggr
 
 ## Prerequisites
 
-* maven
-* java 8
-* postresql
+* Maven 3.0.5
+* Java 8
+* PostgreSQL 9.4
 
 ## Getting started
 
 First run postgresql and create the database and a role via unix shell
     
-    postgres -D /usr/local/var/postgres
-    createdb catwatch
-    createuser cat1
+    psql -c "create database catwatch;" -U postgres -h localhost
+    psql -c "create database catwatch_test;" -U postgres -h localhost
+    psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
 Build and run the web application either by Gradle or Maven. 
 
@@ -36,7 +36,7 @@ Gradle:
     ./gradlew build
     
     # run
-    java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar -Dorganization.list=<listOfGitHubAccounts>
+    java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar -Dorganization.list=<listOfGitHubAccounts> -Dgithub.login=XXX -Dgithub.password=YYY
 
 
 Maven:
@@ -49,27 +49,36 @@ Maven:
     # run
     mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
     
-    # run with postgresql and auto create the database
+    # run with postgresql and auto create the database (drops existing contents)
     mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
     
     # run with H2 in memory database and auto create the database
-    mvn spring-boot:run -Dspring.profiles.active=hbm2ddl -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
+    mvn spring-boot:run -Dgithub.login=XXX -Dgithub.password=YYY
 
 
 The web application is available under http://localhost:8080
 
 It provides the [CatWatch REST-API](https://zalando.github.io/catwatch/).
 
+## Details
+
+#### General
+
+Travis CI is used for continuous integration (see button on the top).
+Coveralls is used for tracking the test coverage (see button on the top).
+
+### Database
+
 By default the web application uses an H2 in-memory database.
 The file application-postgresql.properties demonstrates how a PostgreSQL database can be configured.
- 
-## Admin Console
 
-Currently the scheduler is being executed at 8 each morning. There are some endpoints 
+After the application is started, some test data are added to the database.
 
-    GET /config/scoring.project
-    
-Initialise the database
+### Admin Console
+
+Currently the scheduler is being executed at 8 each morning. There are some endpoints.
+
+Initialise the database with test data (for the virtual organization 'galanto'')
     
     GET /init
     
@@ -77,9 +86,9 @@ Drop the database
 
     GET /delete
     
-Import the data
+Import the data (see catwatch-dump/export.txt)
 
-    GET /import
+    POST /import
     
 Export the data
 
@@ -92,4 +101,8 @@ Fetch the data (Please note that the properties ```github.login``` ```github.pas
 Get the config
 
     GET /config
-    
+
+Update temporarily the scoring function for projects (see catwatch-score/scoring.project.sh)
+
+    POST /config/scoring.project
+
