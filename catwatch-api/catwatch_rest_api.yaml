@@ -3,7 +3,7 @@ info:
   title: CatWatch API
   description: Get your GitHub statistics with the CatWatch API
   version: 1.0.0
-host: catwatch-web.hackweek.zalan.do
+host: catwatch.opensource.zalan.do
 schemes:
   - https
 produces:
