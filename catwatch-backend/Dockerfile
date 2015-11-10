@@ -1,4 +1,4 @@
-FROM zalando/openjdk:8u45-b14-6
+FROM zalando/openjdk:8u66-b17-1-2
 
 COPY target/catwatch-backend.jar /catwatch-backend.jar
 
