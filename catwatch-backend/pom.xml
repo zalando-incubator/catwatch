@@ -220,7 +220,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${basedir}/bin/scm-source.sh</executable>
+                            <executable>${basedir}/etc/scm/scm-source.sh</executable>
                         </configuration>
                     </execution>
                 </executions>
