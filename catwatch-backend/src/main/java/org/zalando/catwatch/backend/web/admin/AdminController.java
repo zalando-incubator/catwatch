@@ -23,6 +23,8 @@ import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.util.DatabasePopulator;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.stream;
 
 @Controller
 public class AdminController {
@@ -105,7 +107,7 @@ public class AdminController {
     @RequestMapping(value = "/init", method = GET, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String init() {
-        databasePopulator.postConstruct();
+        databasePopulator.populateTestData();
         return "OK";
     }
 
