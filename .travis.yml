@@ -7,7 +7,6 @@ addons:
 
 env:
   - BUILD_TOOL=maven
-  - BUILD_TOOL=gradle
 
 before_script:
   - psql -c "create database catwatch;" -U postgres -h localhost

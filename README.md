@@ -26,20 +26,7 @@ First run postgresql and create the database and a role via unix shell
     psql -c "create database catwatch_test;" -U postgres -h localhost
     psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
-Build and run the web application either by Gradle or Maven. 
-
-Gradle:
-
-    cd catwatch-backend
-    
-    # build
-    ./gradlew build
-    
-    # run
-    java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar -Dorganization.list=<listOfGitHubAccounts> -Dgithub.login=XXX -Dgithub.password=YYY
-
-
-Maven:
+Build and run the web application by Maven. 
 
     cd catwatch-backend
 
