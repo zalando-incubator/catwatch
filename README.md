@@ -5,10 +5,14 @@
 
 
 # CatWatch
- 
-CatWatch is a web application that fetches GitHub statistics for your GitHub accounts, processes and saves your GitHub data in a database, then makes the data available via a REST API. The data reveals the popularity of your open source projects, most active contributors, and other interesting points.
 
-To compare it to [CoderStats](http://coderstats.net/): CatWatch aggregates your statistics over a list of GitHub accounts.
+CatWatch is a web application that fetches GitHub statistics for your GitHub accounts,
+processes and saves your GitHub data in a database, then makes the data available via a REST API.
+The data reveals the popularity of your open source projects, most active contributors,
+and other interesting points.
+
+To compare it to [CoderStats](http://coderstats.net/): CatWatch aggregates your
+statistics over a list of GitHub accounts.
 
 ## Prerequisites
 
@@ -19,37 +23,24 @@ To compare it to [CoderStats](http://coderstats.net/): CatWatch aggregates your 
 ## Getting Started
 
 First, run PostgreSQL and create the database and a role via a unix shell:
-    
+
     psql -c "create database catwatch;" -U postgres -h localhost
     psql -c "create database catwatch_test;" -U postgres -h localhost
     psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
-Build and run the web application either with Gradle or Maven. 
-
-Gradle:
-
-    cd catwatch-backend
-    
-    # build
-    ./gradlew build
-    
-    # run
-    java -jar build/libs/catwatch-backend-0.0.1-SNAPSHOT.jar -Dorganization.list=<listOfGitHubAccounts> -Dgithub.login=XXX -Dgithub.password=YYY
-
-
-Maven:
+Build and run the web application with Maven.
 
     cd catwatch-backend
 
     # build
     mvn package
-    
+
     # run
     mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
-    
+
     # run with postgresql and auto create the database (drops existing contents)
     mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
-    
+
     # run with H2 in memory database and auto create the database
     mvn spring-boot:run -Dgithub.login=XXX -Dgithub.password=YYY
 
@@ -77,25 +68,25 @@ After the application is started, some test data are added to the database.
 Currently the scheduler is being executed at 8:00 AM every morning. There are some endpoints.
 
 Initialise the database with test data (for the virtual organization 'galanto''):
-    
+
     GET /init
-    
+
 Drop the database:
 
     GET /delete
-    
+
 Import the data (see catwatch-dump/export.txt):
 
     POST /import
-    
+
 Export the data:
 
     GET /export
-    
+
 Fetch the data. Please note that the properties ```github.login``` ```github.password``` must be set:
-    
+
     GET /fetch
-    
+
 Get the config:
 
     GET /config
