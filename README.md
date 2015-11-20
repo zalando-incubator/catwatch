@@ -5,12 +5,10 @@
 
 
 # CatWatch
+ 
+CatWatch is a web application that fetches GitHub statistics for your GitHub accounts, processes and saves your GitHub data in a database, then makes the data available via a REST API. The data reveals the popularity of your open source projects, most active contributors, and other interesting points.
 
-CatWatch provides a web application that fetches regularly statistics for your GitHub accounts from GitHub.
-The web application processes and saves the data in a database and then makes the data available via a REST-API.
-The provided data reveal the popularity of your projects, your most active contributors etc.
-
-In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggregated over a list of GitHub accounts.
+To compare it to [CoderStats](http://coderstats.net/): CatWatch aggregates your statistics over a list of GitHub accounts.
 
 ## Prerequisites
 
@@ -18,15 +16,15 @@ In comparison to [CoderStats](http://coderstats.net/) the statistics can be aggr
 * Java 8
 * PostgreSQL 9.4
 
-## Getting started
+## Getting Started
 
-First run postgresql and create the database and a role via unix shell
+First, run PostgreSQL and create the database and a role via a unix shell:
     
     psql -c "create database catwatch;" -U postgres -h localhost
     psql -c "create database catwatch_test;" -U postgres -h localhost
     psql -c "create user cat1 with password 'cat1';" -U postgres -h localhost
 
-Build and run the web application either by Gradle or Maven. 
+Build and run the web application either with Gradle or Maven. 
 
 Gradle:
 
@@ -56,53 +54,64 @@ Maven:
     mvn spring-boot:run -Dgithub.login=XXX -Dgithub.password=YYY
 
 
-The web application is available under http://localhost:8080
+The web application is available at http://localhost:8080
 
-It provides the [CatWatch REST-API](https://zalando.github.io/catwatch/).
+It provides the [CatWatch REST API](https://zalando.github.io/catwatch/).
 
 ## Details
 
 #### General
 
 Travis CI is used for continuous integration (see button on the top).
-Coveralls is used for tracking the test coverage (see button on the top).
+Coveralls is used for tracking test coverage (see button on the top).
 
 ### Database
 
-By default the web application uses an H2 in-memory database.
+By default, the web application uses an H2 in-memory database.
 The file application-postgresql.properties demonstrates how a PostgreSQL database can be configured.
 
 After the application is started, some test data are added to the database.
 
 ### Admin Console
 
-Currently the scheduler is being executed at 8 each morning. There are some endpoints.
+Currently the scheduler is being executed at 8:00 AM every morning. There are some endpoints.
 
-Initialise the database with test data (for the virtual organization 'galanto'')
+Initialise the database with test data (for the virtual organization 'galanto''):
     
     GET /init
     
-Drop the database
+Drop the database:
 
     GET /delete
     
-Import the data (see catwatch-dump/export.txt)
+Import the data (see catwatch-dump/export.txt):
 
     POST /import
     
-Export the data
+Export the data:
 
     GET /export
     
-Fetch the data (Please note that the properties ```github.login``` ```github.password``` must be set)
+Fetch the data. Please note that the properties ```github.login``` ```github.password``` must be set:
     
     GET /fetch
     
-Get the config
+Get the config:
 
     GET /config
 
-Update temporarily the scoring function for projects (see catwatch-score/scoring.project.sh)
+Update temporarily the scoring function for projects (see catwatch-score/scoring.project.sh):
 
     POST /config/scoring.project
 
+###TODO
+Here are open tasks regarding the infrastructure:
+* Deployment (Database migration, GitHub account credentials management)
+* Monitoring
+* Robustness (DB fails, CatWatch backend fails)
+* Cleaning up the code base
+
+Potential and confirmed bugs:
+* not all Zalando projects are listed (confirmed)
+* the number of contributors is not correct (potential)
+* the time series graphs should be hidden for the first version as they break the responsive layout (confirmed)
