@@ -5,17 +5,23 @@ import static org.junit.Assert.assertThat;
 import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
 import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
 import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomLanguage;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Optional;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 
+@Transactional
 public class ProjectRepositoryIT extends AbstractRepositoryIT {
+
+    private final Logger logger = LoggerFactory.getLogger(ProjectRepositoryIT.class);
 
     @Autowired
     private ProjectRepository repository;
@@ -36,9 +42,8 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
         language_list.add("Java");
         language_list.add("Scala");
 
-
-        Project project =new ProjectBuilder(repository, new Date(), gitHubProjectId, name, language, forksCount, starsCount,
-                commitsCount, contributionCount, score).organizationName("galanto").getProject();
+        Project project = new ProjectBuilder(repository, new Date(), gitHubProjectId, name, language, forksCount, starsCount,
+            commitsCount, contributionCount, score).organizationName("galanto").getProject();
         project.setLanguageList(language_list);
         repository.save(project);
 
@@ -49,4 +54,42 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
         assertThat(loadedProject.getName(), equalTo("testProject"));
     }
 
+    @Test
+    public void testFindProjectsWithDifferentSnapshotDate() {
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(1000))
+            .organizationName("test1")
+            .name("p1")
+            .save();
+
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(2000))
+            .organizationName("test2")
+            .name("p2")
+            .save();
+
+        List<Project> projects1 = repository.findProjects("test1", Optional.empty(), Optional.empty());
+        assertEquals(1, projects1.size());
+
+        List<Project> projects2 = repository.findProjects("test2", Optional.empty(), Optional.empty());
+        assertEquals(1, projects2.size());
+    }
+
+    @Test
+    public void testFindProjectsSnapshotDate(){
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(1000))
+            .organizationName("test_org")
+            .name("p1")
+            .save();
+
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(2000))
+            .organizationName("test_org")
+            .name("p1")
+            .save();
+
+        List<Project> projects = repository.findProjects("test_org", new Date(2000), Optional.empty(), Optional.empty());
+        assertEquals(1, projects.size());
+    }
 }
