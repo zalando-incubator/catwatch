@@ -34,11 +34,11 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             .and(project.snapshotDate.eq(lastSnapshot));
 
         if (query.isPresent()) {
-            q = q.and(project.name.startsWith(query.get()));
+            q.and(project.name.startsWith(query.get()));
         }
 
         if (language.isPresent()) {
-            q = q.and(project.primaryLanguage.eq(language.get()));
+            q.and(project.primaryLanguage.eq(language.get()));
         }
 
         return queryProject().where(q).list(project);
@@ -55,11 +55,11 @@ class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         q.and(project.snapshotDate.eq(snapshotDateMatch.get()));
         if (query.isPresent()) {
-            q = q.and(project.name.startsWith(query.get()));
+            q.and(project.name.startsWith(query.get()));
         }
 
         if (language.isPresent()) {
-            q = q.and(project.primaryLanguage.eq(language.get()));
+            q.and(project.primaryLanguage.eq(language.get()));
         }
 
         return queryProject().where(q).list(project);

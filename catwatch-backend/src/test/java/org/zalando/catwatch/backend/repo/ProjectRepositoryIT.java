@@ -74,4 +74,22 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
         List<Project> projects2 = repository.findProjects("test2", Optional.empty(), Optional.empty());
         assertEquals(1, projects2.size());
     }
+
+    @Test
+    public void testFindProjectsSnapshotDate(){
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(1000))
+            .organizationName("test_org")
+            .name("p1")
+            .save();
+
+        new ProjectBuilder(repository)
+            .snapshotDate(new Date(2000))
+            .organizationName("test_org")
+            .name("p1")
+            .save();
+
+        List<Project> projects = repository.findProjects("test_org", new Date(2000), Optional.empty(), Optional.empty());
+        assertEquals(1, projects.size());
+    }
 }
