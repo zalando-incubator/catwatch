@@ -14,6 +14,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,6 +131,7 @@ public class TakeSnapshotTaskTest {
         when(repo.listLanguages()).thenReturn(toMap("C", 30, "Go", 15, "Java", 4));
         when(repo.listCommits()).thenReturn(mockList(GHCommit.class, 2));
         when(repo.listContributors()).thenReturn(mockList(Contributor.class, 2));
+        when(repo.getFileContent("MAINTAINERS")).thenReturn(new ByteArrayInputStream("foo".getBytes()));
         when(scorer.score(any(Project.class))).thenReturn(55);
 
         // when
