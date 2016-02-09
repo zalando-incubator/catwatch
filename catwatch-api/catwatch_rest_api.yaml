@@ -409,6 +409,11 @@ definitions:
       organization_name:
         type: string
         description: Organization of the Project.
+      maintainers:
+        type: array
+        description: List of maintainers of project
+        items:
+          type: string
       snapshot_date:
         type: string
         format: date-time

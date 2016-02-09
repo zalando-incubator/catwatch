@@ -80,6 +80,11 @@ public class Project {
     @Column(name = "primary_language")
     private String primaryLanguage;
 
+    @ElementCollection
+    @CollectionTable(name = "maintainers", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "maintainers")
+    private List<String> maintainers = new ArrayList<>();
+
     @JsonIgnore
     public int getId() {
         return id;
@@ -215,6 +220,15 @@ public class Project {
 
     public void setPrimaryLanguage(final String primaryLanguage) {
         this.primaryLanguage = primaryLanguage;
+    }
+
+    @ApiModelProperty(value = "List of maintainers of project")
+    public List<String> getMaintainers() {
+        return maintainers;
+    }
+
+    public void setMaintainers(final List<String> maintainers) {
+        this.maintainers = maintainers;
     }
 
     @Override
