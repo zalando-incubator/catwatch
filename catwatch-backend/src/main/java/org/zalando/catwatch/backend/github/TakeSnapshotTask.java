@@ -20,6 +20,8 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.YamlMapFactoryBean;
+import org.springframework.boot.json.YamlJsonParser;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
@@ -135,6 +137,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
             project.setMaintainers(getProjectMaintainers(repository));
 
+            readCatwatchYaml(repository, project);
+
             projects.add(project);
         }
 
@@ -148,6 +152,20 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             return Lists.newArrayList(Streams.asString(repository.getFileContent("MAINTAINERS")).split("\n"));
         } catch (IOException ioe) {
             return Collections.emptyList();
+        }
+    }
+
+    void readCatwatchYaml(RepositoryWrapper repository, Project project) {
+        YamlJsonParser parser = new YamlJsonParser();
+        Map<String, Object> map = null;
+        try {
+            map = parser.parseMap(Streams.asString(repository.getFileContent(".catwatch.yaml")));
+        } catch (IOException ioe) {
+            // ignore;
+        }
+        if (null != map) {
+            project.setTitle(map.get("title"));
+            project.setImage(map.get("image"));
         }
     }
 
