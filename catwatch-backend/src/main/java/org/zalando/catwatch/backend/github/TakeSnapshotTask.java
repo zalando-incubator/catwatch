@@ -7,11 +7,13 @@ import static java.util.stream.Collectors.summarizingLong;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.kohsuke.github.GHObject;
@@ -20,11 +22,10 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.Statistics;
+import org.springframework.boot.json.YamlJsonParser;
+import org.zalando.catwatch.backend.model.*;
 import org.zalando.catwatch.backend.model.util.Scorer;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * Task to get organisation snapshot from GitHub using Kohsuke GitHub API.
@@ -135,6 +136,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
             project.setMaintainers(getProjectMaintainers(repository));
 
+            readCatwatchYaml(repository, project);
+
             projects.add(project);
         }
 
@@ -148,6 +151,26 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             return Lists.newArrayList(Streams.asString(repository.getFileContent("MAINTAINERS")).split("\n"));
         } catch (IOException ioe) {
             return Collections.emptyList();
+        }
+    }
+
+    void readCatwatchYaml(RepositoryWrapper repository, Project project) {
+        CatwatchYaml data;
+        try {
+            final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
+
+            data = mapper.readValue(repository.getFileContent(".catwatch.yaml"), CatwatchYaml.class);
+
+        } catch (FileNotFoundException fnfe) {
+            // ignore 404 for .catwatch.yaml
+            data = null;
+        } catch (IOException ioe) {
+            logger.warn("Failed to read .catwatch.yaml for '{}'", repository.getName(), ioe);
+            data = null;
+        }
+        if (null != data) {
+            project.setTitle(data.getTitle());
+            project.setImage(data.getImage());
         }
     }
 

@@ -50,6 +50,12 @@ public class Project {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "organization_name")
     private String organizationName;
 
@@ -130,6 +136,24 @@ public class Project {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    @ApiModelProperty(value = "Title of project")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    @ApiModelProperty(value = "Image url of project")
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(final String image) {
+        this.image = image;
     }
 
     @ApiModelProperty(value = "Organization of the Project.")
