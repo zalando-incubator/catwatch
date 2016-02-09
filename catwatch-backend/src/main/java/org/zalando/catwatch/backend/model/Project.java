@@ -82,7 +82,7 @@ public class Project {
 
     @ElementCollection
     @CollectionTable(name = "maintainers", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "maintainers")
+    @Column(name = "maintainer")
     private List<String> maintainers = new ArrayList<>();
 
     @JsonIgnore
