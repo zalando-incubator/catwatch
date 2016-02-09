@@ -157,6 +157,7 @@ public class TakeSnapshotTaskTest {
         assertThat(project.getContributorsCount(), equalTo(2));
         assertThat(project.getScore(), equalTo(55));
         assertThat(project.getMaintainers(), containsInAnyOrder("foo", "bar"));
+        assertThat(project.getImage(), equalTo("test"));
     }
 
     @Test
