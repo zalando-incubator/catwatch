@@ -164,8 +164,8 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             // ignore;
         }
         if (null != map) {
-            project.setTitle(map.get("title"));
-            project.setImage(map.get("image"));
+            project.setTitle(Optional.ofNullable(map.get("title")).map(Object::toString).orElse(null));
+            project.setImage(Optional.ofNullable(map.get("image")).map(Object::toString).orElse(null));
         }
     }
 
