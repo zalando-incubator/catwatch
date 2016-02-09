@@ -14,12 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
-import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,15 +30,15 @@ public class Project {
     private int id;
 
     @ElementCollection
-    @CollectionTable(name = "language_list", joinColumns = @JoinColumn(name = "project_id"))
+    @CollectionTable(name = "language_list", joinColumns = @JoinColumn(name = "project_id") )
     @Column(name = "language")
     private List<String> languageList = new ArrayList<>();
 
     @Column(name = "git_hub_project_id")
     private long gitHubProjectId;
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(using = JsonDateDeserializer.class)
+    // @JsonSerialize(using = JsonDateSerializer.class)
+    // @JsonDeserialize(using = JsonDateDeserializer.class)
     @Column(name = "snapshot_date")
     private Date snapshotDate;
 
@@ -98,9 +93,7 @@ public class Project {
         this.languageList = languageList;
     }
 
-    @ApiModelProperty(
-        value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide."
-    )
+    @ApiModelProperty(value = "the GitHub ID of the repository. Part of the primary key. See official GitHub REST API guide.")
     public long getGitHubProjectId() {
         return gitHubProjectId;
     }

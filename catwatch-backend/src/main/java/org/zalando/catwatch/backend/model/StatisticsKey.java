@@ -1,16 +1,9 @@
 package org.zalando.catwatch.backend.model;
 
 import java.io.Serializable;
-
 import java.util.Date;
 
 import javax.persistence.Embeddable;
-
-import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
-import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @SuppressWarnings("serial")
 @Embeddable
@@ -18,8 +11,8 @@ public class StatisticsKey implements Serializable {
 
     private long id;
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(using = JsonDateDeserializer.class)
+    // @JsonSerialize(using = JsonDateSerializer.class)
+    // @JsonDeserialize(using = JsonDateDeserializer.class)
     private Date snapshotDate = null;
 
     public StatisticsKey() {
