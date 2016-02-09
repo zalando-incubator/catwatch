@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.kohsuke.github.GHObject;
@@ -20,13 +21,10 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.boot.json.YamlJsonParser;
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.model.Language;
-import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.model.*;
 import org.zalando.catwatch.backend.model.util.Scorer;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
  * Task to get organisation snapshot from GitHub using Kohsuke GitHub API.
@@ -157,15 +155,18 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
     void readCatwatchYaml(RepositoryWrapper repository, Project project) {
         YamlJsonParser parser = new YamlJsonParser();
-        Map<String, Object> map = null;
+        CatwatchYaml data;
         try {
-            map = parser.parseMap(Streams.asString(repository.getFileContent(".catwatch.yaml")));
+            final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
+
+            data = mapper.readValue(repository.getFileContent(".catwatch.yaml"), CatwatchYaml.class);
+
         } catch (IOException ioe) {
-            // ignore;
+            data = null;
         }
-        if (null != map) {
-            project.setTitle(Optional.ofNullable(map.get("title")).map(Object::toString).orElse(null));
-            project.setImage(Optional.ofNullable(map.get("image")).map(Object::toString).orElse(null));
+        if (null != data) {
+            project.setTitle(data.getTitle());
+            project.setImage(data.getImage());
         }
     }
 

@@ -132,6 +132,7 @@ public class TakeSnapshotTaskTest {
         when(repo.listCommits()).thenReturn(mockList(GHCommit.class, 2));
         when(repo.listContributors()).thenReturn(mockList(Contributor.class, 2));
         when(repo.getFileContent("MAINTAINERS")).thenReturn(new ByteArrayInputStream("foo\nbar".getBytes()));
+        when(repo.getFileContent(".catwatch.yaml")).thenReturn(new ByteArrayInputStream("image: test\n".getBytes()));
         when(scorer.score(any(Project.class))).thenReturn(55);
 
         // when
