@@ -9,18 +9,11 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.IntSummaryStatistics;
-import java.util.List;
-import java.util.LongSummaryStatistics;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 
+import com.google.common.collect.Lists;
+import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.kohsuke.github.GHObject;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
@@ -140,12 +133,22 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setContributorsCount(repository.listContributors().size());
             project.setScore(scorer.score(project));
 
+            project.setMaintainers(getProjectMaintainers(repository));
+
             projects.add(project);
         }
 
         logger.info("Finished collecting projects for organization '{}'.", organisationName);
 
         return projects;
+    }
+
+    List<String> getProjectMaintainers(RepositoryWrapper repository) {
+        try {
+            return Lists.newArrayList(Streams.asString(repository.getFileContent("MAINTAINERS")).split("\n"));
+        } catch (IOException ioe) {
+            return Collections.emptyList();
+        }
     }
 
     @SuppressWarnings("unchecked")

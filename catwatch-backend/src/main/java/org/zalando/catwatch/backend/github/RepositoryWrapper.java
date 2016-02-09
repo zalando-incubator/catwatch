@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -106,6 +107,10 @@ public class RepositoryWrapper {
             logger.warn("No tags found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
             return Collections.<GHTag>emptyList();
         }
+    }
+
+    public InputStream getFileContent(String path) throws IOException {
+        return repository.getFileContent(path).read();
     }
 
 }
