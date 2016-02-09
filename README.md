@@ -33,16 +33,16 @@ Build and run the web application with Maven.
     cd catwatch-backend
 
     # build
-    mvn package
+    ./mvnw package
 
     # run
-    mvn spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
+    ./mvnw spring-boot:run -Dorganization.list=<listOfGitHubAccounts>
 
     # run with postgresql and auto create the database (drops existing contents)
-    mvn spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
+    ./mvnw spring-boot:run -Dspring.profiles.active=postgresql -Dspring.jpa.hibernate.ddl-auto=create -Dgithub.login=XXX -Dgithub.password=YYY
 
     # run with H2 in memory database and auto create the database
-    mvn spring-boot:run -Dgithub.login=XXX -Dgithub.password=YYY
+    ./mvnw spring-boot:run -Dgithub.login=XXX -Dgithub.password=YYY
 
 
 The web application is available at http://localhost:8080
