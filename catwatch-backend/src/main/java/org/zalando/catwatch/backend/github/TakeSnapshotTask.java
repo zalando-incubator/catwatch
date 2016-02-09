@@ -154,7 +154,6 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
     }
 
     void readCatwatchYaml(RepositoryWrapper repository, Project project) {
-        YamlJsonParser parser = new YamlJsonParser();
         CatwatchYaml data;
         try {
             final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()); // jackson databind
