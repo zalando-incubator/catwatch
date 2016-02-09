@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.summarizingLong;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -160,7 +161,11 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
 
             data = mapper.readValue(repository.getFileContent(".catwatch.yaml"), CatwatchYaml.class);
 
+        } catch (FileNotFoundException fnfe) {
+            // ignore 404 for .catwatch.yaml
+            data = null;
         } catch (IOException ioe) {
+            logger.warn("Failed to read .catwatch.yaml for '{}'", repository.getName(), ioe);
             data = null;
         }
         if (null != data) {
