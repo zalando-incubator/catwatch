@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 
-@Transactional
 public class ProjectRepositoryIT extends AbstractRepositoryIT {
 
     private final Logger logger = LoggerFactory.getLogger(ProjectRepositoryIT.class);
@@ -30,6 +29,8 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
     public void learningtestSaveAndLoad() throws Exception {
 
         // given
+        repository.deleteAll();
+
         Long gitHubProjectId = freshId();
         String name = "testProject";
         String language = randomLanguage();
@@ -56,6 +57,10 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
 
     @Test
     public void testFindProjectsWithDifferentSnapshotDate() {
+
+        // given
+        repository.deleteAll();
+
         new ProjectBuilder(repository)
             .snapshotDate(new Date(1000))
             .organizationName("test1")
@@ -68,15 +73,21 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
             .name("p2")
             .save();
 
+        // when then
         List<Project> projects1 = repository.findProjects("test1", Optional.empty(), Optional.empty());
         assertEquals(1, projects1.size());
 
+        // when then
         List<Project> projects2 = repository.findProjects("test2", Optional.empty(), Optional.empty());
         assertEquals(1, projects2.size());
     }
 
     @Test
     public void testFindProjectsSnapshotDate(){
+
+        // given
+        repository.deleteAll();
+
         new ProjectBuilder(repository)
             .snapshotDate(new Date(1000))
             .organizationName("test_org")
@@ -89,7 +100,10 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
             .name("p1")
             .save();
 
+        // when
         List<Project> projects = repository.findProjects("test_org", new Date(2000), Optional.empty(), Optional.empty());
+
+        // then
         assertEquals(1, projects.size());
     }
 }
