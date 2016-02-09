@@ -374,9 +374,15 @@ definitions:
       name:
         type: string
         description: Name of project
+      title:
+        type: string
+        description: Title of project
       url:
         type: string
         description: URL of project
+      image:
+         type: string
+         description: Image url of project
       description:
         type: string
         description: Description of project
