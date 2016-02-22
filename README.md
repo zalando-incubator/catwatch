@@ -9,7 +9,8 @@
 CatWatch is a web application that fetches GitHub statistics for your GitHub accounts,
 processes and saves your GitHub data in a database, then makes the data available via a REST API.
 The data reveals the popularity of your open source projects, most active contributors,
-and other interesting points.
+and other interesting points. As an example, you can see the data at work behind the 
+[Zalando Open Source page](http://zalando.github.io/).
 
 To compare it to [CoderStats](http://coderstats.net/): CatWatch aggregates your
 statistics over a list of GitHub accounts.
