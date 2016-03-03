@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.util.Scorer;
 
@@ -39,23 +38,13 @@ public class SnapshotProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(SnapshotProvider.class);
 
-    @Autowired
-    private Scorer scorer;
-
-    @Value("${cache.path}")
-    private String cachePath;
-
-    @Value("${cache.size}")
-    private Integer cacheSize;
-
-    @Value("${github.login:GITHUB_LOGIN}")
-    private String login;
-
-    @Value("${github.password:GITHUB_PASSWORD}")
-    private String password;
-
     private static final int MEGABYTE = 1024 * 1024;
 
+    private final Scorer scorer;
+    private final String cachePath;
+    private final Integer cacheSize;
+    private final String login;
+    private final String password;
     private final ExecutorService pool = Executors.newCachedThreadPool();
 
     /**
@@ -64,6 +53,19 @@ public class SnapshotProvider {
      * @see <a href="https://github.com/square/okhttp/wiki/Recipes#response-caching">OkHttp Wiki</a>
      */
     private OkHttpClient httpClient;
+
+    @Autowired
+    public SnapshotProvider(Scorer scorer,
+                            @Value("${cache.path}") String cachePath,
+                            @Value("${cache.size}") Integer cacheSize,
+                            @Value("${github.login:GITHUB_LOGIN}") String login,
+                            @Value("${github.password:GITHUB_PASSWORD}") String password) {
+        this.scorer = scorer;
+        this.cachePath = cachePath;
+        this.cacheSize = cacheSize;
+        this.login = login;
+        this.password = password;
+    }
 
     /**
      * Initializes cache after the bean is created

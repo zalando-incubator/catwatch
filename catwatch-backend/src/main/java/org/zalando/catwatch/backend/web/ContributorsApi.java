@@ -64,11 +64,14 @@ public class ContributorsApi {
     @EmbeddedId
     private ContributorKey key;
 
-    @Autowired
-    private ContributorRepository repository;
+    private final ContributorRepository repository;
+    private final Environment env;
 
     @Autowired
-    private Environment env;
+    public ContributorsApi(ContributorRepository repository, Environment env) {
+        this.repository = repository;
+        this.env = env;
+    }
 
     @ApiOperation(value = "Contributor", notes = "The Contributors endpoint returns all information like name, url, commits count, \nprojects count of all the Contributors for the selected filter. \n", response = Contributor.class, responseContainer = "List")
     @ApiResponses(value = {

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -15,28 +16,13 @@ import org.zalando.catwatch.backend.mail.MailSender;
 
 import static org.mockito.Mockito.*;
 
-/**
- * Created by jgolebiowski on 8/18/15.
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@TestPropertySource(properties = {"fetcher.initialInterval=100", "fetcher.multiplier=2", "fetcher.maxAttempts=1"})
-@SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
 public class MailOnRetryTest {
 
-    @InjectMocks
-    @Autowired
-    private RetryableFetcher retryableFetcher;
+    private final static int MAX_ATTEMPTS = 1;
 
-    @Mock
-    private Fetcher fetcher;
-
-    @Mock
-    private MailSender mailSender;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
+    private final Fetcher fetcher = mock(Fetcher.class);
+    private final MailSender mailSender = mock(MailSender.class);
+    private final RetryableFetcher retryableFetcher = new RetryableFetcher(fetcher, 1, 0, 0, 0, mailSender);
 
     @Test
     public void shouldSendMailOnCrawlerFailure() throws Exception {

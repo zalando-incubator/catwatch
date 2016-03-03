@@ -10,8 +10,12 @@ import org.zalando.catwatch.backend.scheduler.RetryableFetcher;
 @Controller
 public class FetchController {
 
+	private final RetryableFetcher fetcher;
+
 	@Autowired
-	private RetryableFetcher fetcher;
+	public FetchController(RetryableFetcher fetcher) {
+		this.fetcher = fetcher;
+	}
 
 	@RequestMapping(value = "/fetch", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	@ResponseBody

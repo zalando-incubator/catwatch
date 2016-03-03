@@ -24,11 +24,15 @@ import org.zalando.catwatch.backend.util.StringParser;
 @Service
 public class LanguageService {
 
-	@Autowired
-	ProjectRepository repository;
-
     public static final Logger logger = LoggerFactory.getLogger(LanguageService.class);
-	
+
+	private final ProjectRepository repository;
+
+    @Autowired
+    public LanguageService(ProjectRepository repository) {
+        this.repository = repository;
+    }
+
     public List<Language> filterLanguages(List<Language> languages, int limit,  int offset){
          return  languages.stream().skip(offset).limit(limit).collect(Collectors.toList());
     }

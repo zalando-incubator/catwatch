@@ -26,17 +26,21 @@ import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 @Component
 public class DatabasePopulator {
 
-    @Autowired
-    private StatisticsRepository statisticsRepository;
+    private final StatisticsRepository statisticsRepository;
+    private final ProjectRepository projectRepository;
+    private final ContributorRepository contributorRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ContributorRepository contributorRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public DatabasePopulator(StatisticsRepository statisticsRepository,
+                             ProjectRepository projectRepository,
+                             ContributorRepository contributorRepository,
+                             JdbcTemplate jdbcTemplate) {
+        this.statisticsRepository = statisticsRepository;
+        this.projectRepository = projectRepository;
+        this.contributorRepository = contributorRepository;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void populateTestData() {
 

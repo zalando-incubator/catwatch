@@ -36,17 +36,21 @@ import org.zalando.catwatch.backend.util.*;
 @Api(value = Constants.API_RESOURCE_STATISTICS, description = "the statistics API")
 public class StatisticsApi {
 
-	@Autowired
-	private StatisticsRepository repository;
+	private final StatisticsRepository repository;
+	private final ProjectRepository projectRepository;
+    private final ContributorRepository contributorRepository;
+	private final Environment env;
 
 	@Autowired
-	private ProjectRepository projectRepository;
-
-    @Autowired
-    private ContributorRepository contributorRepository;
-
-	@Autowired
-	private Environment env;
+	public StatisticsApi(StatisticsRepository repository,
+						 ProjectRepository projectRepository,
+						 ContributorRepository contributorRepository,
+						 Environment env) {
+		this.repository = repository;
+		this.projectRepository = projectRepository;
+		this.contributorRepository = contributorRepository;
+		this.env = env;
+	}
 
 	@ApiOperation(value = "General Statistics of list of Github.com Organizations", notes = "The Statistics endpoint returns snapshot of statistics over a given period of time of the organization \nGithub account. Statistics contains information of the count of all private projects,  public projects,              members, teams, contributors, stars, forks, size, programming languages, tags of the list of Github.com              Organizations.\n", response = Statistics.class, responseContainer = "List")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "An array of Statistics over selected period of time."),

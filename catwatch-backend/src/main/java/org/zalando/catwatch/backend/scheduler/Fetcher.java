@@ -34,20 +34,24 @@ public class Fetcher {
 
     private static final Logger logger = LoggerFactory.getLogger(Fetcher.class);
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
+    private final StatisticsRepository statisticsRepository;
+    private final ContributorRepository contributorRepository;
+    private final SnapshotProvider snapshotProvider;
+    private final String[] organizations;
 
     @Autowired
-    private StatisticsRepository statisticsRepository;
-
-    @Autowired
-    private ContributorRepository contributorRepository;
-
-    @Autowired
-    private SnapshotProvider snapshotProvider;
-
-    @Value("#{'${organization.list}'.split(',')}")
-    private String[] organizations;
+    public Fetcher(ProjectRepository projectRepository,
+                   StatisticsRepository statisticsRepository,
+                   ContributorRepository contributorRepository,
+                   SnapshotProvider snapshotProvider,
+                   @Value("#{'${organization.list}'.split(',')}") String[] organizations) {
+        this.projectRepository = projectRepository;
+        this.statisticsRepository = statisticsRepository;
+        this.contributorRepository = contributorRepository;
+        this.snapshotProvider = snapshotProvider;
+        this.organizations = organizations;
+    }
 
     /**
      * This is used to fetch data from GitHub.

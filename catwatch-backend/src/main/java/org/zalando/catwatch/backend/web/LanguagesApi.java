@@ -31,16 +31,17 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = Constants.API_RESOURCE_LANGUAGES, description = "the languages API")
 public class LanguagesApi {
 
-	
 	private static final Integer DEFAULT_LIMIT = 5;
-
     private static final Integer DEFAULT_OFFSET = 0;
     
+    private final LanguageService languageService;
+    private final Environment env;
+
     @Autowired
-    LanguageService languageService;
-    
-    @Autowired
-    Environment env;
+    public LanguagesApi(LanguageService languageService, Environment env) {
+        this.languageService = languageService;
+        this.env = env;
+    }
 
     @ApiOperation(
         value = "Project programming language",
