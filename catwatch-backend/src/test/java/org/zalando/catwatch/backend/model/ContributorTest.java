@@ -1,12 +1,12 @@
 package org.zalando.catwatch.backend.model;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.util.Date;
 
-import org.junit.Test;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.Assert.assertThat;
 
 public class ContributorTest {
 

@@ -1,16 +1,10 @@
 package org.zalando.catwatch.backend.web;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -25,11 +19,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.service.StatisticsService;
-import org.zalando.catwatch.backend.util.*;
+import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.util.ContributorStats;
+import org.zalando.catwatch.backend.util.LanguageStats;
+import org.zalando.catwatch.backend.util.ProjectStats;
+import org.zalando.catwatch.backend.util.StringParser;
+
+import java.time.temporal.ChronoUnit;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
 @RequestMapping(value = Constants.API_RESOURCE_STATISTICS, produces = { APPLICATION_JSON_VALUE })
@@ -71,9 +76,7 @@ public class StatisticsApi {
 
 		Collection<Statistics> statistics = StatisticsService.getStatistics(repository, orgs, startDate, endDate);
 
-		ResponseEntity<Collection<Statistics>> res = new ResponseEntity<>(statistics, HttpStatus.OK);
-
-		return res;
+		return new ResponseEntity<>(statistics, HttpStatus.OK);
 	}
 
 	private Date parseDate(String dateString, Date defaultValue) {

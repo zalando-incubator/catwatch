@@ -1,16 +1,13 @@
 package org.zalando.catwatch.backend.model;
 
-import java.io.Serializable;
-
-import java.util.Date;
-
-import javax.persistence.Embeddable;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
 import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 @Embeddable

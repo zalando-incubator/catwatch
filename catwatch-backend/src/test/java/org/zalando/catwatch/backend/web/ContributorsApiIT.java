@@ -1,24 +1,5 @@
 package org.zalando.catwatch.backend.web;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.HOURS;
-import static java.util.Date.from;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ENDDATE;
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ORGANIZATIONS;
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_STARTDATE;
-import static org.zalando.catwatch.backend.util.Constants.API_RESOURCE_CONTRIBUTORS;
-import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
-
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -28,6 +9,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
+
+import java.net.URI;
+import java.util.Date;
+import java.util.Map;
+
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.util.Date.from;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+import static org.zalando.catwatch.backend.util.Constants.*;
+import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
 public class ContributorsApiIT extends AbstractCatwatchIT {
 
@@ -181,7 +178,7 @@ public class ContributorsApiIT extends AbstractCatwatchIT {
 	}
 
 	private <T> ResponseEntity<T> exchange(HttpMethod method, String url, Class<T> clazz) throws Exception {
-		RequestEntity<String> requestEntity = new RequestEntity<String>(method, new URI(url));
+		RequestEntity<String> requestEntity = new RequestEntity<>(method, new URI(url));
 		return template.exchange(requestEntity, clazz);
 	}
 

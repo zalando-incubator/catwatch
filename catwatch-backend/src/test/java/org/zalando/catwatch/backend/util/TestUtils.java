@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.util;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.catwatch.backend.model.Statistics;
+
+import java.util.List;
 
 public class TestUtils {
 	

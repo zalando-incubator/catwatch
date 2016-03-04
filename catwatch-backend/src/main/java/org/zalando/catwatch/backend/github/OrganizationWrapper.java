@@ -1,6 +1,8 @@
 package org.zalando.catwatch.backend.github;
 
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHOrganization;
+import org.kohsuke.github.GHTeam;
+import org.kohsuke.github.GHUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

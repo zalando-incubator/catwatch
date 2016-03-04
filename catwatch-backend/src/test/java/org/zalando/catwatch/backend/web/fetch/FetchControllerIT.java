@@ -1,16 +1,5 @@
 package org.zalando.catwatch.backend.web.fetch;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.TimeZone.getTimeZone;
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
-
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.beanutils.BeanComparator;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,6 +14,17 @@ import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
+
+import java.util.Collection;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.TimeZone.getTimeZone;
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
 @IntegrationTest({ "github.login=", "organization.list=rwitzeltestorg,rwitzeltestorg2", "server.port=0" })
 public class FetchControllerIT extends AbstractCatwatchIT {
@@ -88,7 +88,7 @@ public class FetchControllerIT extends AbstractCatwatchIT {
     }
 
     private <T> List<T> sort(Collection<T> collection, String property) {
-        return collection.stream().sorted(new BeanComparator<T>(property)).collect(toList());
+        return collection.stream().sorted(new BeanComparator<>(property)).collect(toList());
     }
 
 }

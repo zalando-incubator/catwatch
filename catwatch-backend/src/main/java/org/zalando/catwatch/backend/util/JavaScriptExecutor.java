@@ -1,12 +1,11 @@
 package org.zalando.catwatch.backend.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JavaScriptExecutor {
 
@@ -44,7 +43,7 @@ public class JavaScriptExecutor {
     @SuppressWarnings("unchecked")
     public <T> T execute() {
         try {
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             bindings.put("result", map);
             engine.eval(jsCode, bindings);
             return (T) map.get("value");

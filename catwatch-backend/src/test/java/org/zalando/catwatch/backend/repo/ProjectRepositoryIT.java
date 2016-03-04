@@ -1,22 +1,21 @@
 package org.zalando.catwatch.backend.repo;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomLanguage;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.*;
 
 public class ProjectRepositoryIT extends AbstractRepositoryIT {
 

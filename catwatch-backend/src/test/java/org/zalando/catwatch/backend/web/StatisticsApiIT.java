@@ -1,15 +1,5 @@
 package org.zalando.catwatch.backend.web;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.junit.Assert.assertThat;
-import static org.zalando.catwatch.backend.util.TestUtils.createAbsoluteStatisticsUrl;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,6 +10,16 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.StringParser;
 import org.zalando.catwatch.backend.util.TestUtils;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.hamcrest.Matchers.iterableWithSize;
+import static org.junit.Assert.assertThat;
+import static org.zalando.catwatch.backend.util.TestUtils.createAbsoluteStatisticsUrl;
 
 public class StatisticsApiIT extends AbstractCatwatchIT {
 

@@ -1,13 +1,19 @@
 package org.zalando.catwatch.backend.github;
 
-import org.kohsuke.github.*;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHOrganization;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GHTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Wrapper for GHRepository object.

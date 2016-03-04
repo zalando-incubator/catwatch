@@ -1,16 +1,5 @@
 package org.zalando.catwatch.backend.web;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.zalando.catwatch.backend.util.TestUtils.createRelativeStatisticsUrl;
-
-import java.util.Date;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -24,6 +13,15 @@ import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.util.Constants;
 import org.zalando.catwatch.backend.util.StringParser;
+
+import java.util.Date;
+
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.zalando.catwatch.backend.util.TestUtils.createRelativeStatisticsUrl;
 
 public class StatisticsApiMvcIT extends AbstractRepositoryIT {
 

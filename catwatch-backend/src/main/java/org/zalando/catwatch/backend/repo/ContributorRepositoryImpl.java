@@ -1,16 +1,7 @@
 package org.zalando.catwatch.backend.repo;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.time.Instant.now;
-import static java.time.LocalDateTime.ofInstant;
-import static java.time.ZoneId.systemDefault;
-import static java.time.ZoneOffset.UTC;
-import static java.time.temporal.ChronoUnit.YEARS;
-import static java.util.Date.from;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.model.ContributorKey;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,9 +10,17 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.model.ContributorKey;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.time.Instant.now;
+import static java.time.LocalDateTime.ofInstant;
+import static java.time.ZoneId.systemDefault;
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.YEARS;
+import static java.util.Date.from;
 
 public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 
@@ -75,7 +74,7 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 		Path<ContributorKey> key = contributor.get("key");
 
 		// define constraints
-		List<Predicate> andPredicates = new ArrayList<Predicate>();
+		List<Predicate> andPredicates = new ArrayList<>();
 		{
 			if (organizationId != null) {
 				andPredicates.add(cb.equal(key.get("organizationId"), organizationId));
@@ -110,7 +109,7 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 		Path<ContributorKey> key = contributor.get("key");
 
 		// define constraints
-		List<Predicate> andPredicates = new ArrayList<Predicate>();
+		List<Predicate> andPredicates = new ArrayList<>();
 		{
 			if (organizationId != null) {
 				andPredicates.add(cb.equal(key.get("organizationId"), organizationId));
@@ -118,9 +117,9 @@ public class ContributorRepositoryImpl implements ContributorRepositoryCustom {
 			if (startDate != null && endDate != null) {
 				andPredicates.add(cb.between(key.<Date> get("snapshotDate"), startDate, endDate));
 			} else if (startDate != null) {
-				andPredicates.add(cb.<Date> greaterThanOrEqualTo(key.<Date> get("snapshotDate"), startDate));
+				andPredicates.add(cb.greaterThanOrEqualTo(key.<Date> get("snapshotDate"), startDate));
 			} else if (endDate != null) {
-				andPredicates.add(cb.<Date> lessThanOrEqualTo(key.<Date> get("snapshotDate"), endDate));
+				andPredicates.add(cb.lessThanOrEqualTo(key.<Date> get("snapshotDate"), endDate));
 			}
 			if (namePrefix != null) {
 				andPredicates.add(cb.like(contributor.get("name"), namePrefix.replace("%", "[%]") + "%"));

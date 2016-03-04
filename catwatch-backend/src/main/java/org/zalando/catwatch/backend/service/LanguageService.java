@@ -1,16 +1,5 @@
 package org.zalando.catwatch.backend.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +9,16 @@ import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.util.StringParser;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class LanguageService {
@@ -41,11 +40,10 @@ public class LanguageService {
         // get the projects
         for (String org : organizationList) {
 
-            Iterable<Project> projects = repository.findProjects(org, Optional.ofNullable(null), filterLanguage);
+            Iterable<Project> projects = repository.findProjects(org, Optional.empty(), filterLanguage);
 
-            Iterator<Project> iter = projects.iterator();
-            while (iter.hasNext()) {
-                projectList.add(iter.next());
+            for (Project project : projects) {
+                projectList.add(project);
             }
         }
 
@@ -66,7 +64,7 @@ public class LanguageService {
 
         Set<String> languageSet = new HashSet<>(languageList);
 
-        int frequency = 0;
+        int frequency;
 
         for (String language : languageSet) {
             Language l = new Language(language);

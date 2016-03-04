@@ -1,5 +1,35 @@
 package org.zalando.catwatch.backend.web;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Sets.SetView;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.collections.comparators.ComparatorChain;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.model.ContributorKey;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
+import org.zalando.catwatch.backend.util.Constants;
+
+import javax.persistence.EmbeddedId;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import static com.google.common.base.Joiner.on;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,39 +46,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.zalando.catwatch.backend.util.Constants.CONFIG_ORGANIZATION_LIST;
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EmbeddedId;
-
-import org.apache.commons.beanutils.BeanComparator;
-import org.apache.commons.collections.comparators.ComparatorChain;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.model.ContributorKey;
-import org.zalando.catwatch.backend.repo.ContributorRepository;
-import org.zalando.catwatch.backend.util.Constants;
-
-import com.google.common.base.Strings;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Sets.SetView;
 
 @Controller
 @RequestMapping(value = Constants.API_RESOURCE_CONTRIBUTORS, produces = {APPLICATION_JSON_VALUE})
@@ -235,9 +232,8 @@ public class ContributorsApi {
         if (isNullOrEmpty(organizations)) {
             organizations = env.getProperty(CONFIG_ORGANIZATION_LIST);
         }
-        return stream(organizations.trim().split("\\s*,\\s*")).collect(toMap(identity(), orgName -> {
-            return repository.findOrganizationId(orgName);
-        }));
+        return stream(organizations.trim().split("\\s*,\\s*"))
+                .collect(toMap(identity(), orgName -> repository.findOrganizationId(orgName)));
     }
 
     private int offset(Integer offset) {

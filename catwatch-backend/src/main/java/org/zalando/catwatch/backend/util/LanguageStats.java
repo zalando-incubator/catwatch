@@ -6,7 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zalando.catwatch.backend.model.Project;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class LanguageStats {
 
@@ -105,13 +112,10 @@ public class LanguageStats {
                     ":" + p.getOrganizationName() +
                     ":" + p.getSnapshotDate().getTime();
 
-            boolean isNew = false;
-
             if (!nameAndDateSet.contains(key)) {
                 newCount++;
                 result.add(p);
                 nameAndDateSet.add(key);
-                isNew = true;
             } else {
                 oldCount++;
             }

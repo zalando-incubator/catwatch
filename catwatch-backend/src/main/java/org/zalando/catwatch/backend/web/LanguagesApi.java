@@ -1,13 +1,10 @@
 package org.zalando.catwatch.backend.web;
 
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -20,11 +17,13 @@ import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.service.LanguageService;
 import org.zalando.catwatch.backend.util.Constants;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
 @RequestMapping(value = Constants.API_RESOURCE_LANGUAGES, produces = {APPLICATION_JSON_VALUE})
@@ -80,7 +79,7 @@ public class LanguagesApi {
         
         List<Language> filteredLanguages = languageService.filterLanguages(languages, limitVal, offsetVal);
         
-        return new ResponseEntity<Collection<Language>>(filteredLanguages, HttpStatus.OK);
+        return new ResponseEntity<>(filteredLanguages, HttpStatus.OK);
     }
 
     private class LanguagePercentComparator implements Comparator<Language> {

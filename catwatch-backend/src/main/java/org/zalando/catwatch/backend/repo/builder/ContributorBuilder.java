@@ -1,17 +1,15 @@
 package org.zalando.catwatch.backend.repo.builder;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomDate;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
 
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.repo.ContributorRepository;
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.*;
 
 public class ContributorBuilder {
 

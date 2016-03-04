@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.web;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class ExistingRootPageIT extends AbstractCatwatchIT {
 

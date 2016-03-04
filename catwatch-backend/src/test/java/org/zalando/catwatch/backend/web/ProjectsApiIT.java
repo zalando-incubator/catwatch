@@ -1,38 +1,24 @@
 package org.zalando.catwatch.backend.web;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.time.temporal.ChronoUnit.HOURS;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ENDDATE;
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_ORGANIZATIONS;
-import static org.zalando.catwatch.backend.util.Constants.API_REQUEST_PARAM_STARTDATE;
-import static org.zalando.catwatch.backend.util.Constants.API_RESOURCE_PROJECTS;
-
-import java.text.SimpleDateFormat;
-
-import java.time.Instant;
-
-import java.util.Arrays;
-import java.util.Date;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.util.UriComponentsBuilder;
-
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Date;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static org.junit.Assert.*;
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
+import static org.zalando.catwatch.backend.util.Constants.*;
 
 public class ProjectsApiIT extends AbstractCatwatchIT {
 

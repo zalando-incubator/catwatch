@@ -1,17 +1,5 @@
 package org.zalando.catwatch.backend.service;
 
-import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,6 +8,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +64,7 @@ public class ProjectServiceImplTest {
 		when(projectRepository.findProjects(ORGANIZATION1, empty(), empty())).thenReturn(singletonList(p));
 		// when
 		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, empty(), empty(),
-				Optional.ofNullable(snapshotDate), empty(), empty(), empty(), empty());
+				Optional.of(snapshotDate), empty(), empty(), empty(), empty());
 
 		// then
 		assertThat(projectList, hasSize(1));
@@ -79,14 +79,14 @@ public class ProjectServiceImplTest {
 		Date snapshotDate = new Date(System.currentTimeMillis());
 		Project p = new ProjectBuilder().snapshotDate(snapshotDate).gitHubProjectId(1).organizationName(ORGANIZATION1)
 				.starsCount(1).commitsCount(2).contributorsCount(1).score(20).forksCount(0).create();
-		when(projectRepository.findProjects(ORGANIZATION1, snapshotDate, Optional.ofNullable("PROJECT Z"), empty()))
+		when(projectRepository.findProjects(ORGANIZATION1, snapshotDate, Optional.of("PROJECT Z"), empty()))
 				.thenReturn(singletonList(p));
-		when(projectRepository.findProjects(ORGANIZATION1, Optional.ofNullable("PROJECT Z"), empty()))
+		when(projectRepository.findProjects(ORGANIZATION1, Optional.of("PROJECT Z"), empty()))
 				.thenReturn(singletonList(p));
 
 		// when
 		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, empty(), empty(),
-				Optional.ofNullable(snapshotDate), empty(), empty(), Optional.ofNullable("PROJECT Z"), empty());
+				Optional.of(snapshotDate), empty(), empty(), Optional.of("PROJECT Z"), empty());
 
 		// then
 		assertThat(projectList, hasSize(1));
@@ -99,12 +99,12 @@ public class ProjectServiceImplTest {
 		// given
 		Project p = new ProjectBuilder().gitHubProjectId(1).organizationName(ORGANIZATION1).starsCount(1)
 				.commitsCount(2).contributorsCount(1).score(20).forksCount(0).create();
-		when(projectRepository.findProjects(ORGANIZATION1, Optional.ofNullable("PROJECT Z"),
-				Optional.ofNullable(LANGUAGE1))).thenReturn(singletonList(p));
+		when(projectRepository.findProjects(ORGANIZATION1, Optional.of("PROJECT Z"),
+				Optional.of(LANGUAGE1))).thenReturn(singletonList(p));
 
 		// when
 		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, empty(), empty(),
-				empty(), empty(), empty(), Optional.ofNullable("PROJECT Z"), Optional.ofNullable(LANGUAGE1));
+				empty(), empty(), empty(), Optional.of("PROJECT Z"), Optional.of(LANGUAGE1));
 
 		// then
 		assertThat(projectList, hasSize(1));
@@ -185,7 +185,7 @@ public class ProjectServiceImplTest {
 
 		// when
 		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, empty(), empty(),
-				empty(), empty(), Optional.ofNullable("-commits"), empty(), empty());
+				empty(), empty(), Optional.of("-commits"), empty(), empty());
 
 		// then
 		projects = new ArrayList<>();
@@ -197,7 +197,7 @@ public class ProjectServiceImplTest {
 		
 		// when
 		projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, empty(), empty(),
-				empty(), empty(), Optional.ofNullable("stars"), empty(), empty());
+				empty(), empty(), Optional.of("stars"), empty(), empty());
 
 		// then
 		projects = new ArrayList<>();
@@ -231,7 +231,7 @@ public class ProjectServiceImplTest {
 		when(projectRepository.findProjects(ORGANIZATION1, empty(), empty())).thenReturn(projects);
 
 		// when
-		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, Optional.ofNullable(2),
+		List<Project> projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, Optional.of(2),
 				empty(), empty(), empty(), empty(), empty(), empty());
 
 		// then
@@ -243,8 +243,8 @@ public class ProjectServiceImplTest {
 		assertThat(projectList, equalTo(projects));
 
 		// when
-		projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, Optional.ofNullable(3),
-				Optional.ofNullable(1), empty(), empty(), empty(), empty(), empty());
+		projectList = (List<Project>) projectService.findProjects(ORGANIZATION1, Optional.of(3),
+				Optional.of(1), empty(), empty(), empty(), empty(), empty());
 
 		// then
 		projects = new ArrayList<>();

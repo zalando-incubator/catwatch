@@ -6,10 +6,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.service.comparator.*;
+import org.zalando.catwatch.backend.service.comparator.ProjectCommitComparator;
+import org.zalando.catwatch.backend.service.comparator.ProjectContributorComparator;
+import org.zalando.catwatch.backend.service.comparator.ProjectForkComparator;
+import org.zalando.catwatch.backend.service.comparator.ProjectScoreComparator;
+import org.zalando.catwatch.backend.service.comparator.ProjectStarComparator;
 import org.zalando.catwatch.backend.util.Constants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -140,11 +151,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (sortBy.isPresent()) {
             String sortColumn = sortBy.get();
-            if (sortColumn.startsWith(SORT_ORDER_DESC)) {
-                return false;
-            } else {
-                return true;
-            }
+            return !sortColumn.startsWith(SORT_ORDER_DESC);
         } else {
             return false;
         }
@@ -159,7 +166,7 @@ public class ProjectServiceImpl implements ProjectService {
      */
     private Comparator<Project> getProjectSortComparator(final Optional<String> sortBy, final boolean sortOrderAscending) {
 
-        String sortColumn = null;
+        String sortColumn;
 
         if (sortBy.isPresent()) {
 

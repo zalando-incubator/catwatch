@@ -34,6 +34,7 @@ public class FetcherTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldRetryThreeTimes() throws Exception {
         when(fetcher.fetchData())

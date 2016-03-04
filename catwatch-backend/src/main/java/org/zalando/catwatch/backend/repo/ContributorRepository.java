@@ -5,8 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.ContributorKey;
 
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public interface ContributorRepository

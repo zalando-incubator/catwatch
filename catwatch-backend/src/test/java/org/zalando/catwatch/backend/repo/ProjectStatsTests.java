@@ -1,11 +1,8 @@
 package org.zalando.catwatch.backend.repo;
 
-import org.aspectj.lang.annotation.Before;
-import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.junit.Test;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zalando.catwatch.backend.CatWatchBackendApplication;
@@ -49,9 +46,8 @@ public class ProjectStatsTests {
 
 
         Date startDate = Date.from(now.toInstant().minusSeconds(60));
-        Date endDate = now;
 
-        for (Project p: projects.findProjectsByDateRange(startDate, endDate)) {
+        for (Project p: projects.findProjectsByDateRange(startDate, now)) {
             System.out.printf("Project %s, commit %d, id %d %n", p.getName(), p.getCommitsCount(), p.getId());
         }
     }

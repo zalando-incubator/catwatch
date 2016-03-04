@@ -1,13 +1,16 @@
 package org.zalando.catwatch.backend.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
-import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class to collect Projects stats
@@ -107,13 +110,9 @@ public class ProjectStats {
     public static List<ProjectStats> buildStats(List<Project> projects) {
         Map<String,List<Project>> projectsByName = getDistinctProjects(projects);
 
-        List<ProjectStats> result = new LinkedList<>();
-
-        for(List<Project> ps: projectsByName.values()) {
-            result.add(new ProjectStats(ps));
-        }
-
-        return result;
+        return projectsByName.values().stream()
+                .map(ProjectStats::new)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**

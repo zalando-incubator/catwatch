@@ -1,9 +1,9 @@
 package org.zalando.catwatch.backend.service;
 
+import org.zalando.catwatch.backend.model.Project;
+
 import java.util.Date;
 import java.util.Optional;
-
-import org.zalando.catwatch.backend.model.Project;
 
 public interface ProjectService {
 

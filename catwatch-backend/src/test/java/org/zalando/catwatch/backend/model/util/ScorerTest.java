@@ -1,11 +1,10 @@
 package org.zalando.catwatch.backend.model.util;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.util.Scorer;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+
+import static org.junit.Assert.assertEquals;
 
 public class ScorerTest {
 

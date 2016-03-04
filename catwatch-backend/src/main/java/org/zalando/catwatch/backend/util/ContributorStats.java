@@ -1,10 +1,16 @@
 package org.zalando.catwatch.backend.util;
 
-import org.zalando.catwatch.backend.model.Contributor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.zalando.catwatch.backend.model.Contributor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class to collect the statistics of the contributors
@@ -115,11 +121,9 @@ public class ContributorStats {
      */
     public static List<ContributorStats> buildStats(List<Contributor> contributors) {
         Map<String, List<Contributor>> contributorByLoginId = getDistinctContributors(contributors);
-        List<ContributorStats> result = new LinkedList<>();
-        for (List<Contributor> contributions : contributorByLoginId.values()) {
-            result.add(new ContributorStats(contributions));
-        }
-        return result;
+        return contributorByLoginId.values().stream()
+                .map(ContributorStats::new)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**

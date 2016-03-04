@@ -1,13 +1,13 @@
 package org.zalando.catwatch.backend.web.config;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
+
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class CorsFilterIT extends AbstractCatwatchIT {
 

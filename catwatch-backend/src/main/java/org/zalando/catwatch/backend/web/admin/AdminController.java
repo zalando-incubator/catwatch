@@ -1,16 +1,5 @@
 package org.zalando.catwatch.backend.web.admin;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -23,8 +12,17 @@ import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
 import org.zalando.catwatch.backend.repo.util.DatabasePopulator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class AdminController {

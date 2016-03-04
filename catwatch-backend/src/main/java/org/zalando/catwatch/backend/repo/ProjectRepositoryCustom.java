@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.repo;
 
+import org.zalando.catwatch.backend.model.Project;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import org.zalando.catwatch.backend.model.Project;
 
 interface ProjectRepositoryCustom {
 

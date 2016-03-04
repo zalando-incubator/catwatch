@@ -1,11 +1,11 @@
 package org.zalando.catwatch.backend.model.util;
 
 
-import static org.zalando.catwatch.backend.util.JavaScriptExecutor.newExecutor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.Project;
+
+import static org.zalando.catwatch.backend.util.JavaScriptExecutor.newExecutor;
 
 @Component
 public class Scorer {
