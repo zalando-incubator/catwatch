@@ -38,7 +38,7 @@ public class StatisticsApi {
 
 	private final StatisticsRepository repository;
 	private final ProjectRepository projectRepository;
-    private final ContributorRepository contributorRepository;
+	private final ContributorRepository contributorRepository;
 	private final Environment env;
 
 	@Autowired
