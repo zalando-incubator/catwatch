@@ -13,14 +13,18 @@ import static java.util.stream.Collectors.joining;
 @Service
 public class MailSender {
 
+    private final JavaMailSender javaMailSender;
+    private final String destinationAddress;
+    private final String sourceAddress;
+
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Value("${mail.to}")
-    private String destinationAddress;
-
-    @Value("${mail.from}")
-    private String sourceAddress;
+    public MailSender(JavaMailSender javaMailSender,
+                      @Value("${mail.to}") String destinationAddress,
+                      @Value("${mail.from}") String sourceAddress) {
+        this.javaMailSender = javaMailSender;
+        this.destinationAddress = destinationAddress;
+        this.sourceAddress = sourceAddress;
+    }
 
     public boolean send(Throwable e) {
         javaMailSender.send(createMessageFor(e));

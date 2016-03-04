@@ -15,17 +15,18 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    ProjectRepository projectRepository;
-
-    @Autowired
-    private Environment env;
-
     private static final String SORT_ORDER_DESC = "-";
-
     private static final Integer DEFAULT_LIMIT = 5;
-
     private static final Integer DEFAULT_OFFSET = 0;
+
+    private final ProjectRepository projectRepository;
+    private final Environment env;
+
+    @Autowired
+    public ProjectServiceImpl(ProjectRepository projectRepository, Environment env) {
+        this.projectRepository = projectRepository;
+        this.env = env;
+    }
 
     @Override
     public Iterable<Project> findProjects(final String organizations, final Optional<Integer> limit,

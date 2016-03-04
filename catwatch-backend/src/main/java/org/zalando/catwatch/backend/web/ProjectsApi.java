@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import org.springframework.http.HttpStatus;
@@ -36,8 +35,12 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = Constants.API_RESOURCE_PROJECTS, description = "the projects API")
 public class ProjectsApi {
 
+    private final ProjectService projectService;
+
     @Autowired
-    private ProjectService projectService;
+    public ProjectsApi(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @ApiOperation(
         value = "Project",

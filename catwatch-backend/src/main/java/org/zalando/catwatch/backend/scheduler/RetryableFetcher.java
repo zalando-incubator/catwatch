@@ -19,19 +19,27 @@ import java.util.Map;
 @Component
 public class RetryableFetcher {
 
-    @Autowired
-    private Fetcher fetcher;
-    @Value("${fetcher.maxAttempts}")
-    private int maxAttempts;
-    @Value("${fetcher.initialInterval}")
-    private int initialInterval;
-    @Value("${fetcher.maxInterval}")
-    private int maxInterval;
-    @Value("${fetcher.multiplier}")
-    private double multiplier;
+    private final Fetcher fetcher;
+    private final int maxAttempts;
+    private final int initialInterval;
+    private final int maxInterval;
+    private final double multiplier;
+    private final MailSender mailSender;
 
     @Autowired
-    private MailSender mailSender;
+    public RetryableFetcher(Fetcher fetcher,
+                            @Value("${fetcher.maxAttempts}") int maxAttempts,
+                            @Value("${fetcher.initialInterval}") int initialInterval,
+                            @Value("${fetcher.maxInterval}") int maxInterval,
+                            @Value("${fetcher.multiplier}") double multiplier,
+                            MailSender mailSender) {
+        this.fetcher = fetcher;
+        this.maxAttempts = maxAttempts;
+        this.initialInterval = initialInterval;
+        this.maxInterval = maxInterval;
+        this.multiplier = multiplier;
+        this.mailSender = mailSender;
+    }
 
     public void tryFetchData() {
         RetryCallback<Boolean, RuntimeException> retryCallback = context -> {

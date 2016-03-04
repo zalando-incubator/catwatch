@@ -29,26 +29,30 @@ import static java.util.Arrays.stream;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private ContributorRepository contributorRepository;
+    private final ContributorRepository contributorRepository;
+    private final StatisticsRepository statisticsRepository;
+    private final ProjectRepository projectRepository;
+    private final DatabasePopulator databasePopulator;
+    private final Scorer scorer;
+    private final String organizations;
+    private final String scoringProject;
 
     @Autowired
-    private StatisticsRepository statisticsRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private DatabasePopulator databasePopulator;
-
-    @Autowired
-    private Scorer scorer;
-
-    @Value("${organization.list}")
-    private String organizations;
-
-    @Value("${scoring.project}")
-    private String scoringProject;
+    public AdminController(ContributorRepository contributorRepository,
+                           StatisticsRepository statisticsRepository,
+                           ProjectRepository projectRepository,
+                           DatabasePopulator databasePopulator,
+                           Scorer scorer,
+                           @Value("${organization.list}") String organizations,
+                           @Value("${scoring.project}") String scoringProject) {
+        this.contributorRepository = contributorRepository;
+        this.statisticsRepository = statisticsRepository;
+        this.projectRepository = projectRepository;
+        this.databasePopulator = databasePopulator;
+        this.scorer = scorer;
+        this.organizations = organizations;
+        this.scoringProject = scoringProject;
+    }
 
     @RequestMapping(value = "/config/scoring.project", method = POST, produces = "application/json; charset=utf-8")
     @ResponseBody

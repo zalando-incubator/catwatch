@@ -1,25 +1,28 @@
 package org.zalando.catwatch.backend;
 
-import static com.google.common.base.Joiner.on;
-import static java.util.Arrays.stream;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
+import static com.google.common.base.Joiner.on;
+import static java.util.Arrays.stream;
+
 @Component
 @ConditionalOnProperty("debug")
 public class DebugBean {
 
-	@Autowired
-	private Environment env;
+	private final Environment env;
+	private final ApplicationContext context;
 
 	@Autowired
-	private ApplicationContext context;
+	public DebugBean(Environment env, ApplicationContext context) {
+		this.env = env;
+		this.context = context;
+	}
 
 	@PostConstruct
 	public void postConstruct() {

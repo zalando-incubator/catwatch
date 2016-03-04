@@ -25,11 +25,11 @@ public class LanguageServiceTest {
 
     public static final Logger logger = LoggerFactory.getLogger(LanguageServiceTest.class);
 
-    @InjectMocks
-    LanguageService languageService = new LanguageService();
-
     @Mock
     ProjectRepository projectRepository;
+
+    @InjectMocks
+    LanguageService languageService;
 
     /**
      *  Checking if the language with name null is ignored
