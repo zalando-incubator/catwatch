@@ -11,9 +11,6 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by nwang on 13/08/15.
- */
 public class ContributorStatsTest{
     @Test
     public void checkContributorStats(){

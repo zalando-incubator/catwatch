@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by mibraun on 12/08/15.
- */
 public class JsonDateListSerializer extends JsonSerializer<List<Date>> {
 
     @Override

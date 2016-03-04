@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-/**
- * Created by jgolebiowski on 8/18/15.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = {
         "mail.port=2500",

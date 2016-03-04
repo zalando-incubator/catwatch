@@ -6,9 +6,6 @@ import java.util.Optional;
 
 import org.zalando.catwatch.backend.model.Project;
 
-/**
- * Created by mkunz on 7/22/15.
- */
 interface ProjectRepositoryCustom {
 
     List<Project> findProjects(String organization, Optional<String> query, Optional<String> language);

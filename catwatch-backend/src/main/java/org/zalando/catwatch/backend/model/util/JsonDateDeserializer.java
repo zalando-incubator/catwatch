@@ -10,9 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-/**
- * Created by mkunz on 7/28/15.
- */
 public class JsonDateDeserializer extends JsonDeserializer<Date> {
 
     @Override

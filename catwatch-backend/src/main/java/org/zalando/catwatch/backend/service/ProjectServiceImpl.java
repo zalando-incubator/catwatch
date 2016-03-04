@@ -12,9 +12,6 @@ import org.zalando.catwatch.backend.util.Constants;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Created by mkunz on 7/22/15.
- */
 @Service
 public class ProjectServiceImpl implements ProjectService {
 

@@ -13,9 +13,6 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.query.DateTimeSubQuery;
 import java.util.Collections;
 
-/**
- * Created by mkunz on 7/22/15.
- */
 class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     @PersistenceContext
