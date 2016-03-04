@@ -11,9 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-/**
- * Created by mkunz on 7/28/15.
- */
 public class JsonDateSerializer extends JsonSerializer<Date> {
 
     @Override

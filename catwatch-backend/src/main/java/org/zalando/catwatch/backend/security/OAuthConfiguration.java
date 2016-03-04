@@ -12,9 +12,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.zalando.stups.oauth2.spring.server.TokenInfoResourceServerTokenServices;
 
-/**
- * Created by jgolebiowski on 8/25/15.
- */
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity

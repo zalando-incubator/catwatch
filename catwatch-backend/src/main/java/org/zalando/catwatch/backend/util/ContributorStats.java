@@ -14,7 +14,6 @@ import java.util.*;
  * Specifically, the fields which have always the same value are storaged for
  * only once. The counts and dates are put into an array of their own.
  *
- * Created by nwang on 13/08/15.
  */
 public class ContributorStats {
     private String name;

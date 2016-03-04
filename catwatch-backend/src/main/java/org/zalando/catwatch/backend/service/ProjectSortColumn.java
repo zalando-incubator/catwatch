@@ -1,8 +1,5 @@
 package org.zalando.catwatch.backend.service;
 
-/**
- * Created by mkunz on 7/25/15.
- */
 public class ProjectSortColumn {
 
     public static final String STARS_COUNT = "stars";

@@ -18,7 +18,6 @@ import java.util.*;
  * Essentially, the fields which are always the same (such as "name"...) are stored only once
  * and the counts (such as "commitCounts") are put into arrays of their own.
  *
- * Created by mibraun on 12/08/15.
  */
 public class ProjectStats {
 

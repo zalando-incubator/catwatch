@@ -11,9 +11,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by mibraun on 12/08/15.
- */
 public class ProjectStatsTest {
 
     @Test

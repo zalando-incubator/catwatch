@@ -4,9 +4,6 @@ import org.zalando.catwatch.backend.model.Project;
 
 import java.util.Comparator;
 
-/**
- * Created by pmaji on 7/27/15.
- */
 public class ProjectContributorComparator implements Comparator<Project> {
 
     @Override

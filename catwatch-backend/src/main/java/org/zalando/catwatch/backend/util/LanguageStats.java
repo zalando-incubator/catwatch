@@ -8,9 +8,6 @@ import org.zalando.catwatch.backend.model.Project;
 
 import java.util.*;
 
-/**
- * Created by mibraun on 25/08/15.
- */
 public class LanguageStats {
 
     private static final Logger logger = LoggerFactory.getLogger(LanguageStats.class);
