@@ -22,7 +22,7 @@ public class MailOnRetryTest {
 
     private final Fetcher fetcher = mock(Fetcher.class);
     private final MailSender mailSender = mock(MailSender.class);
-    private final RetryableFetcher retryableFetcher = new RetryableFetcher(fetcher, 1, 0, 0, 0, mailSender);
+    private final RetryableFetcher retryableFetcher = new RetryableFetcher(fetcher, MAX_ATTEMPTS, 0, 0, 0, mailSender);
 
     @Test
     public void shouldSendMailOnCrawlerFailure() throws Exception {
