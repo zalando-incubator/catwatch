@@ -1,5 +1,8 @@
 package org.zalando.catwatch.backend.util;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import com.google.common.collect.Lists;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -11,9 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
-import com.google.common.collect.Lists;
 
 public class StringParser {
 
@@ -35,10 +35,10 @@ public class StringParser {
 
 		String[] array = stringList.split(delimiter);
 
-		List<String> list = new ArrayList<String>(array.length);
+		List<String> list = new ArrayList<>(array.length);
 
-		for (int i = 0; i < array.length; i++) {
-			list.add(array[i].trim());
+		for (String s : array) {
+			list.add(s.trim());
 		}
 
 		return list;

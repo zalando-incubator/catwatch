@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.util;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.text.ParseException;
+import java.util.Date;
 
 public class StringParserTest {
 	

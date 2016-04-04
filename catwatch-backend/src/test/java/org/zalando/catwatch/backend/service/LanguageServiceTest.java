@@ -37,12 +37,6 @@ public class LanguageServiceTest {
     @Test
     public void checkProgrammingLanguage() {
 
-        List<String> languages = new ArrayList<String>();
-        languages.add("Java");
-        languages.add("Python");
-        languages.add("Scala");
-        languages.add(null);
-
         logger.info("Setting up the projects...");
         Project p1 = new ProjectBuilder().commitsCount(10)
                 .contributorsCount(5)
@@ -94,8 +88,8 @@ public class LanguageServiceTest {
         String organizations = "zalando,zalando-stups";
 
         logger.info("Calling language service...");
-        List<Project> projectsZalando = new ArrayList<Project>();
-        List<Project> projectsZalandoStups = new ArrayList<Project>();
+        List<Project> projectsZalando = new ArrayList<>();
+        List<Project> projectsZalandoStups = new ArrayList<>();
 
         projectsZalandoStups.add(p1);
         projectsZalandoStups.add(p2);

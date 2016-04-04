@@ -1,7 +1,5 @@
 package org.zalando.catwatch.backend.repo.builder;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,6 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class BuilderUtil {
 

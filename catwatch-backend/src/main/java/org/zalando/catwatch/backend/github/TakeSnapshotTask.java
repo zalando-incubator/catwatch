@@ -1,19 +1,7 @@
 package org.zalando.catwatch.backend.github;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summarizingInt;
-import static java.util.stream.Collectors.summarizingLong;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.Callable;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.collect.Lists;
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.kohsuke.github.GHObject;
@@ -22,10 +10,30 @@ import org.kohsuke.github.GitHub;
 import org.kohsuke.github.RateLimitHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.json.YamlJsonParser;
-import org.zalando.catwatch.backend.model.*;
+import org.zalando.catwatch.backend.model.CatwatchYaml;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.model.Language;
+import org.zalando.catwatch.backend.model.Project;
+import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.model.util.Scorer;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.IntSummaryStatistics;
+import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
+
+import static java.util.stream.Collectors.*;
 
 /**
  * Task to get organisation snapshot from GitHub using Kohsuke GitHub API.

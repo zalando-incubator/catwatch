@@ -3,7 +3,6 @@ package org.zalando.catwatch.backend.repo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.Statistics;
 
 import java.util.Collection;
 import java.util.Date;

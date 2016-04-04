@@ -1,14 +1,12 @@
 package org.zalando.catwatch.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 
 @Entity
 @ApiModel(description = "A contributor is a (GitHub) user that may have contributed to projects. "

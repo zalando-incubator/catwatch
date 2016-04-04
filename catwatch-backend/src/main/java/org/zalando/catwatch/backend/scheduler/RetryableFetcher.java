@@ -42,12 +42,8 @@ public class RetryableFetcher {
     }
 
     public void tryFetchData() {
-        RetryCallback<Boolean, RuntimeException> retryCallback = context -> {
-            return fetcher.fetchData();
-        };
-        RecoveryCallback<Boolean> recoveryCallback = retryContext -> {
-            return mailSender.send(retryContext.getLastThrowable());
-        };
+        RetryCallback<Boolean, RuntimeException> retryCallback = context -> fetcher.fetchData();
+        RecoveryCallback<Boolean> recoveryCallback = retryContext -> mailSender.send(retryContext.getLastThrowable());
         retryTemplate().execute(retryCallback, recoveryCallback);
     }
 

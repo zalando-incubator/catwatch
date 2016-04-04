@@ -1,20 +1,8 @@
 package org.zalando.catwatch.backend.repo.util;
 
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.random;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomLanguage;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.randomProjectName;
-import static org.zalando.catwatch.backend.repo.util.DatabasePing.isDatabaseAvailable;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import org.zalando.catwatch.backend.repo.ContributorRepository;
 import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.StatisticsRepository;
@@ -22,6 +10,14 @@ import org.zalando.catwatch.backend.repo.builder.BuilderUtil;
 import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
+
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.*;
+import static org.zalando.catwatch.backend.repo.util.DatabasePing.isDatabaseAvailable;
 
 @Component
 public class DatabasePopulator {

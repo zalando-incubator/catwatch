@@ -1,14 +1,12 @@
 package org.zalando.catwatch.backend.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
 
 @Entity
 @ApiModel(description = "Represents the statistics of a GitHub organization. See https://developer.github.com/v3/orgs/")

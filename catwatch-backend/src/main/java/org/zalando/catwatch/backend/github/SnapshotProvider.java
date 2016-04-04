@@ -3,7 +3,6 @@ package org.zalando.catwatch.backend.github;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
-
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.zalando.catwatch.backend.model.util.Scorer;
 
 import javax.annotation.PostConstruct;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;

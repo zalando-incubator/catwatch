@@ -1,14 +1,14 @@
 package org.zalando.catwatch.backend.repo.builder;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
+import org.zalando.catwatch.backend.model.Project;
+import org.zalando.catwatch.backend.repo.ProjectRepository;
 
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
-import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProjectBuilder {
 

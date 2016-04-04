@@ -1,11 +1,11 @@
 package org.zalando.catwatch.backend.web.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseDto {
 

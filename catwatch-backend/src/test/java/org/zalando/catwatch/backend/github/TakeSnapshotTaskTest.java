@@ -1,29 +1,5 @@
 package org.zalando.catwatch.backend.github;
 
-import static java.time.Instant.now;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.sort;
-import static java.util.Date.from;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kohsuke.github.GHCommit;
@@ -38,6 +14,24 @@ import org.zalando.catwatch.backend.model.Language;
 import org.zalando.catwatch.backend.model.Project;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.model.util.Scorer;
+
+import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.time.Instant.now;
+import static java.util.Arrays.asList;
+import static java.util.Collections.*;
+import static java.util.Date.from;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TakeSnapshotTaskTest {
@@ -66,12 +60,10 @@ public class TakeSnapshotTaskTest {
         Contributor c2 = newContributor(44, 55, "http://b.com", 66);
         when(repo2.listContributors()).thenReturn(asList(c2));
 
-        // when
-        List<org.zalando.catwatch.backend.model.Contributor> contributors = //
-        new ArrayList<org.zalando.catwatch.backend.model.Contributor>( //
-                task.collectContributors(org(asList(repo1, repo2))));
+        List<org.zalando.catwatch.backend.model.Contributor> contributors =
+                new ArrayList<>(
+                        task.collectContributors(org(asList(repo1, repo2))));
 
-        // then
         assertThat(contributors, hasSize(2));
 
         org.zalando.catwatch.backend.model.Contributor c1_ = contributors.get(0);
@@ -208,7 +200,7 @@ public class TakeSnapshotTaskTest {
      */
     @SuppressWarnings("unchecked")
     private <T> Map<String, T> toMap(Object... keyAndValuePairs) {
-        Map<String, T> map = new HashMap<String, T>();
+        Map<String, T> map = new HashMap<>();
         for (int index = 0; index < keyAndValuePairs.length; index = index + 2) {
             String key = (String) keyAndValuePairs[index];
             Object value = keyAndValuePairs[index + 1];

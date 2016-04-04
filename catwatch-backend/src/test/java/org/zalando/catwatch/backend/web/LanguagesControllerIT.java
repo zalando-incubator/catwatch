@@ -1,17 +1,5 @@
 package org.zalando.catwatch.backend.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +11,18 @@ import org.zalando.catwatch.backend.repo.ProjectRepository;
 import org.zalando.catwatch.backend.repo.builder.BuilderUtil;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 import org.zalando.catwatch.backend.util.TestUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class LanguagesControllerIT extends AbstractCatwatchIT {
 
@@ -108,8 +108,6 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		
 		List<String> languageNames = fillRepository(ORG1);
 
-		List<Language> languageList = generateLanguageList(languageNames);
-		
 		// when
 		String url = TestUtils.createAbsoluteLanguagesUrl(this.base.toString(), ORG1, null, null, LANG_CPP);
 
@@ -135,7 +133,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		}
 
 		Assert.assertEquals(nrOfProjects,
-				repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
+				repository.findProjects(organization, Optional.empty(), Optional.empty()).size());
 
 		return languages;
 	}
@@ -165,7 +163,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		for (int i = 0; i < langs.size(); i++) {
 			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
 					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
-					.name("p" + i).description("Test project "+i).gitHubProjectId(1234456).score((int) Math.random()*100)
+					.name("p" + i).description("Test project "+i).gitHubProjectId(1234456).score((int) (Math.random() * 100))
 					.languages(Arrays.asList(BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage()))
 					.lastPushed(null).save();
 
@@ -173,7 +171,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		}
 
 		Assert.assertEquals(langs.size(),
-				repository.findProjects(organization, Optional.ofNullable(null), Optional.ofNullable(null)).size());
+				repository.findProjects(organization, Optional.empty(), Optional.empty()).size());
 
 		return result;
 	}

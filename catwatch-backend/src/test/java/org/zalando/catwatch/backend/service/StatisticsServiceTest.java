@@ -1,7 +1,10 @@
 package org.zalando.catwatch.backend.service;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
+import org.junit.Assert;
+import org.junit.Test;
+import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
+import org.zalando.catwatch.backend.util.TestUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,11 +12,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
-import org.zalando.catwatch.backend.util.TestUtils;
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class StatisticsServiceTest {
 

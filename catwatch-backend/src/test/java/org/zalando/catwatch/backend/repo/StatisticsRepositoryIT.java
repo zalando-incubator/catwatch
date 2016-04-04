@@ -1,17 +1,5 @@
 package org.zalando.catwatch.backend.repo;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,6 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.zalando.catwatch.backend.model.Statistics;
 import org.zalando.catwatch.backend.util.TestUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 
@@ -185,9 +183,6 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		Date threeDaysAgo = Date.from(now().minus(3, DAYS));
 		Date foursDaysAgo = Date.from(now().minus(4, DAYS));
 
-		Date startDate = threeDaysAgo;
-		Date endDate = twoDaysAgo;
-
 		repository.deleteAll();
 
 		// // snapshot date is before requested period of time
@@ -204,7 +199,7 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		assertThat(repository.findAll(), iterableWithSize(5));
 
 		// when
-		List<Statistics> stats = findInPeriod(startDate, endDate);
+		List<Statistics> stats = findInPeriod(threeDaysAgo, twoDaysAgo);
 
 		// then
 		assertThat(stats, hasSize(2));

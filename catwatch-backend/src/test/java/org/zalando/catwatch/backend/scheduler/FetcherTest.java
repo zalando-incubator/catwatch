@@ -13,6 +13,7 @@ public class FetcherTest {
     private final MailSender mailSender = mock(MailSender.class);
     private final RetryableFetcher retryableFetcher = new RetryableFetcher(fetcher, MAX_ATTEMPTS, 0, 0, 0, mailSender);
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldRetryThreeTimes() throws Exception {
         when(fetcher.fetchData())

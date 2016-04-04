@@ -1,14 +1,12 @@
 package org.zalando.catwatch.backend.model;
 
-import java.io.Serializable;
-
-import java.util.Date;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
 import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.Serializable;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public class ContributorKey implements Serializable {

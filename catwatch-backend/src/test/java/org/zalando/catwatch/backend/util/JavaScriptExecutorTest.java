@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.util;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
-import static org.zalando.catwatch.backend.util.JavaScriptExecutor.newExecutor;
-
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.zalando.catwatch.backend.util.JavaScriptExecutor.newExecutor;
 
 public class JavaScriptExecutorTest {
 

@@ -1,5 +1,11 @@
 package org.zalando.catwatch.backend.service;
 
+import org.springframework.data.domain.PageRequest;
+import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.util.Constants;
+import org.zalando.catwatch.backend.util.StringParser;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,12 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.springframework.data.domain.PageRequest;
-import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.util.Constants;
-import org.zalando.catwatch.backend.util.StringParser;
 
 public class StatisticsService {
 
@@ -34,7 +34,7 @@ public class StatisticsService {
 				unaggregatedStatistics.addAll(s);
 			}
 
-			if (unaggregatedStatistics != null && unaggregatedStatistics.size() > 0) {
+			if (unaggregatedStatistics.size() > 0) {
 				Statistics aggregatedStatistics = aggregateStatistics(unaggregatedStatistics);
 
 				statistics.add(aggregatedStatistics);
@@ -51,7 +51,8 @@ public class StatisticsService {
 	
 	private static Collection<Statistics> getStatisticsByDate(StatisticsRepository repository, Collection<String> orgs, String startDate, String endDate) {
 
-		Date start = null, end = null;
+		Date start = null;
+		Date end;
 		try {
 			if (startDate != null) {
 				start = StringParser.parseIso8601Date(startDate);
@@ -220,7 +221,7 @@ public class StatisticsService {
 	
 	private static Integer add(Integer sum, Integer value){
 		
-		int tempSum = sum == null ? 0 : sum.intValue();
+		int tempSum = sum == null ? 0 : sum;
 		
 		if(value!=null) tempSum += value;
 		

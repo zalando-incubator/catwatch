@@ -1,15 +1,5 @@
 package org.zalando.catwatch.backend.web.admin;
 
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.Date.from;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.iterableWithSize;
-import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -24,6 +14,14 @@ import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
 import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
 import org.zalando.catwatch.backend.repo.builder.StatisticsBuilder;
 import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
+
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.Date.from;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 public class AdminControllerIT extends AbstractCatwatchIT {
 
@@ -68,7 +66,7 @@ public class AdminControllerIT extends AbstractCatwatchIT {
 	private HttpEntity<String> entity(String body, String headerName, String headerValue) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(headerName, headerValue);
-		return new HttpEntity<String>(body, headers);
+		return new HttpEntity<>(body, headers);
 	}
 
 	@Test

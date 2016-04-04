@@ -1,22 +1,19 @@
 package org.zalando.catwatch.backend.repo;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
+
+import java.util.Date;
+import java.util.List;
+
 import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Date.from;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
+import static org.junit.Assert.*;
 
 public class ContributorRepositoryIT extends AbstractRepositoryIT {
 
@@ -130,7 +127,7 @@ public class ContributorRepositoryIT extends AbstractRepositoryIT {
 
 		// when
 		try {
-			contributors = repository.findAllTimeTopContributors(null, null, null, null, null);
+			repository.findAllTimeTopContributors(null, null, null, null, null);
 		} catch (NullPointerException e) {
 			// then
 			assertThat(e.getMessage(), containsString("snapshot date must not be null but was"));

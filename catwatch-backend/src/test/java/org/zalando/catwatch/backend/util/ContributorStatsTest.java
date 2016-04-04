@@ -3,13 +3,14 @@ package org.zalando.catwatch.backend.util;
 import org.junit.Test;
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.repo.builder.ContributorBuilder;
-import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.zalando.catwatch.backend.repo.builder.BuilderUtil.freshId;
 
 public class ContributorStatsTest{
     @Test

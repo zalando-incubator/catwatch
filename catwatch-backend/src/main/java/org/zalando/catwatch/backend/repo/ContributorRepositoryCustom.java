@@ -1,10 +1,10 @@
 package org.zalando.catwatch.backend.repo;
 
-import java.util.Date;
-import java.util.List;
-
 import org.zalando.catwatch.backend.model.Contributor;
 import org.zalando.catwatch.backend.model.ContributorKey;
+
+import java.util.Date;
+import java.util.List;
 
 public interface ContributorRepositoryCustom {
 
