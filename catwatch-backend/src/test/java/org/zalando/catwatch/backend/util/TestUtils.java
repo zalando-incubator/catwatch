@@ -33,9 +33,6 @@ public class TestUtils {
 		Assert.assertEquals("Oranization names are different", expected.getOrganizationName(),
 				actual.getOrganizationName());
 
-		Assert.assertEquals("Number of projects is different", expected.getPrivateProjectCount(),
-				actual.getPrivateProjectCount());
-
 		Assert.assertEquals("Number of programming languages is different", expected.getProgramLanguagesCount(),
 				actual.getProgramLanguagesCount());
 
@@ -68,7 +65,6 @@ public class TestUtils {
 			size += s.getAllSizeCount();
 			stars += s.getAllStarsCount();
 			members += s.getMembersCount();
-			privateProjects += s.getPrivateProjectCount();
 			languages += s.getProgramLanguagesCount();
 			publicProjects += s.getPublicProjectCount();
 			tags += s.getTagsCount();
@@ -85,7 +81,6 @@ public class TestUtils {
 		Assert.assertEquals(size, actual.getAllSizeCount());
 		Assert.assertEquals(stars, actual.getAllStarsCount());
 		Assert.assertEquals(members, actual.getMembersCount());
-		Assert.assertEquals(privateProjects, actual.getPrivateProjectCount());
 		Assert.assertEquals(languages, actual.getProgramLanguagesCount());
 		Assert.assertEquals(publicProjects, actual.getPublicProjectCount());
 		Assert.assertEquals(tags, actual.getTagsCount());

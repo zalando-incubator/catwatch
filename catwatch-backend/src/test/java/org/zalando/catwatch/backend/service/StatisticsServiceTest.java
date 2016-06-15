@@ -42,7 +42,6 @@ public class StatisticsServiceTest {
 				.allContributersCount(33)
 				.allSize(17)
 				.membersCount(43)
-				.privateProjectCount(3)
 				.tagsCount(28)
 				.teamsCount(1)
 				.create();
@@ -56,7 +55,6 @@ public class StatisticsServiceTest {
 				.allContributersCount(32)
 				.allSize(16)
 				.membersCount(42)
-                .privateProjectCount(0)
 				.tagsCount(27)
 				.teamsCount(2)
 				.create();
@@ -70,7 +68,6 @@ public class StatisticsServiceTest {
 				.allContributersCount(31)
 				.allSize(15)
 				.membersCount(41)
-				.privateProjectCount(2)
 				.tagsCount(26)
 				.teamsCount(3)
 				.create();
@@ -94,7 +91,6 @@ public class StatisticsServiceTest {
 		Assert.assertEquals(17 + 16, result.getAllSizeCount().intValue());
 		Assert.assertEquals(11 + 10, result.getAllStarsCount().intValue());
 		Assert.assertEquals(43 + 42, result.getMembersCount().intValue());
-		Assert.assertEquals(3 + 0, result.getPrivateProjectCount().intValue());
 		Assert.assertEquals(13 + 12, result.getProgramLanguagesCount().intValue());
 		Assert.assertEquals(10 + 9, result.getPublicProjectCount().intValue());
 		Assert.assertEquals(28 + 27, result.getTagsCount().intValue());
@@ -114,7 +110,6 @@ public class StatisticsServiceTest {
 		Assert.assertEquals(17 + 16 + 15, result.getAllSizeCount().intValue());
 		Assert.assertEquals(11 + 10 + 9, result.getAllStarsCount().intValue());
 		Assert.assertEquals(43 + 42 + 41, result.getMembersCount().intValue());
-		Assert.assertEquals(3 + 0 + 2, result.getPrivateProjectCount().intValue());
 		Assert.assertEquals(13 + 12 +11, result.getProgramLanguagesCount().intValue());
 		Assert.assertEquals(10 + 9 + 8, result.getPublicProjectCount().intValue());
 		Assert.assertEquals(28 + 27 +26, result.getTagsCount().intValue());
@@ -180,7 +175,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION1)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -194,7 +188,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION1)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -208,7 +201,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION1)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -223,7 +215,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION2)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -237,7 +228,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION2)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -251,7 +241,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION2)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -265,7 +254,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION3)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -279,7 +267,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION3)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)
@@ -293,7 +280,6 @@ public class StatisticsServiceTest {
 				.allStarsCount(400)
 				.membersCount(500)
 				.organizationName(ORGANIZATION3)
-				.privateProjectCount(600)
 				.programLanguagesCount(700)
 				.tagsCount(800)
 				.teamsCount(900)

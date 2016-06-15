@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
@@ -31,16 +32,19 @@ public class Project {
     @Column(name = "id")
     private int id;
 
+    @JsonProperty("language_list")
     @ElementCollection
     @CollectionTable(name = "language_list", joinColumns = @JoinColumn(name = "project_id"))
     @Column(name = "language")
     private List<String> languageList = new ArrayList<>();
 
+    @JsonIgnore
     @Column(name = "git_hub_project_id")
     private long gitHubProjectId;
 
     @JsonSerialize(using = JsonDateSerializer.class)
     @JsonDeserialize(using = JsonDateDeserializer.class)
+    @JsonProperty("snapshot_date")
     @Column(name = "snapshot_date")
     private Date snapshotDate;
 
@@ -53,6 +57,7 @@ public class Project {
     @Column(name = "image")
     private String image;
 
+    @JsonProperty("organization_name")
     @Column(name = "organization_name")
     private String organizationName;
 
@@ -62,24 +67,30 @@ public class Project {
     @Column(name = "description")
     private String description;
 
+    @JsonProperty("stars_count")
     @Column(name = "stars_count")
     private Integer starsCount;
 
+    @JsonProperty("commits_count")
     @Column(name = "commits_count")
     private Integer commitsCount;
 
+    @JsonProperty("forks_count")
     @Column(name = "forks_count")
     private Integer forksCount;
 
+    @JsonProperty("contributors_count")
     @Column(name = "contributors_count")
     private Integer contributorsCount;
 
     @Column(name = "score")
     private Integer score;
 
+    @JsonProperty("last_pushed")
     @Column(name = "last_pushed")
     private String lastPushed;
 
+    @JsonProperty("primary_language")
     @Column(name = "primary_language")
     private String primaryLanguage;
 

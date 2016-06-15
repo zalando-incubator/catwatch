@@ -12,7 +12,7 @@ paths:
   /statistics:
     get:
       summary: General statistics of list of GitHub Organizations
-      description: 'The Statistics endpoint returns snapshot of statistics over a given period of time of the organization GitHub account. Statistics contains information of the count of all private projects,  public projects, members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub Organizations. If start date and end date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned.'
+      description: 'The Statistics endpoint returns snapshot of statistics over a given period of time of the organization GitHub account. Statistics contains information of the count of all public projects, members, teams, contributors, stars, forks, size, programming languages, tags of the list of GitHub Organizations. If start date and end date is not present, most recent statistics snapshot is returned. If start date and end date is present all statistics snaphots starting from start date till end date is returned. If start date is present and end date is not present, all statistics snapshot starting from start date till present is returned.'
       parameters:
         - name: organizations
           in: query
@@ -302,9 +302,6 @@ paths:
 definitions:
   Statistics:
     properties:
-      private_project_count:
-        type: number
-        description: Count of private projects.
       public_project_count:
         type: number
         description: Count of public projects.
@@ -344,7 +341,7 @@ definitions:
       name:
         type: string
         description: Name of contributor
-      gitHubUserName:
+      github_username:
         type: string
         description: Unique GitHub name of contributor
       url:

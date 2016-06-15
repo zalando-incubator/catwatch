@@ -10,7 +10,7 @@ public class Constants {
 		
 		API_REQUEST_PARAM_ENDDATE = "end_date",
 		API_REQUEST_PARAM_STARTDATE = "start_date",
-		API_REQUEST_PARAM_SORTBY = "sortBy",
+		API_REQUEST_PARAM_SORTBY = "sort_by",
 		API_REQUEST_PARAM_ORGANIZATIONS = "organizations",
 		API_REQUEST_PARAM_LIMIT = "limit",
 		API_REQUEST_PARAM_OFFSET = "offset",

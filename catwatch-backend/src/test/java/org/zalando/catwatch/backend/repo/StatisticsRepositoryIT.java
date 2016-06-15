@@ -274,7 +274,6 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		s1.setAllSizeCount(100);
 		s1.setAllStarsCount(23);
 		s1.setMembersCount(7);
-		s1.setPrivateProjectCount(11);
 		s1.setProgramLanguagesCount(3);
 		s1.setPublicProjectCount(2);
 		s1.setSnapshotDate(new Date(System.currentTimeMillis() - 60000));
@@ -287,51 +286,4 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 		/**/ new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 500));
 		/**/ new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 600));
 	}
-
-	// private void checkEquals(Statistics expected, Statistics actual) {
-	// Assert.assertEquals("Number of contributors is different",
-	// expected.getAllContributorsCount(),
-	// actual.getAllContributorsCount());
-	//
-	// Assert.assertEquals("Snapshot date is different",
-	// expected.getSnapshotDate(), actual.getSnapshotDate());
-	//
-	// Assert.assertEquals("ID is different", expected.getId(), actual.getId());
-	//
-	// Assert.assertEquals("Number of contributors is different",
-	// expected.getAllForksCount(),
-	// actual.getAllForksCount());
-	//
-	// Assert.assertEquals("Number of size is different",
-	// expected.getAllSizeCount(), actual.getAllSizeCount());
-	//
-	// Assert.assertEquals("Number of stars is different",
-	// expected.getAllStarsCount(), actual.getAllStarsCount());
-	//
-	// Assert.assertEquals("Number of members is different",
-	// expected.getMembersCount(), actual.getMembersCount());
-	//
-	// Assert.assertEquals("Oranization names are different",
-	// expected.getOrganizationName(),
-	// actual.getOrganizationName());
-	//
-	// Assert.assertEquals("Number of projects is different",
-	// expected.getPrivateProjectCount(),
-	// actual.getPrivateProjectCount());
-	//
-	// Assert.assertEquals("Number of programming languages is different",
-	// expected.getProgramLanguagesCount(),
-	// actual.getProgramLanguagesCount());
-	//
-	// Assert.assertEquals("Number of public projects is different",
-	// expected.getPublicProjectCount(),
-	// actual.getPublicProjectCount());
-	//
-	// Assert.assertEquals("Number of tags is different",
-	// expected.getTagsCount(), actual.getTagsCount());
-	//
-	// Assert.assertEquals("Number of teams is different",
-	// expected.getTeamsCount(), actual.getTeamsCount());
-	//
-	// }
 }

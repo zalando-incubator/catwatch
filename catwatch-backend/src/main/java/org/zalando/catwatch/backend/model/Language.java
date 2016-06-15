@@ -36,7 +36,7 @@ public class Language  {
    * Count of projects using it.
    **/
   @ApiModelProperty(value = "Count of projects using it.")
-  @JsonProperty("projectsCount")
+  @JsonProperty("projects_count")
   public Integer getProjectsCount() {
     return projectsCount;
   }

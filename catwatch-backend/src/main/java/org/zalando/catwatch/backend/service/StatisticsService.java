@@ -142,7 +142,6 @@ public class StatisticsService {
 			size = add(size, s.getAllSizeCount());
 			stars = add(stars, s.getAllStarsCount());
 			members = add(members, s.getMembersCount());
-			privateProjects = add(privateProjects, s.getPrivateProjectCount());
 			languages = add(languages, s.getProgramLanguagesCount());
 			publicProjects = add(publicProjects, s.getPublicProjectCount());
 			tags = add(tags, s.getTagsCount());
@@ -173,7 +172,6 @@ public class StatisticsService {
 		s.setAllStarsCount(stars);
 		s.setMembersCount(members);
 		s.setOrganizationName(organizations);
-		s.setPrivateProjectCount(privateProjects);
 		s.setProgramLanguagesCount(languages);
 		s.setPublicProjectCount(publicProjects);
 		s.setTagsCount(tags);

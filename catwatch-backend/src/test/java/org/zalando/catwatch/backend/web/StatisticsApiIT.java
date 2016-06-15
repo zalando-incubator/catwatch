@@ -137,7 +137,6 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 		s1.setAllSizeCount(100);
 		s1.setAllStarsCount(23);
 		s1.setMembersCount(7);
-		s1.setPrivateProjectCount(11);
 		s1.setProgramLanguagesCount(3);
 		s1.setPublicProjectCount(2);
 		s1.setTagsCount(6);
@@ -153,7 +152,6 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 		s2.setAllSizeCount(99);
 		s2.setAllStarsCount(22);
 		s2.setMembersCount(6);
-		s2.setPrivateProjectCount(10);
 		s2.setProgramLanguagesCount(2);
 		s2.setPublicProjectCount(1);
 		s2.setTagsCount(5);

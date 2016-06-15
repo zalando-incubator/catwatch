@@ -1,0 +1,1 @@
+ALTER TABLE statistics DROP COLUMN private_project_count;

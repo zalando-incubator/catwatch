@@ -1,8 +1,13 @@
 package org.zalando.catwatch.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
+import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +20,6 @@ public class Statistics {
 	@Id
 	private StatisticsKey key;
 
-	private Integer privateProjectCount = null;
 	private Integer publicProjectCount = null;
 	private Integer membersCount = null;
 	private Integer teamsCount = null;
@@ -36,34 +40,22 @@ public class Statistics {
 		this.key = new StatisticsKey(id, snapshotDate);
 	}
 
+	@JsonIgnore
 	public StatisticsKey getKey() {
 		return key;
 	}
 
 	@ApiModelProperty(value = "the GitHub ID of the organization. Part of the primary key. See official GitHub REST API guide.")
-	@JsonProperty("id")
+	@JsonIgnore
 	public long getId() {
 		return key == null ? 0: key.getId();
-	}
-	
-	/**
-	 * Count of private projects.
-	 **/
-	@ApiModelProperty(value = "Count of private projects.")
-	@JsonProperty("privateProjectCount")
-	public Integer getPrivateProjectCount() {
-		return privateProjectCount;
-	}
-
-	public void setPrivateProjectCount(Integer privateProjectCount) {
-		this.privateProjectCount = privateProjectCount;
 	}
 
 	/**
 	 * Count of public projects.
 	 **/
 	@ApiModelProperty(value = "Count of public projects.")
-	@JsonProperty("publicProjectCount")
+	@JsonProperty("public_project_count")
 	public Integer getPublicProjectCount() {
 		return publicProjectCount;
 	}
@@ -76,7 +68,7 @@ public class Statistics {
 	 * Count of memebers.
 	 **/
 	@ApiModelProperty(value = "Count of memebers.")
-	@JsonProperty("membersCount")
+	@JsonProperty("members_count")
 	public Integer getMembersCount() {
 		return membersCount;
 	}
@@ -89,7 +81,7 @@ public class Statistics {
 	 * Count of teams.
 	 **/
 	@ApiModelProperty(value = "Count of teams.")
-	@JsonProperty("teamsCount")
+	@JsonProperty("teams_count")
 	public Integer getTeamsCount() {
 		return teamsCount;
 	}
@@ -102,7 +94,7 @@ public class Statistics {
 	 * Count of contributors.
 	 **/
 	@ApiModelProperty(value = "Count of contributors.")
-	@JsonProperty("allContributorsCount")
+	@JsonProperty("all_contributors_count")
 	public Integer getAllContributorsCount() {
 		return allContributorsCount;
 	}
@@ -115,7 +107,7 @@ public class Statistics {
 	 * Count of stars.
 	 **/
 	@ApiModelProperty(value = "Count of stars.")
-	@JsonProperty("allStarsCount")
+	@JsonProperty("all_stars_count")
 	public Integer getAllStarsCount() {
 		return allStarsCount;
 	}
@@ -128,7 +120,7 @@ public class Statistics {
 	 * Count of forks.
 	 **/
 	@ApiModelProperty(value = "Count of forks.")
-	@JsonProperty("allForksCount")
+	@JsonProperty("all_forks_count")
 	public Integer getAllForksCount() {
 		return allForksCount;
 	}
@@ -141,7 +133,7 @@ public class Statistics {
 	 * Count of projects.
 	 **/
 	@ApiModelProperty(value = "Count of projects.")
-	@JsonProperty("allSizeCount")
+	@JsonProperty("all_size_count")
 	public Integer getAllSizeCount() {
 		return allSizeCount;
 	}
@@ -154,7 +146,7 @@ public class Statistics {
 	 * Count of programming languages used.
 	 **/
 	@ApiModelProperty(value = "Count of programming languages used.")
-	@JsonProperty("programLanguagesCount")
+	@JsonProperty("program_languages_count")
 	public Integer getProgramLanguagesCount() {
 		return programLanguagesCount;
 	}
@@ -167,7 +159,7 @@ public class Statistics {
 	 * Count of tags.
 	 **/
 	@ApiModelProperty(value = "Count of tags.")
-	@JsonProperty("tagsCount")
+	@JsonProperty("tags_count")
 	public Integer getTagsCount() {
 		return tagsCount;
 	}
@@ -176,12 +168,11 @@ public class Statistics {
 		this.tagsCount = tagsCount;
 	}
 
-	
 	/**
 	 * Organization name.
 	 **/
 	@ApiModelProperty(value = "Organization name.")
-	@JsonProperty("organizationName")
+	@JsonProperty("organization_name")
 	public String getOrganizationName() {
 		return organizationName;
 	}
@@ -189,11 +180,14 @@ public class Statistics {
 	public void setOrganizationName(String organizationName) {
 		this.organizationName = organizationName;
 	}
+
 	/**
 	 * Statistics snapshot date.
 	 **/
 	@ApiModelProperty(value = "Statistics snapshot date. Part of the primary key.")
-	@JsonProperty("snapshotDate")
+	@JsonSerialize(using = JsonDateSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonProperty("snapshot_date")
 	public Date getSnapshotDate() {
 		return key == null ? null : key.getSnapshotDate();
 	}
@@ -211,7 +205,6 @@ public class Statistics {
 		sb.append("class Statistics {\n");
 
 		sb.append("  id: ").append(getId()).append("\n");
-		sb.append("  privateProjectCount: ").append(privateProjectCount).append("\n");
 		sb.append("  publicProjectCount: ").append(publicProjectCount).append("\n");
 		sb.append("  membersCount: ").append(membersCount).append("\n");
 		sb.append("  teamsCount: ").append(teamsCount).append("\n");

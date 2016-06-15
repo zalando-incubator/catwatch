@@ -20,7 +20,6 @@ public class StatisticsBuilder {
 		this.statisticsRepository = statisticsRepository;
 
 		statistics = new Statistics(freshId(), randomDate());
-		statistics.setPrivateProjectCount(random(20, 70));
 		statistics.setPublicProjectCount(random(50, 120));
 
 		statistics.setMembersCount(random(1, 20));
@@ -77,11 +76,6 @@ public class StatisticsBuilder {
 		return this;
 	}
 	
-	public StatisticsBuilder privateProjectCount(int privateProjectCount) {
-		statistics.setPrivateProjectCount(privateProjectCount);
-		return this;
-	}
-	
 	public StatisticsBuilder tagsCount(int tagsCount) {
 		statistics.setTagsCount(tagsCount);
 		return this;
@@ -105,7 +99,6 @@ public class StatisticsBuilder {
 	public Statistics create() {
 		Statistics s = new Statistics(statistics.getId(), statistics.getSnapshotDate());
 
-		s.setPrivateProjectCount(statistics.getPrivateProjectCount());
 		s.setPublicProjectCount(statistics.getPublicProjectCount());
 
 		s.setMembersCount(statistics.getMembersCount());

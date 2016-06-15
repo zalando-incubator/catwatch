@@ -1,8 +1,13 @@
 package org.zalando.catwatch.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
+import org.zalando.catwatch.backend.model.util.JsonDateSerializer;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -37,18 +42,19 @@ public class Contributor {
 	}
 	
 
+	@JsonIgnore
 	public ContributorKey getKey() {
 		return key;
 	}
 
 	@ApiModelProperty(value = "the GitHub User ID of the Contributor. Part of the primary key. See official GitHub REST API guide.")
-	@JsonProperty("id")
+	@JsonIgnore
 	public long getId() {
 		return key == null ? 0: key.getId();
 	}
 
 	@ApiModelProperty(value = "the GitHub ID of the organization. Part of the primary key. See official GitHub REST API guide.")
-	@JsonProperty("organizationId")
+	@JsonIgnore
 	public long getOrganizationId() {
 		return key == null ? 0: key.getOrganizationId();
 	}
@@ -82,7 +88,7 @@ public class Contributor {
 	 * Count of organizational commits.
 	 **/
 	@ApiModelProperty(value = "Count of organizational commits.")
-	@JsonProperty("organizationalCommitsCount")
+	@JsonProperty("organizational_commits_count")
 	public Integer getOrganizationalCommitsCount() {
 		return organizationalCommitsCount;
 	}
@@ -95,7 +101,7 @@ public class Contributor {
 	 * Count of personal commits.
 	 **/
 	@ApiModelProperty(value = "Count of personal commits.")
-	@JsonProperty("personalCommitsCount")
+	@JsonProperty("personal_commits_count")
 	public Integer getPersonalCommitsCount() {
 		return personalCommitsCount;
 	}
@@ -108,7 +114,7 @@ public class Contributor {
 	 * Count of personal projects of contributor.
 	 **/
 	@ApiModelProperty(value = "Count of personal projects of contributor.")
-	@JsonProperty("personalProjectsCount")
+	@JsonProperty("personal_projects_count")
 	public Integer getPersonalProjectsCount() {
 		return personalProjectsCount;
 	}
@@ -121,7 +127,7 @@ public class Contributor {
 	 * Count of organization projects of contributor.
 	 **/
 	@ApiModelProperty(value = "Count of organization projects of contributor.")
-	@JsonProperty("organizationalProjectsCount")
+	@JsonProperty("organizational_projects_count")
 	public Integer getOrganizationalProjectsCount() {
 		return organizationalProjectsCount;
 	}
@@ -134,7 +140,7 @@ public class Contributor {
 	 * Organization of the Contributor.
 	 **/
 	@ApiModelProperty(value = "Organization of the Contributor.")
-	@JsonProperty("organizationName")
+	@JsonProperty("organization_name")
 	public String getOrganizationName() {
 		return organizationName;
 	}
@@ -147,11 +153,14 @@ public class Contributor {
 	 * Contributor snapshot date.
 	 **/
 	@ApiModelProperty(value = "Contributor snapshot date. Part of the primary key.")
-	@JsonProperty("snapshotDate")
+	@JsonSerialize(using = JsonDateSerializer.class)
+	@JsonDeserialize(using = JsonDateDeserializer.class)
+	@JsonProperty("snapshot_date")
 	public Date getSnapshotDate() {
 		return key == null ? null : key.getSnapshotDate();
 	}
 
+	@JsonProperty("github_username")
 	public String getLoginId() {
 		String regex = "https://github.com/";
 		String loginId = "";
