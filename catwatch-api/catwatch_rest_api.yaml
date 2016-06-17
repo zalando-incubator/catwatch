@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: CatWatch API
   description: Get your GitHub statistics with the CatWatch API
-  version: 1.0.0
+  version: 1.0.1
 host: catwatch.opensource.zalan.do
 schemes:
   - https
@@ -109,7 +109,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ProjectStatistics'
+              $ref: '#/definitions/ContributorStatistics'
         default:
           description: Unexpected error
           schema:
@@ -340,13 +340,13 @@ definitions:
     properties:
       name:
         type: string
-        description: Name of contributor
+        description: Name of contributor.
       github_username:
         type: string
         description: Unique GitHub name of contributor
       url:
         type: string
-        description: URL of contributor
+        description: URL of contributor.
       organizational_commits_count:
         type: number
         description: Count of organizational commits.
@@ -370,19 +370,19 @@ definitions:
     properties:
       name:
         type: string
-        description: Name of project
+        description: Name of the project.
       title:
         type: string
-        description: Title of project
+        description: Title of the project.
       url:
         type: string
-        description: URL of project
+        description: URL of the project.
       image:
          type: string
-         description: Image url of project
+         description: Image url of the project.
       description:
         type: string
-        description: Description of project
+        description: Description of the project.
       stars_count:
         type: number
         description: Count of stars for the project.
@@ -391,30 +391,30 @@ definitions:
         description: Count of commits for the project.
       forks_count:
         type: number
-        description: Count of forks of project.
+        description: Count of forks of the project.
       contributors_count:
         type: number
-        description: Count of contributors of project.
+        description: Count of contributors of the project.
       score:
-        type: string
-        description: Score of project.
+        type: number
+        description: Score of the project.
       last_pushed:
         type: string
-        description: Last pushed data of project.
+        description: Last pushed date of the project.
       primary_language:
         type: string
-        description: Primary programming language of project
+        description: Primary programming language of the project.
       language_list:
         type: array
-        description: List of programming languages of project
+        description: List of programming languages of the project.
         items:
           type: string
       organization_name:
         type: string
-        description: Organization of the Project.
+        description: Organization of the project.
       maintainers:
         type: array
-        description: List of maintainers of project
+        description: List of maintainers of the project.
         items:
           type: string
       snapshot_date:
@@ -428,10 +428,10 @@ definitions:
         description: Name of the programming language used.
       projects_count:
         type: number
-        description: Count of projects using it.
+        description: Count of projects using the programming language.
       percentage:
         type: number
-        description: Usage percentage of programming language.
+        description: Usage percentage of the programming language.
   Error:
     properties:
       code:
@@ -446,6 +446,18 @@ definitions:
       name:
         type: string
         description: The name of the project
+      organization_name:
+        type: string
+        description: Organization of the project
+      url:
+        type: string
+        description: URL of project
+      description:
+        type: string
+        description: Description of the project
+      primary_language:
+        type: string
+        description: Primary programming language of the project
       commit_counts:
         type: array
         items: 
@@ -456,7 +468,58 @@ definitions:
         items: 
           type: integer
         description: Count of forks in a time span.
-      snapshot_date:
+      contributors_counts:
+        type: array
+        items:
+          type: integer
+        description: Count of contributors in a time span.
+      scores:
+        type: array
+        items:
+          type: integer
+        description: Scores in a time span.
+      snapshot_dates:
+        type: array
+        items:
+          type: string
+          format: date-time
+        description: Snapshot dates.
+  ContributorStatistics:
+    properties:
+      name:
         type: string
-        format: date-time
-        description: Snapshot date.
+        description: Name of contributor.
+      organization_name:
+        type: array
+        items:
+          type: string
+        description: List of organizations contributed to.
+      url:
+        type: string
+        description: URL of contributor.
+      organizational_commits_counts:
+        type: array
+        items:
+          type: number
+        description: Count of organizational commits in a time span.
+      personal_commits_counts:
+        type: array
+        items:
+          type: number
+        description: Count of personal commits in a time span.
+      personal_projects_counts:
+        type: array
+        items:
+          type: number
+        description: Count of personal projects of contributor in a time span.
+      organizational_projects_counts:
+        type: array
+        items:
+          type: number
+        description: Count of organization projects of contributor in a time span.
+      snapshot_dates:
+        type: array
+        items:
+          type: string
+          format: date-time
+        description: Contributor snapshot date.
