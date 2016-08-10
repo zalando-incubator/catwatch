@@ -43,6 +43,7 @@ public class SnapshotProvider {
     private final Integer cacheSize;
     private final String login;
     private final String password;
+    private final String token;
     private final ExecutorService pool = Executors.newCachedThreadPool();
 
     /**
@@ -56,13 +57,15 @@ public class SnapshotProvider {
     public SnapshotProvider(Scorer scorer,
                             @Value("${cache.path}") String cachePath,
                             @Value("${cache.size}") Integer cacheSize,
-                            @Value("${github.login:GITHUB_LOGIN}") String login,
-                            @Value("${github.password:GITHUB_PASSWORD}") String password) {
+                            @Value("${github.login:#{null}}") String login,
+                            @Value("${github.password:#{null}}") String password,
+                            @Value("${github.oauth.token:#{null}}") String token) {
         this.scorer = scorer;
         this.cachePath = cachePath;
         this.cacheSize = cacheSize;
         this.login = login;
         this.password = password;
+        this.token = token;
     }
 
     /**
@@ -84,8 +87,12 @@ public class SnapshotProvider {
     public Future<Snapshot> takeSnapshot(String organizationName, Date snapshotDate) throws IOException {
         GitHubBuilder builder = new GitHubBuilder();
 
-        if (StringUtils.isNotEmpty(login)) {
+        if (StringUtils.isNotEmpty(token)) {
+            builder.withOAuthToken(token);
+        } else if (StringUtils.isNotEmpty(login) && StringUtils.isNotEmpty(password)) {
             builder.withPassword(login, password);
+        } else {
+            logger.error("GitHub credentials not found, proceeding unauthenticated. That will enforce 60 requests per hour limit.");
         }
 
         GitHub gitHub = builder.withConnector(new OkHttpConnector(new OkUrlFactory(httpClient))).build();
