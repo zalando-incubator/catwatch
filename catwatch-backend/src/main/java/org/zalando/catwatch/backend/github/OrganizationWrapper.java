@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.github;
 
 import org.kohsuke.github.GHOrganization;
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTeam;
 import org.kohsuke.github.GHUser;
 import org.slf4j.Logger;
@@ -83,5 +84,9 @@ public class OrganizationWrapper {
 
     public String getLogin() {
         return organization.getLogin();
+    }
+
+    public Boolean contributorIsMember(GHRepository.Contributor contributor) {
+        return contributor.isMemberOf(organization);
     }
 }
