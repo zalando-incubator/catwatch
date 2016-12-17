@@ -27,6 +27,7 @@ public class StatisticsBuilder {
         statistics.setTeamsCount(random(1, 4));
 
         statistics.setAllContributorsCount(random(1, 50));
+        statistics.setExternalContributorsCount(random(0, statistics.getAllContributorsCount()));
 		statistics.setAllStarsCount(random(1, 5));
 		statistics.setAllForksCount(random(1, 10));
         statistics.setAllSizeCount(random(1, 1000000));
@@ -66,7 +67,12 @@ public class StatisticsBuilder {
 		statistics.setAllContributorsCount(contributersCount);
 		return this;
 	}
-	
+
+	public StatisticsBuilder externalContributorsCount(int externalContributorsCount) {
+		statistics.setExternalContributorsCount(externalContributorsCount);
+		return this;
+	}
+
 	public StatisticsBuilder allSize(int sizeCount) {
 		statistics.setAllSizeCount(sizeCount);
 		return this;
@@ -112,6 +118,7 @@ public class StatisticsBuilder {
 		s.setTeamsCount(statistics.getTeamsCount());
 		
 		s.setAllContributorsCount(statistics.getAllContributorsCount());
+		s.setExternalContributorsCount(statistics.getExternalContributorsCount());
 		s.setAllStarsCount(statistics.getAllStarsCount());
 		s.setAllForksCount(statistics.getAllForksCount());
 		s.setAllSizeCount(statistics.getAllSizeCount());

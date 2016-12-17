@@ -40,6 +40,7 @@ public class StatisticsServiceTest {
 				.allStarsCount(11)
 				.programLanguagesCount(13)
 				.allContributersCount(33)
+				.externalContributorsCount(5)
 				.allSize(17)
 				.membersCount(43)
 				.privateProjectCount(3)
@@ -54,6 +55,7 @@ public class StatisticsServiceTest {
 				.allStarsCount(10)
 				.programLanguagesCount(12)
 				.allContributersCount(32)
+				.externalContributorsCount(4)
 				.allSize(16)
 				.membersCount(42)
                 .privateProjectCount(0)
@@ -68,6 +70,7 @@ public class StatisticsServiceTest {
 				.allStarsCount(9)
 				.programLanguagesCount(11)
 				.allContributersCount(31)
+				.externalContributorsCount(1)
 				.allSize(15)
 				.membersCount(41)
 				.privateProjectCount(2)
@@ -99,6 +102,7 @@ public class StatisticsServiceTest {
 		Assert.assertEquals(10 + 9, result.getPublicProjectCount().intValue());
 		Assert.assertEquals(28 + 27, result.getTagsCount().intValue());
 		Assert.assertEquals(1 + 2, result.getTeamsCount().intValue());
+		Assert.assertEquals(5 + 4, result.getExternalContributorsCount().intValue());
 		Assert.assertNotNull(result.getOrganizationName());
 		Assert.assertNotNull(result.getSnapshotDate());
 		Assert.assertNotNull(result.getId());
@@ -119,6 +123,7 @@ public class StatisticsServiceTest {
 		Assert.assertEquals(10 + 9 + 8, result.getPublicProjectCount().intValue());
 		Assert.assertEquals(28 + 27 +26, result.getTagsCount().intValue());
 		Assert.assertEquals(1 + 2 + 3, result.getTeamsCount().intValue());
+		Assert.assertEquals(5 + 4 + 1, result.getExternalContributorsCount().intValue());
 		Assert.assertNotNull(result.getOrganizationName());
 		Assert.assertNotNull(result.getSnapshotDate());
 		Assert.assertNotNull(result.getId());

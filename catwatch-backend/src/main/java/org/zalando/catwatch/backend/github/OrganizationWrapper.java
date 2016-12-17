@@ -30,6 +30,8 @@ public class OrganizationWrapper {
 
     private final GHOrganization organization;
     private final List<RepositoryWrapper> repositories;
+    private List<GHUser> members;
+    private List<GHTeam> teams;
 
     OrganizationWrapper(GHOrganization organization) {
         this.organization = organization;
@@ -48,21 +50,27 @@ public class OrganizationWrapper {
     }
 
     public List<GHTeam> listTeams() {
-        try {
-            return organization.listTeams().asList();
-        } catch (Throwable t) {
-            logger.warn("No teams found for organization '{}'.", organization.getLogin());
-            return Collections.<GHTeam>emptyList();
+        if (this.teams == null) {
+            try {
+                this.teams = organization.listTeams().asList();
+            } catch (Throwable t) {
+                logger.warn("No teams found for organization '{}'.", organization.getLogin());
+                this.teams = Collections.<GHTeam>emptyList();
+            }
         }
+        return  this.teams;
     }
 
     public List<GHUser> listMembers() {
-        try {
-            return organization.listMembers().asList();
-        } catch (Throwable t) {
-            logger.warn("No public members found for organization '{}'.", organization.getLogin());
-            return Collections.<GHUser>emptyList();
+        if (this.members == null) {
+            try {
+                this.members = organization.listMembers().asList();
+            } catch (Throwable t) {
+                logger.warn("No public members found for organization '{}'.", organization.getLogin());
+                this.members = Collections.<GHUser>emptyList();
+            }
         }
+        return this.members;
     }
 
     public List<RepositoryWrapper> listRepositories() {
@@ -87,6 +95,6 @@ public class OrganizationWrapper {
     }
 
     public Boolean contributorIsMember(GHRepository.Contributor contributor) {
-        return contributor.isMemberOf(organization);
+        return this.listMembers().contains(contributor);
     }
 }

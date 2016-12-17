@@ -49,7 +49,8 @@ public class TestUtils {
 	
 	public static void checkAggregatedStatistics(Statistics actual, List<Statistics> expectedstatisticsToBeAggregated) {
 		Integer 
-			contributers = 0, 
+			contributers = 0,
+			externalContributors = 0,
 			forks = 0, 
 			size = 0, 
 			stars = 0, 
@@ -64,6 +65,7 @@ public class TestUtils {
 
 		for (Statistics s : expectedstatisticsToBeAggregated) {
 			contributers += s.getAllContributorsCount();
+			externalContributors += s.getExternalContributorsCount();
 			forks += s.getAllForksCount();
 			size += s.getAllSizeCount();
 			stars += s.getAllStarsCount();
@@ -81,6 +83,7 @@ public class TestUtils {
 		}
 
 		Assert.assertEquals(contributers, actual.getAllContributorsCount());
+		Assert.assertEquals(externalContributors, actual.getExternalContributorsCount());
 		Assert.assertEquals(forks, actual.getAllForksCount());
 		Assert.assertEquals(size, actual.getAllSizeCount());
 		Assert.assertEquals(stars, actual.getAllStarsCount());

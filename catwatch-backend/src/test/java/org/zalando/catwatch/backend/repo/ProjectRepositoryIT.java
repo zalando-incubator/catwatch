@@ -37,13 +37,14 @@ public class ProjectRepositoryIT extends AbstractRepositoryIT {
         Integer starsCount = random(1, 10);
         Integer commitsCount = random(1, 1000);
         Integer contributionCount = random(1, 1000);
+        Integer externalContributionCount = random(0, contributionCount);
         Integer score = random(1, 100);
         List<String> language_list = new ArrayList<>();
         language_list.add("Java");
         language_list.add("Scala");
 
         Project project = new ProjectBuilder(repository, new Date(), gitHubProjectId, name, language, forksCount, starsCount,
-            commitsCount, contributionCount, score).organizationName("galanto").getProject();
+            commitsCount, contributionCount, score, externalContributionCount).organizationName("galanto").getProject();
         project.setLanguageList(language_list);
         repository.save(project);
 

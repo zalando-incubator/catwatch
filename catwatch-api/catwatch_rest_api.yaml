@@ -317,6 +317,9 @@ definitions:
       all_contributors_count:
         type: number
         description: Count of contributors.
+      external_contributors_count:
+        type: number
+        description: Count of external contributors.
       all_stars_count:
         type: number
         description: Count of stars.
@@ -394,10 +397,13 @@ definitions:
         description: Count of commits for the project.
       forks_count:
         type: number
-        description: Count of forks of project.
+        description: Count of forks of the project.
       contributors_count:
         type: number
-        description: Count of contributors of project.
+        description: Count of contributors to the project.
+      external_contributors_count:
+        type: number
+        description: Counts of external contributors to the project.
       score:
         type: string
         description: Score of project.

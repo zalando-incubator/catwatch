@@ -270,6 +270,7 @@ public class StatisticsRepositoryIT extends AbstractRepositoryIT {
 	private void createStatistics() {
 		s1 = new Statistics(new Double(Math.random() * 1000).intValue(), new Date(System.currentTimeMillis() - 100));
 		s1.setAllContributorsCount(10);
+		s1.setExternalContributorsCount(3);
 		s1.setAllForksCount(12);
 		s1.setAllSizeCount(100);
 		s1.setAllStarsCount(23);

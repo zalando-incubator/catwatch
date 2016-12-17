@@ -39,6 +39,12 @@ public class RepositoryWrapper {
         this.organization = organization;
     }
 
+    private List<GHRepository.Contributor> contributors;
+
+    private List<GHCommit> commits;
+
+    private List<GHTag> tags;
+
     public int getId() {
         return repository.getId();
     }
@@ -89,30 +95,39 @@ public class RepositoryWrapper {
     }
 
     public List<GHCommit> listCommits() {
-        try {
-            return repository.listCommits().asList();
-        } catch (Error e) {
-            logger.warn("No commits found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
-            return Collections.<GHCommit>emptyList();
+        if (this.commits == null) {
+            try {
+                this.commits = repository.listCommits().asList();
+            } catch (Error e) {
+                logger.warn("No commits found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
+                this.commits = Collections.<GHCommit>emptyList();
+            }
         }
+        return this.commits;
     }
 
     public List<GHRepository.Contributor> listContributors() {
-        try {
-            return repository.listContributors().asList();
-        } catch (Throwable t) {
-            logger.warn("No contributors found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
-            return Collections.<GHRepository.Contributor>emptyList();
+        if (this.contributors == null) {
+            try {
+                this.contributors = repository.listContributors().asList();
+            } catch (Throwable t) {
+                logger.warn("No contributors found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
+                this.contributors = Collections.<GHRepository.Contributor>emptyList();
+            }
         }
+        return this.contributors;
     }
 
     public List<GHTag> listTags() {
-        try {
-            return repository.listTags().asList();
-        } catch (Throwable t) {
-            logger.warn("No tags found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
-            return Collections.<GHTag>emptyList();
+        if (this.tags == null) {
+            try {
+                this.tags = repository.listTags().asList();
+            } catch (Throwable t) {
+                logger.warn("No tags found for project '{}' of organization '{}'.", repository.getName(), organization.getLogin());
+                this.tags = Collections.<GHTag>emptyList();
+            }
         }
+        return this.tags;
     }
 
     public InputStream getFileContent(String path) throws IOException {

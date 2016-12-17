@@ -125,7 +125,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 
 		Date now = new Date();
 		for (int i = 0; i < nrOfProjects; i++) {
-			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
+			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0, 0)
 					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
 					.name("p" + i).save();
 
@@ -161,7 +161,7 @@ public class LanguagesControllerIT extends AbstractCatwatchIT {
 		
 		Date now = new Date();
 		for (int i = 0; i < langs.size(); i++) {
-			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0)
+			Project p = new ProjectBuilder(repository, new Date(), 0L, null, null, 0, 0, 0, 0, 0, 0)
 					.primaryLanguage(BuilderUtil.randomLanguage()).organizationName(organization).snapshotDate(now)
 					.name("p" + i).description("Test project "+i).gitHubProjectId(1234456).score((int) (Math.random() * 100))
 					.languages(Arrays.asList(BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage(), BuilderUtil.randomLanguage()))

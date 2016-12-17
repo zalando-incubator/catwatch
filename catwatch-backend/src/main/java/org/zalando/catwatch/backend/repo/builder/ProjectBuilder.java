@@ -28,8 +28,9 @@ public class ProjectBuilder {
     }
 
     public ProjectBuilder(final ProjectRepository projectRepository, final Date date, final Long gitHubProjectId,
-            final String name, final String language, final Integer forksCount, final Integer starsCount,
-            final Integer commitsCount, final Integer contributionCount, final Integer score) {
+                          final String name, final String language, final Integer forksCount, final Integer starsCount,
+                          final Integer commitsCount, final Integer contributionCount, final Integer score,
+                          final Integer externalContributorsCount) {
         this.projectRepository = projectRepository;
 
         project = new Project();
@@ -41,6 +42,7 @@ public class ProjectBuilder {
         project.setStarsCount(starsCount);
         project.setCommitsCount(commitsCount);
         project.setContributorsCount(contributionCount);
+        project.setExternalContributorsCount(externalContributorsCount);
         project.setScore(score);
     }
 
@@ -102,6 +104,11 @@ public class ProjectBuilder {
         return this;
     }
 
+    public ProjectBuilder externalContributorsCount(final int externalContributorsCount) {
+        project.setContributorsCount(externalContributorsCount);
+        return this;
+    }
+
     public ProjectBuilder description(final String description) {
         project.setDescription(description);
         return this;
@@ -136,6 +143,7 @@ public class ProjectBuilder {
         p.setOrganizationName(project.getOrganizationName());
         p.setCommitsCount(project.getCommitsCount());
         p.setContributorsCount(project.getContributorsCount());
+        p.setExternalContributorsCount(project.getExternalContributorsCount());
         p.setDescription(project.getDescription());
         p.setLastPushed(project.getLastPushed());
         p.setScore(project.getScore());

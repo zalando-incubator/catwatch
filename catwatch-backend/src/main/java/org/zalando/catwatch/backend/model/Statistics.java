@@ -220,7 +220,7 @@ public class Statistics {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
-				.add("key", key)
+				.add("id", getId())
 				.add("privateProjectCount", privateProjectCount)
 				.add("publicProjectCount", publicProjectCount)
 				.add("membersCount", membersCount)
@@ -233,6 +233,7 @@ public class Statistics {
 				.add("programLanguagesCount", programLanguagesCount)
 				.add("tagsCount", tagsCount)
 				.add("organizationName", organizationName)
+				.add("snapshotDate", getSnapshotDate())
 				.toString();
 	}
 }
