@@ -209,8 +209,6 @@ public class TakeSnapshotTaskTest {
         when(org.listTeams()).thenReturn(mockList(GHTeam.class, 4));
         when(org.listRepositories()).thenReturn(Lists.newArrayList(repo));
         when(org.contributorIsMember(any(Contributor.class))).thenCallRealMethod();
-        // TODO add more behavior and more assertions
-        when(org.getLogin()).thenReturn("myLogin");
 
         // when
         Statistics statistics = task.collectStatistics(org);
