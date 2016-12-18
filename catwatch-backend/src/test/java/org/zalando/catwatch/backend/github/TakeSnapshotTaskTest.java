@@ -1,8 +1,10 @@
 package org.zalando.catwatch.backend.github;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepository.Contributor;
 import org.kohsuke.github.GHTeam;
 import org.kohsuke.github.GHUser;
@@ -178,6 +180,43 @@ public class TakeSnapshotTaskTest {
         assertThat(langs.get(2).getName(), equalTo("Java"));
         assertThat(langs.get(2).getProjectsCount(), equalTo(3));
         assertThat(langs.get(2).getPercentage(), equalTo(10));
+    }
+
+    class TestGHContributor extends GHRepository.Contributor {
+        public TestGHContributor(String login, int id) {
+            super();
+            this.login = login;
+            this.id = id;
+        }
+    }
+
+    @Test
+    /**
+     * Tests the counting of external contributors
+     */
+    public void testCountExternalContributors() throws Exception {
+        GHRepository.Contributor internal1 = new TestGHContributor("internal1", 1);
+        GHRepository.Contributor internal2 = new TestGHContributor("internal2", 2);
+        List<GHUser> members = Lists.newArrayList(internal1, internal2);
+        List<GHRepository.Contributor> contributors = Lists.newArrayList(internal1, internal2, new TestGHContributor("external", 3));
+
+        RepositoryWrapper repo = mock(RepositoryWrapper.class);
+        when(repo.listContributors()).thenReturn(contributors);
+
+        // given
+        OrganizationWrapper org = mock(OrganizationWrapper.class);
+        when(org.listMembers()).thenReturn(members);
+        when(org.listTeams()).thenReturn(mockList(GHTeam.class, 4));
+        when(org.listRepositories()).thenReturn(Lists.newArrayList(repo));
+        when(org.contributorIsMember(any(Contributor.class))).thenCallRealMethod();
+        // TODO add more behavior and more assertions
+        when(org.getLogin()).thenReturn("myLogin");
+
+        // when
+        Statistics statistics = task.collectStatistics(org);
+
+        assertThat(statistics.getExternalContributorsCount(), equalTo(1));
+        assertThat(statistics.getAllContributorsCount(), equalTo(3));
     }
 
     private OrganizationWrapper org(List<RepositoryWrapper> repos) {
