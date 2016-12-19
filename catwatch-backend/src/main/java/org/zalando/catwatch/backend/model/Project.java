@@ -3,6 +3,7 @@ package org.zalando.catwatch.backend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.MoreObjects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.zalando.catwatch.backend.model.util.JsonDateDeserializer;
@@ -73,6 +74,9 @@ public class Project {
 
     @Column(name = "contributors_count")
     private Integer contributorsCount;
+
+    @Column(name = "external_contributors_count")
+    private Integer externalContributorsCount;
 
     @Column(name = "score")
     private Integer score;
@@ -207,13 +211,20 @@ public class Project {
         this.forksCount = forksCount;
     }
 
-    @ApiModelProperty(value = "Count of contributors of project.")
+    @ApiModelProperty(value = "Count of contributors for project.")
     public Integer getContributorsCount() {
         return contributorsCount;
     }
 
     public void setContributorsCount(final Integer contributorsCount) {
         this.contributorsCount = contributorsCount;
+    }
+
+    @ApiModelProperty(value = "Count of external contributors for project.")
+    public Integer getExternalContributorsCount() { return externalContributorsCount; }
+
+    public void setExternalContributorsCount(Integer externalContributorsCount) {
+        this.externalContributorsCount = externalContributorsCount;
     }
 
     @ApiModelProperty(value = "Score of project.")
@@ -254,11 +265,26 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", languageList=" + languageList + ", gitHubProjectId=" + gitHubProjectId
-                + ", snapshotDate=" + snapshotDate + ", name='" + name + '\'' + ", organizationName='"
-                + organizationName + '\'' + ", url='" + url + '\'' + ", description='" + description + '\''
-                + ", starsCount=" + starsCount + ", commitsCount=" + commitsCount + ", forksCount=" + forksCount
-                + ", contributorsCount=" + contributorsCount + ", score=" + score + ", lastPushed='" + lastPushed + '\''
-                + ", primaryLanguage='" + primaryLanguage + '\'' + '}';
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("languageList", languageList)
+                .add("gitHubProjectId", gitHubProjectId)
+                .add("snapshotDate", snapshotDate)
+                .add("name", name)
+                .add("title", title)
+                .add("image", image)
+                .add("organizationName", organizationName)
+                .add("url", url)
+                .add("description", description)
+                .add("starsCount", starsCount)
+                .add("commitsCount", commitsCount)
+                .add("forksCount", forksCount)
+                .add("contributorsCount", contributorsCount)
+                .add("externalContributorsCount", externalContributorsCount)
+                .add("score", score)
+                .add("lastPushed", lastPushed)
+                .add("primaryLanguage", primaryLanguage)
+                .add("maintainers", maintainers)
+                .toString();
     }
 }

@@ -95,6 +95,13 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
                 .map(GHRepository.Contributor::getId)
                 .distinct()
                 .count());
+        statistics.setExternalContributorsCount((int) organization.listRepositories().stream()
+                .map(RepositoryWrapper::listContributors)
+                .flatMap(List::stream)
+                .filter(contributor -> !organization.contributorIsMember(contributor))
+                .map(GHRepository.Contributor::getId)
+                .distinct()
+                .count());
         statistics.setAllStarsCount(organization.listRepositories().stream()
                 .map(RepositoryWrapper::getStarsCount)
                 .reduce(0, Integer::sum));
@@ -140,6 +147,11 @@ public class TakeSnapshotTask implements Callable<Snapshot> {
             project.setOrganizationName(organization.getLogin());
             project.setCommitsCount(repository.listCommits().size());
             project.setContributorsCount(repository.listContributors().size());
+            project.setExternalContributorsCount((int) repository.listContributors().stream()
+                    .filter(contributor -> !organization.contributorIsMember(contributor))
+                    .map(GHRepository.Contributor::getId)
+                    .distinct()
+                    .count());
             project.setScore(scorer.score(project));
 
             project.setMaintainers(getProjectMaintainers(repository));

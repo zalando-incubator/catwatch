@@ -127,7 +127,7 @@ public class StatisticsService {
 
 		if(statistics.size()==1) return statistics.iterator().next();
 		
-		Integer contributers = 0, forks = 0, size = 0, stars = 0, members = 0, privateProjects = 0, languages = 0,
+		Integer contributers = 0, externalContributors = 0, forks = 0, size = 0, stars = 0, members = 0, privateProjects = 0, languages = 0,
 				publicProjects = 0, tags = 0, teams = 0;
 
 		
@@ -138,6 +138,7 @@ public class StatisticsService {
 		//aggregate data
 		for (Statistics s : statistics) {
 			contributers = add(contributers, s.getAllContributorsCount());
+			externalContributors = add(externalContributors, s.getExternalContributorsCount());
 			forks = add(forks, s.getAllForksCount());
 			size = add(size, s.getAllSizeCount());
 			stars = add(stars, s.getAllStarsCount());
@@ -168,6 +169,7 @@ public class StatisticsService {
 		//save aggregated values in new statistics object
 		Statistics s = new Statistics(new Double(Math.random()*10000).intValue() , snapshotDate);
 		s.setAllContributorsCount(contributers);
+		s.setExternalContributorsCount(externalContributors);
 		s.setAllForksCount(forks);
 		s.setAllSizeCount(size);
 		s.setAllStarsCount(stars);

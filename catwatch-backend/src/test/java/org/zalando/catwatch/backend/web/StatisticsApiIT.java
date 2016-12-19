@@ -133,6 +133,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 
 		s1 = new Statistics(statisticIdCounter++, new Date());
 		s1.setAllContributorsCount(10);
+		s1.setExternalContributorsCount(5);
 		s1.setAllForksCount(12);
 		s1.setAllSizeCount(100);
 		s1.setAllStarsCount(23);
@@ -149,6 +150,7 @@ public class StatisticsApiIT extends AbstractCatwatchIT {
 		s2 = new Statistics(statisticIdCounter++,
 				new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
 		s2.setAllContributorsCount(9);
+		s2.setExternalContributorsCount(3);
 		s2.setAllForksCount(11);
 		s2.setAllSizeCount(99);
 		s2.setAllStarsCount(22);

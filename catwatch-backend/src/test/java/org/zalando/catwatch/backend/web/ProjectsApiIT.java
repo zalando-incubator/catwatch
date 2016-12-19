@@ -42,7 +42,8 @@ public class ProjectsApiIT extends AbstractCatwatchIT {
 
         Project project1 = new ProjectBuilder(projectRepository).name("catwatch").snapshotDate(snapshotDate1)
                                                                 .organizationName("zalando").gitHubProjectId(73561571)
-                                                                .starsCount(4000).contributorsCount(300).score(79)
+                                                                .starsCount(4000).contributorsCount(300)
+                                                                .externalContributorsCount(30).score(79)
                                                                 .commitsCount(100).forksCount(70)
                                                                 .languages(Arrays.asList("Java", "Python", "Scala"))
                                                                 .save();
@@ -52,7 +53,8 @@ public class ProjectsApiIT extends AbstractCatwatchIT {
         Project project2 = new ProjectBuilder(projectRepository).name("catwatch").snapshotDate(snapshotDate2)
                                                                 .organizationName("zalando").gitHubProjectId(73561571)
                                                                 .starsCount(5000).score(90).contributorsCount(500)
-                                                                .commitsCount(130).forksCount(90)
+                                                                .externalContributorsCount(50).commitsCount(130)
+                                                                .forksCount(90)
                                                                 .languages(Arrays.asList("Java", "Python", "Scala"))
                                                                 .save();
 
@@ -97,6 +99,7 @@ public class ProjectsApiIT extends AbstractCatwatchIT {
         assertEquals(responseProject.getStarsCount(), project2.getStarsCount());
         assertEquals(responseProject.getScore(), project2.getScore());
         assertEquals(responseProject.getContributorsCount(), project2.getContributorsCount());
+        assertEquals(responseProject.getExternalContributorsCount(), project2.getExternalContributorsCount());
         assertEquals(responseProject.getCommitsCount(), project2.getCommitsCount());
         assertEquals(responseProject.getScore(), project2.getScore());
     }

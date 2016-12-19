@@ -1,6 +1,7 @@
 package org.zalando.catwatch.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,6 +21,7 @@ public class Statistics {
 	private Integer membersCount = null;
 	private Integer teamsCount = null;
 	private Integer allContributorsCount = null;
+	private Integer externalContributorsCount = null;
 	private Integer allStarsCount = null;
 	private Integer allForksCount = null;
 	private Integer allSizeCount = null;
@@ -109,6 +111,16 @@ public class Statistics {
 
 	public void setAllContributorsCount(Integer allContributorsCount) {
 		this.allContributorsCount = allContributorsCount;
+	}
+
+	@ApiModelProperty(value = "Count of external contributors.")
+	@JsonProperty("externalContributorsCount")
+	public Integer getExternalContributorsCount() {
+		return externalContributorsCount;
+	}
+
+	public void setExternalContributorsCount(Integer externalContributorsCount) {
+		this.externalContributorsCount = externalContributorsCount;
 	}
 
 	/**
@@ -207,23 +219,21 @@ public class Statistics {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class Statistics {\n");
-
-		sb.append("  id: ").append(getId()).append("\n");
-		sb.append("  privateProjectCount: ").append(privateProjectCount).append("\n");
-		sb.append("  publicProjectCount: ").append(publicProjectCount).append("\n");
-		sb.append("  membersCount: ").append(membersCount).append("\n");
-		sb.append("  teamsCount: ").append(teamsCount).append("\n");
-		sb.append("  allContributorsCount: ").append(allContributorsCount).append("\n");
-		sb.append("  allStarsCount: ").append(allStarsCount).append("\n");
-		sb.append("  allForksCount: ").append(allForksCount).append("\n");
-		sb.append("  allSizeCount: ").append(allSizeCount).append("\n");
-		sb.append("  programLanguagesCount: ").append(programLanguagesCount).append("\n");
-		sb.append("  tagsCount: ").append(tagsCount).append("\n");
-		sb.append("  organizationName: ").append(organizationName).append("\n");
-		sb.append("  snapshotDate: ").append(getSnapshotDate()).append("\n");
-		sb.append("}\n");
-		return sb.toString();
+		return MoreObjects.toStringHelper(this)
+				.add("id", getId())
+				.add("privateProjectCount", privateProjectCount)
+				.add("publicProjectCount", publicProjectCount)
+				.add("membersCount", membersCount)
+				.add("teamsCount", teamsCount)
+				.add("allContributorsCount", allContributorsCount)
+				.add("externalContributorsCount", externalContributorsCount)
+				.add("allStarsCount", allStarsCount)
+				.add("allForksCount", allForksCount)
+				.add("allSizeCount", allSizeCount)
+				.add("programLanguagesCount", programLanguagesCount)
+				.add("tagsCount", tagsCount)
+				.add("organizationName", organizationName)
+				.add("snapshotDate", getSnapshotDate())
+				.toString();
 	}
 }
