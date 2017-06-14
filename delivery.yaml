@@ -1,0 +1,13 @@
+build_steps:
+- desc: Install dependencies
+  cmd: |
+    apt-get update
+    apt-get install -y apt-transport-https ca-certificates curl openjdk-8-jdk
+    curl -sSL https://get.docker.com/ | sh
+- desc: Build and push docker image
+  cmd: |
+    image=registry-write.opensource.zalan.do/opensource/catwatch:${CDP_BUILD_VERSION}
+    cd catwatch-backend
+    ../mvnw --batch-mode package
+    docker build -t $image .
+    docker push $image
