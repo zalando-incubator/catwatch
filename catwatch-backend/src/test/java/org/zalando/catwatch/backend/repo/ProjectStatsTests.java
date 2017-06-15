@@ -1,20 +1,21 @@
 package org.zalando.catwatch.backend.repo;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.zalando.catwatch.backend.CatWatchBackendApplication;
-import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.zalando.catwatch.backend.model.Project;
+import org.zalando.catwatch.backend.repo.builder.ProjectBuilder;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment=RANDOM_PORT)
 public class ProjectStatsTests {
 
     @Autowired

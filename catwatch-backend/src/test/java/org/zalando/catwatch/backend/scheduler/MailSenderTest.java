@@ -1,33 +1,35 @@
 package org.zalando.catwatch.backend.scheduler;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.subethamail.wiser.Wiser;
-import org.subethamail.wiser.WiserMessage;
-import org.zalando.catwatch.backend.CatWatchBackendApplication;
-import org.zalando.catwatch.backend.mail.MailSender;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import javax.mail.internet.MimeMessage;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.subethamail.wiser.Wiser;
+import org.subethamail.wiser.WiserMessage;
+import org.zalando.catwatch.backend.mail.MailSender;
+
+@RunWith(SpringRunner.class)
 @TestPropertySource(properties = {
         "mail.port=2500",
         "mail.host=localhost",
         "mail.from=from@test.de",
         "mail.to=to@test.de",
         "fetcher.maxAttempts=1"})
-@SpringApplicationConfiguration(classes = CatWatchBackendApplication.class)
+@SpringBootTest(webEnvironment=RANDOM_PORT)
 public class MailSenderTest {
 
     private Wiser wiser;
@@ -35,7 +37,7 @@ public class MailSenderTest {
     @Autowired
     private MailSender mailSender;
 
-    @Mock
+    @MockBean
     private Fetcher fetcher;
 
     @Before
