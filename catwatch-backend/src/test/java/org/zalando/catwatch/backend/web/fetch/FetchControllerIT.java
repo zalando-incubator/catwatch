@@ -1,23 +1,5 @@
 package org.zalando.catwatch.backend.web.fetch;
 
-import org.apache.commons.beanutils.BeanComparator;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.core.env.Environment;
-import org.springframework.scheduling.support.CronSequenceGenerator;
-import org.zalando.catwatch.backend.model.Contributor;
-import org.zalando.catwatch.backend.model.Project;
-import org.zalando.catwatch.backend.model.Statistics;
-import org.zalando.catwatch.backend.repo.ContributorRepository;
-import org.zalando.catwatch.backend.repo.ProjectRepository;
-import org.zalando.catwatch.backend.repo.StatisticsRepository;
-import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
-
-import java.util.Collection;
-import java.util.List;
-
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.TimeZone.getTimeZone;
 import static java.util.stream.Collectors.toList;
@@ -26,7 +8,28 @@ import static org.junit.Assert.assertThat;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import static org.zalando.catwatch.backend.web.config.DateUtil.iso8601;
 
-@IntegrationTest({ "github.login=", "organization.list=rwitzeltestorg,rwitzeltestorg2", "server.port=0" })
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanComparator;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.scheduling.support.CronSequenceGenerator;
+import org.springframework.test.context.TestPropertySource;
+import org.zalando.catwatch.backend.model.Contributor;
+import org.zalando.catwatch.backend.model.Project;
+import org.zalando.catwatch.backend.model.Statistics;
+import org.zalando.catwatch.backend.repo.ContributorRepository;
+import org.zalando.catwatch.backend.repo.ProjectRepository;
+import org.zalando.catwatch.backend.repo.StatisticsRepository;
+import org.zalando.catwatch.backend.web.AbstractCatwatchIT;
+
+//@IntegrationTest({ "github.login=", "organization.list=rwitzeltestorg,rwitzeltestorg2", "server.port=0" })
+@TestPropertySource(properties = {
+        "github.login=",
+        "organization.list=rwitzeltestorg,rwitzeltestorg2"})
 public class FetchControllerIT extends AbstractCatwatchIT {
 
     @Autowired

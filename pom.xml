@@ -39,9 +39,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>1.3.2.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.4.RELEASE</spring.boot.version>
 
-        <jacoco.version>0.7.5.201505241946</jacoco.version>
+        <jacoco.version>0.7.9</jacoco.version>
     </properties>
 
     <licenses>
@@ -127,7 +127,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5</version>
+                    <version>3.6.1</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -152,7 +152,7 @@
                                 <goal>process</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>target/generated-sources</outputDirectory>
+                                <outputDirectory>target/generated-sources/querydsl</outputDirectory>
                                 <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
                             </configuration>
                         </execution>

@@ -1,20 +1,12 @@
 package org.zalando.catwatch.backend.scheduler;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.zalando.catwatch.backend.CatWatchBackendApplication;
-import org.zalando.catwatch.backend.mail.MailSender;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import static org.mockito.Mockito.*;
+import org.junit.Test;
+import org.zalando.catwatch.backend.mail.MailSender;
 
 public class MailOnRetryTest {
 
