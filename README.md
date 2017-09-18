@@ -102,7 +102,8 @@ Update temporarily the scoring function for projects (see catwatch-score/scoring
 
     POST /config/scoring.project
 
-###TODO
+### TODO
+
 Here are open tasks regarding the infrastructure:
 * Deployment (Database migration, GitHub account credentials management)
 * Monitoring
