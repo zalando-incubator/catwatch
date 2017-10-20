@@ -1,5 +1,6 @@
 package org.zalando.catwatch.backend.web.admin;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -47,6 +48,7 @@ public class AdminControllerIT extends AbstractCatwatchIT {
 	}
 
 	@Test
+	@Ignore("Endpoint functionaltity removed")
 	public void testConfigScoringProject() throws Exception {
 
 		// given
@@ -70,6 +72,7 @@ public class AdminControllerIT extends AbstractCatwatchIT {
 	}
 
 	@Test
+	@Ignore("Endpoint functionaltity removed")
 	public void testExportAndImport() throws Exception {
 
 		// given
